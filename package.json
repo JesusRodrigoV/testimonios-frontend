@@ -23,6 +23,7 @@
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
     "angular-datatables": "^19.0.0",
+    "boxicons": "^2.1.4",
     "leaflet": "^1.9.4",
     "ng-select": "^1.0.2",
     "ngx-videogular": "^13.2.4",
@@ -45,4 +46,3 @@
     "typescript": "~5.7.3"
   }
 }
-
