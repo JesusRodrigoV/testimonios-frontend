@@ -1,0 +1,31 @@
+.profile-card {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.profile-info {
+  padding: 20px 0;
+
+  .info-group {
+    margin: 15px 0;
+
+    label {
+      font-weight: 500;
+      margin-right: 10px;
+    }
+  }
+}
+
+.logout-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  button {
+    min-width: 150px;
+
+    i {
+      margin-right: 8px;
+    }
+  }
+}

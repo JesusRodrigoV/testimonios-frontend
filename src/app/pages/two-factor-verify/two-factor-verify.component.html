@@ -1,0 +1,22 @@
+<form [formGroup]="twoFactorForm" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>Código 2FA</mat-label>
+    <input matInput formControlName="token" placeholder="Ingrese el código" />
+    <mat-error *ngIf="twoFactorForm.get('token')?.errors?.['required']">
+      El código es requerido
+    </mat-error>
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    [disabled]="twoFactorForm.invalid || loading()"
+  >
+    {{ loading() ? "Verificando..." : "Verificar" }}
+  </button>
+
+  @if (error()) {
+    <mat-error>{{ error() }}</mat-error>
+  }
+</form>

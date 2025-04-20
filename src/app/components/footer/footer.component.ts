@@ -20,7 +20,7 @@ export class FooterComponent {
   readonly currentYear = new Date().getFullYear();
 
   readonly brand = {
-    logo: "assets/images/logo.png",
+    logo: "assets/images/logo-Sfondo.png",
     title: "Legado de Bolivia",
     description: "Sistema de Archivos de Testimonios del Bicentenario",
   };
@@ -30,12 +30,6 @@ export class FooterComponent {
       name: "GitHub",
       url: "https://github.com/tu-organizacion/testimonios-frontend",
       icon: "bx bxl-github",
-      external: true,
-    },
-    {
-      name: "UCB",
-      url: "https://www.ucb.edu.bo/",
-      icon: "bx bx-building-house",
       external: true,
     },
   ];

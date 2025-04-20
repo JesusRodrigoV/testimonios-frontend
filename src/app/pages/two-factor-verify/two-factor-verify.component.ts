@@ -1,0 +1,45 @@
+import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { AuthStore } from "@app/auth.store";
+
+@Component({
+  selector: "app-two-factor-verify",
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    NgIf,
+    MatInputModule,
+    MatButtonModule,
+  ],
+  templateUrl: "./two-factor-verify.component.html",
+  styleUrl: "./two-factor-verify.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class TwoFactorVerifyComponent {
+  private readonly authStore = inject(AuthStore);
+  private readonly fb = inject(FormBuilder);
+
+  twoFactorForm: FormGroup = this.fb.group({
+    token: ["", Validators.required],
+  });
+
+  loading = this.authStore.loading;
+  error = this.authStore.error;
+
+  async onSubmit() {
+    if (this.twoFactorForm.valid) {
+      const token = this.twoFactorForm.value.token;
+      console.log("Token a enviar:", token);
+      await this.authStore.verify2FA(token);
+    }
+  }
+}

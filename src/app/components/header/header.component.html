@@ -1,0 +1,98 @@
+<header class="header">
+  <div class="header-left">
+    <button
+      mat-icon-button
+      matTooltip="Abrir menú"
+      (click)="onToggleSidebar()"
+      class="menu-btn"
+    >
+      <i class="bx bx-menu"></i>
+    </button>
+
+    <h1 class="app-title">
+      <a class="title-text" routerLink="/home">Legado de Bolivia</a>
+    </h1>
+  </div>
+
+  <div id="poda" class="search-field">
+    <div class="search-wrapper">
+      <div class="search-border"></div>
+      <div class="search-input-wrapper">
+        <i class="bx bx-search search-icon"></i>
+        <input
+          placeholder="Buscar..."
+          type="text"
+          class="input"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+        />
+        <button mat-icon-button class="filter-button">
+          <i class="bx bx-filter-alt"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button
+    mat-icon-button
+    class="mobile-search-btn"
+    (click)="toggleMobileSearch()"
+    matTooltip="Buscar"
+  >
+    <i class="bx bx-search"></i>
+  </button>
+
+  <div class="header-actions">
+    <button
+      mat-icon-button
+      [matTooltip]="'Notificaciones (' + unreadNotifications + ' sin leer)'"
+      [matMenuTriggerFor]="notificationsMenu"
+      class="notification-btn"
+      [matBadge]="unreadNotifications"
+      [matBadgeHidden]="unreadNotifications === 0"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+    >
+      <i class="bx bx-bell"></i>
+    </button>
+
+    <button
+      mat-icon-button
+      matTooltip="Perfil"
+      [matMenuTriggerFor]="profileMenu"
+      class="profile-btn"
+    >
+      <i class="bx bx-user-circle"></i>
+    </button>
+  </div>
+</header>
+
+<mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+  <div *ngFor="let notification of notifications">
+    <button
+      mat-menu-item
+      (click)="markAsRead(notification.id)"
+      [class.unread]="!notification.read"
+    >
+      <i class="bx bx-bell-ring" *ngIf="!notification.read"></i>
+      <i class="bx bx-bell" *ngIf="notification.read"></i>
+      <span>{{ notification.message }}</span>
+    </button>
+  </div>
+</mat-menu>
+
+<mat-menu #profileMenu="matMenu">
+  <button mat-menu-item>
+    <i class="bx bx-user"></i>
+    <span>Mi Perfil</span>
+  </button>
+  <button mat-menu-item routerLink="/settings">
+    <i class="bx bx-cog"></i>
+    <span>Configuración</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="onLogout()">
+    <i class="bx bx-log-out"></i>
+    <span>Cerrar Sesión</span>
+  </button>
+</mat-menu>

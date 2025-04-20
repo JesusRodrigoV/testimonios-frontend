@@ -54,6 +54,31 @@
                 "glob": "favicon.ico",
                 "input": "public",
                 "output": "/"
+              },
+              {
+                "glob": "favicon-96x96.png",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "favicon.svg",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "apple-touch-icon.png",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "site.webmanifest",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "web-app-manifest-*.png",
+                "input": "public",
+                "output": "/"
               }
             ],
             "styles": [
