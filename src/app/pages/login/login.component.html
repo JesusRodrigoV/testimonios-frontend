@@ -6,40 +6,60 @@
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" />
-        <mat-icon matPrefix>mail</mat-icon>
-        <mat-error *ngIf="loginForm.get('email')?.errors?.['required']">
-          El email es requerido
-        </mat-error>
-        <mat-error *ngIf="loginForm.get('email')?.errors?.['email']">
-          Email inválido
-        </mat-error>
-      </mat-form-field>
+      <div class="input-container">
+        <div class="input-group">
+          <mat-icon>mail</mat-icon>
+          <input
+            class="custom-input"
+            type="email"
+            placeholder="Email"
+            formControlName="email"
+          />
+        </div>
+        @if (
+          loginForm.get("email")?.errors?.["required"] &&
+          loginForm.get("email")?.touched
+        ) {
+          <span class="error-text">El email es requerido</span>
+        }
+        @if (
+          loginForm.get("email")?.errors?.["email"] &&
+          loginForm.get("email")?.touched
+        ) {
+          <span class="error-text">Email inválido</span>
+        }
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Contraseña</mat-label>
-        <input
-          matInput
-          [type]="hidePassword ? 'password' : 'text'"
-          formControlName="password"
-        />
-        <mat-icon matPrefix>lock</mat-icon>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="hidePassword = !hidePassword"
-          type="button"
-        >
-          <mat-icon>{{
-            hidePassword ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-        <mat-error *ngIf="loginForm.get('password')?.errors?.['required']">
-          La contraseña es requerida
-        </mat-error>
-      </mat-form-field>
+      <div class="input-container">
+        <div class="input-group">
+          <mat-icon>lock</mat-icon>
+          <input
+            class="custom-input"
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Contraseña"
+            formControlName="password"
+          />
+          <button
+            class="visibility-toggle"
+            type="button"
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+        </div>
+        @if (
+          loginForm.get("password")?.errors?.["required"] &&
+          loginForm.get("password")?.touched
+        ) {
+          <span class="error-text">La contraseña es requerida</span>
+        }
+      </div>
+
+      <div class="forgot-password-link">
+        <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
+      </div>
 
       <button
         mat-raised-button

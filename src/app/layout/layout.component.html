@@ -1,1 +1,14 @@
-<p>layout works!</p>
+<div class="app-container">
+  <header class="app-header">
+    <app-header />
+  </header>
+
+  <main class="app-main">
+    <router-outlet />
+  </main>
+
+  <footer class="app-footer">
+    <button (click)="themeService.toggleTheme()">Change theme</button>
+    <app-footer />
+  </footer>
+</div>

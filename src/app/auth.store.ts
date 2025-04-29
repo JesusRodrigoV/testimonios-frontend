@@ -58,10 +58,23 @@ export const AuthStore = signalStore(
   })),
   withMethods(
     (
-      { user, accessToken, refreshToken, ...store },
+      { ...store },
       authService = inject(AuthService),
       router = inject(Router),
     ) => ({
+      async loadUserProfile() {
+        if (!store.accessToken()) return;
+
+        try {
+          const response = await firstValueFrom(authService.getUserProfile());
+          patchState(store, { user: response });
+        } catch (error) {
+          console.error("Error loading user profile:", error);
+          // Si hay error al cargar el perfil, probablemente el token expiró
+          this.logout();
+        }
+      },
+
       async login(credentials: LoginCredentials) {
         patchState(store, {
           loading: true,
@@ -182,11 +195,21 @@ export const AuthStore = signalStore(
 
       async setup2FA(secret: string, token: string) {
         const currentTempToken = store.tempToken();
-        if (!currentTempToken) return;
+        if (!currentTempToken) {
+          console.error(
+            "No hay token temporal disponible para la configuración 2FA",
+          );
+          patchState(store, {
+            error: "No hay token temporal disponible para la configuración 2FA",
+            loading: false,
+          });
+          return;
+        }
 
         patchState(store, { loading: true, error: null });
 
         try {
+          console.log("Iniciando configuración 2FA con token:", token);
           const response = await firstValueFrom(
             authService.setup2FA(secret, token, currentTempToken),
           );
@@ -245,7 +268,7 @@ export const AuthStore = signalStore(
       },
 
       refreshTokenRequest() {
-        const currentRefreshToken = refreshToken();
+        const currentRefreshToken = store.refreshToken();
         if (!currentRefreshToken) {
           console.warn("No refresh token available");
           return of(false);

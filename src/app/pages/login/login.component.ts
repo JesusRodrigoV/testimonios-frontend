@@ -4,7 +4,6 @@ import {
   Validators,
   FormBuilder,
   ReactiveFormsModule,
-  DefaultValueAccessor,
 } from "@angular/forms";
 import { AuthStore } from "@app/auth.store";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -13,10 +12,12 @@ import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-login",
   imports: [
+    RouterLink,
     MatFormFieldModule,
     ReactiveFormsModule,
     NgIf,

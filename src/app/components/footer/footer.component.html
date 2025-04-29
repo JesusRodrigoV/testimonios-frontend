@@ -1,15 +1,19 @@
 <footer class="footer">
   <div class="footer__container">
-    <!-- Brand -->
     <div class="footer__brand">
       <div class="footer__logo">
-        <img [src]="brand.logo" [alt]="brand.title" class="footer__logo-img" />
+        <img
+          height="40"
+          width="40"
+          [ngSrc]="brand.logo"
+          [alt]="brand.title"
+          class="footer__logo-img"
+        />
         <h3 class="footer__title">{{ brand.title }}</h3>
       </div>
       <p class="footer__description">{{ brand.description }}</p>
     </div>
 
-    <!-- Links -->
     <div class="footer__links">
       @for (link of links; track link.url) {
         <a
@@ -19,7 +23,6 @@
           [rel]="link.external ? 'noopener noreferrer' : undefined"
         >
           <i [class]="link.icon"></i>
-          <!--<span>{{ link.name }}</span>-->
         </a>
       }
     </div>

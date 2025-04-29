@@ -1,16 +1,20 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { FooterComponent } from "./components/footer";
-import { HeaderComponent } from "./components/header";
-import { ThemeService } from "./services/theme/";
+import { AuthStore } from "./auth.store";
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, FooterComponent, HeaderComponent],
+  imports: [RouterOutlet],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private authStore = inject(AuthStore);
+
+  ngOnInit() {
+    if (this.authStore.accessToken()) {
+      this.authStore.loadUserProfile();
+    }
+  }
   title = "testimonios-frontend";
-  readonly themeService = inject(ThemeService);
 }

@@ -5,8 +5,9 @@ import {
   LoginCredentials,
   AuthResponse,
   TwoFactorResponse,
+  User,
 } from "@app/models/user.model";
-import { Observable, catchError, throwError, tap } from "rxjs";
+import { Observable, catchError, throwError, tap, of } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -15,6 +16,29 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly API_URL = "http://localhost:4000/auth";
+
+  getUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/profile`).pipe(
+      catchError((error) => {
+        console.error("Error fetching user profile:", error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message || "Error al obtener perfil de usuario",
+            ),
+        );
+      }),
+    );
+  }
+
+  register(data: {
+    email: string;
+    password: string;
+    nombre: string;
+    biografia?: string;
+  }): Observable<User> {
+    return this.http.post<User>(`${this.API_URL}/register`, data);
+  }
 
   login(
     credentials: LoginCredentials,
@@ -77,12 +101,16 @@ export class AuthService {
     token: string,
     tempToken: string,
   ): Observable<AuthResponse> {
+    console.log("Setting up 2FA with temp token:", tempToken);
     return this.http
       .post<AuthResponse>(
-        `${this.API_URL}/setup-2fa`,
-        { secret, token },
+        `${this.API_URL}/verify-2fa`,
+        { token },
         {
-          headers: { Authorization: `Bearer ${tempToken}` },
+          headers: {
+            Authorization: `Bearer ${tempToken}`,
+            "Content-Type": "application/json",
+          },
         },
       )
       .pipe(
@@ -97,17 +125,36 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.API_URL}/logout`, {}).pipe(
-      tap(() => {
-        this.router.navigate(["/login"]);
-      }),
-      catchError((error) => {
-        console.error("Error en logout:", error);
-        return throwError(
-          () => new Error(error.error.message || "Error al cerrar sesión"),
-        );
-      }),
-    );
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      return of(void 0);
+    }
+
+    return this.http
+      .post<void>(
+        `${this.API_URL}/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .pipe(
+        tap(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          this.router.navigate(["/login"]);
+        }),
+        catchError((error) => {
+          console.error("Error en logout:", error);
+          // Even if the server request fails, we want to clear local storage
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          return of(void 0);
+        }),
+      );
   }
 
   refreshToken(token: string): Observable<{ accessToken: string }> {

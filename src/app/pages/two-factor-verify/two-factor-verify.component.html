@@ -1,22 +1,55 @@
-<form [formGroup]="twoFactorForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
-    <mat-label>Código 2FA</mat-label>
-    <input matInput formControlName="token" placeholder="Ingrese el código" />
-    <mat-error *ngIf="twoFactorForm.get('token')?.errors?.['required']">
-      El código es requerido
-    </mat-error>
-  </mat-form-field>
+<div class="two-factor-container">
+  <div class="verification-card">
+    <div class="logo">
+      <!-- Reemplazar con tu logo -->
+      <img src="assets/images/logo.png" alt="Logo" />
+    </div>
 
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="twoFactorForm.invalid || loading()"
-  >
-    {{ loading() ? "Verificando..." : "Verificar" }}
-  </button>
+    <h1>Verificación de Dos Factores</h1>
+    <p>
+      Por favor, ingresa el código de verificación generado por tu aplicación de
+      autenticación
+    </p>
 
-  @if (error()) {
-    <mat-error>{{ error() }}</mat-error>
-  }
-</form>
+    <form [formGroup]="twoFactorForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Código 2FA</mat-label>
+        <input
+          matInput
+          formControlName="token"
+          placeholder="000000"
+          maxlength="6"
+          autocomplete="one-time-code"
+          inputmode="numeric"
+          pattern="[0-9]*"
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="twoFactorForm.get('token')?.errors?.['required']">
+          El código es requerido
+        </mat-error>
+        <mat-error *ngIf="twoFactorForm.get('token')?.errors?.['pattern']">
+          El código debe contener solo números
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="twoFactorForm.invalid || loading()"
+      >
+        <mat-icon>{{
+          loading() ? "hourglass_empty" : "check_circle"
+        }}</mat-icon>
+        {{ loading() ? "Verificando..." : "Verificar código" }}
+      </button>
+
+      @if (error()) {
+        <mat-error>
+          <mat-icon>error_outline</mat-icon>
+          {{ error() }}
+        </mat-error>
+      }
+    </form>
+  </div>
+</div>

@@ -2,19 +2,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostListener,
   inject,
   Output,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatMenuModule } from "@angular/material/menu";
 import { FormsModule } from "@angular/forms";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatBadgeModule } from "@angular/material/badge";
 import { AuthStore } from "@app/auth.store";
 import { Router, RouterLink } from "@angular/router";
+import { GoldenDirective } from "@app/directives/golden/golden.directive";
 
 @Component({
   selector: "app-header",
@@ -28,32 +30,54 @@ import { Router, RouterLink } from "@angular/router";
     FormsModule,
     MatBadgeModule,
     RouterLink,
+    GoldenDirective,
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+  isScrolled = false;
+
+  @HostListener("window:scroll")
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 0;
+  }
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() search = new EventEmitter<string>();
 
-  private readonly authStore = inject(AuthStore);
+  protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   isMobileSearchActive = false;
-
-  navigateToProfile(): void {
-    this.router.navigate(["/profile"]);
-  }
-
-  navigateToSettings(): void {
-    this.router.navigate(["/settings"]);
-  }
+  notificationCount = 0;
+  userAvatar = "assets/images/default-avatar.png";
 
   toggleMobileSearch(): void {
     this.isMobileSearchActive = !this.isMobileSearchActive;
-    const searchField = document.querySelector(".search-field");
-    if (searchField) {
-      searchField.classList.toggle("mobile-search-active");
+
+    // Si está cerrando el buscador y hay una búsqueda activa, limpiamos
+    if (!this.isMobileSearchActive && this.searchQuery) {
+      this.searchQuery = "";
+    }
+
+    // Prevenir scroll cuando el buscador está activo
+    document.body.style.overflow = this.isMobileSearchActive ? "hidden" : "";
+  }
+
+  @HostListener("document:keydown.escape")
+  onEscapePress() {
+    if (this.isMobileSearchActive) {
+      this.toggleMobileSearch();
+    }
+  }
+
+  onCreatePost() {
+    if (!this.authStore.isAuthenticated()) {
+      this.router.navigate(["/login"], {
+        queryParams: { returnUrl: "/create-post" },
+      });
+    } else {
+      this.router.navigate(["/create-post"]);
     }
   }
 

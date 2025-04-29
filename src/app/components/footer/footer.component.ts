@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { RouterModule } from "@angular/router";
 
 interface FooterLink {
@@ -11,7 +11,7 @@ interface FooterLink {
 
 @Component({
   selector: "app-footer",
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgOptimizedImage],
   templateUrl: "./footer.component.html",
   styleUrl: "./footer.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

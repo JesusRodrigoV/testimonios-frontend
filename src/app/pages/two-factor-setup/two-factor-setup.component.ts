@@ -7,49 +7,46 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { AuthStore } from "@app/auth.store";
 
 @Component({
-  selector: "app-two-factor-verify",
+  selector: "app-two-factor-setup",
   imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
     NgIf,
+    MatCardModule,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    ReactiveFormsModule,
   ],
-  templateUrl: "./two-factor-verify.component.html",
-  styleUrl: "./two-factor-verify.component.scss",
+  templateUrl: "./two-factor-setup.component.html",
+  styleUrl: "./two-factor-setup.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class TwoFactorVerifyComponent {
+export default class TwoFactorSetupComponent {
   private readonly authStore = inject(AuthStore);
   private readonly fb = inject(FormBuilder);
 
-  twoFactorForm: FormGroup = this.fb.group({
+  setupForm: FormGroup = this.fb.group({
     token: [
       "",
-      [
-        Validators.required,
-        Validators.pattern("^[0-9]*$"),
-        Validators.minLength(6),
-        Validators.maxLength(6),
-      ],
+      [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
     ],
   });
 
   loading = this.authStore.loading;
   error = this.authStore.error;
+  setupData = this.authStore.setupData;
 
   async onSubmit() {
-    if (this.twoFactorForm.valid) {
-      const token = this.twoFactorForm.value.token;
-      console.log("Token a enviar:", token);
-      await this.authStore.verify2FA(token);
+    if (this.setupForm.valid && this.setupData()) {
+      const { secret } = this.setupData()!;
+      await this.authStore.setup2FA(secret, this.setupForm.value.token);
     }
   }
 }

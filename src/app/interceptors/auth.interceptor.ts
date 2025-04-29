@@ -8,22 +8,42 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authStore = inject(AuthStore);
   const router = inject(Router);
 
-  // Skip auth routes
-  if (
-    req.url.includes("/refresh") ||
-    req.url.includes("/verify-2fa") ||
-    req.url.includes("/logout") ||
-    req.url.includes("/login")
-  ) {
+  const publicRoutes = [
+    "/refresh",
+    "/logout",
+    "/login",
+    "/forgot-password",
+    "/reset-password",
+    "/register",
+  ];
+
+  if (publicRoutes.some((route) => req.url.includes(route))) {
     return next(req);
+  }
+
+  if (req.url.includes("/verify-2fa")) {
+    const tempToken = authStore.tempToken();
+    if (tempToken) {
+      const authReq = req.clone({
+        headers: req.headers.set("Authorization", `Bearer ${tempToken}`),
+      });
+      return next(authReq);
+    }
   }
 
   const token = authStore.accessToken();
 
-  if (!token && !req.url.includes("/public")) {
+  if (!token) {
     router.navigate(["/login"]);
     return throwError(() => new Error("No authentication token"));
   }
+
+  // Add token to request
+  const authReq = req.clone({
+    headers: req.headers.set("Authorization", `Bearer ${token}`),
+  });
+
+  return next(authReq);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
