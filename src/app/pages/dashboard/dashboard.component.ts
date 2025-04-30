@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgOptimizedImage } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -29,6 +29,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    NgOptimizedImage,
   ],
   templateUrl: "./dashboard.component.html",
   styleUrl: "./dashboard.component.scss",
@@ -66,26 +67,16 @@ export default class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadUsers(): void {
-    this.isLoading = true;
+    this.adminService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users.map((u) => ({
+          ...u,
+          id: u.id_usuario,
+        }));
+        this.ref.detectChanges();
+      },
+    });
     this.ref.detectChanges();
-    this.adminService
-      .getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (users) => {
-          this.users = users;
-          this.isLoading = false;
-          this.ref.detectChanges();
-        },
-        error: (error) => {
-          console.error("Error loading users:", error);
-          this.snackBar.open("Error al cargar usuarios", "Cerrar", {
-            duration: 3000,
-          });
-          this.isLoading = false;
-          this.ref.detectChanges();
-        },
-      });
   }
 
   openUserDialog(user?: User): void {
@@ -99,10 +90,10 @@ export default class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
         if (result) {
-          if (result.id) {
+          if (result.id_usuario) {
             // Actualizar usuario existente
             this.adminService
-              .updateUser(result.id, result)
+              .updateUser(result.id_usuario, result)
               .pipe(takeUntil(this.destroy$))
               .subscribe({
                 next: () => {

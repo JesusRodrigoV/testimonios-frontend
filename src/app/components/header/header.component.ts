@@ -18,6 +18,13 @@ import { AuthStore } from "@app/auth.store";
 import { Router, RouterLink } from "@angular/router";
 import { GoldenDirective } from "@app/directives/golden/golden.directive";
 
+export const Rol = {
+  ADMIN: 1,
+  CURATOR: 2,
+  RESEARCHER: 3,
+  VISITOR: 4,
+} as const;
+
 @Component({
   selector: "app-header",
   imports: [
@@ -37,11 +44,16 @@ import { GoldenDirective } from "@app/directives/golden/golden.directive";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+  protected readonly Rol = Rol;
   isScrolled = false;
 
   @HostListener("window:scroll")
   onWindowScroll() {
     this.isScrolled = window.scrollY > 0;
+  }
+
+  get isAdmin(): boolean {
+    return this.authStore.user()?.role === this.Rol.ADMIN;
   }
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() search = new EventEmitter<string>();

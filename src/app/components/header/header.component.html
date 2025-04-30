@@ -143,7 +143,7 @@
       <i class="bx bx-user"></i>
       Mi Perfil
     </button>
-    <button mat-menu-item routerLink="/dashboard" golden>
+    <button mat-menu-item routerLink="/dashboard" golden *ngIf="isAdmin">
       <i class="bx bxs-dashboard"></i>
       Dashboard
     </button>

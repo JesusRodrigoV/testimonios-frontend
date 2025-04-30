@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ data.id ? "Editar" : "Crear" }} Usuario</h2>
+<h2 mat-dialog-title>{{ data.id_usuario ? "Editar" : "Crear" }} Usuario</h2>
 <mat-dialog-content>
   <form [formGroup]="form">
     <mat-form-field appearance="outline">
@@ -11,12 +11,25 @@
       <input matInput formControlName="email" required type="email" />
     </mat-form-field>
 
+    <div *ngIf="!data.id_usuario">
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          type="password"
+          [required]="!data.id_usuario"
+        />
+      </mat-form-field>
+    </div>
+
     <mat-form-field appearance="outline">
       <mat-label>Rol</mat-label>
       <mat-select formControlName="id_rol" required>
         <mat-option [value]="1">Admin</mat-option>
         <mat-option [value]="2">Curador</mat-option>
-        <mat-option [value]="3">Visitante</mat-option>
+        <mat-option [value]="3">Investigador</mat-option>
+        <mat-option [value]="4">Visitante</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -40,6 +53,6 @@
     [disabled]="!form.valid"
     (click)="onSubmit()"
   >
-    {{ data.id ? "Actualizar" : "Crear" }}
+    {{ data.id_usuario ? "Actualizar" : "Crear" }}
   </button>
 </mat-dialog-actions>

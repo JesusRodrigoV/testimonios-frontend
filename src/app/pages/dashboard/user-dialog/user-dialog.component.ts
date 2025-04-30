@@ -43,10 +43,11 @@ export class UserDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: Partial<User>,
   ) {
     this.form = this.fb.group({
-      id_usuario: [data.id], // Agregamos el campo id_usuario
+      id_usuario: [data.id_usuario],
       nombre: [data.nombre || "", [Validators.required]],
       email: [data.email || "", [Validators.required, Validators.email]],
-      id_rol: [data.id_rol || 3, [Validators.required]],
+      password: ["", data.id_usuario ? [] : [Validators.required]], // Forma correcta
+      id_rol: [data.id_rol || 4, [Validators.required]],
       biografia: [data.biografia || ""],
       profile_image: [data.profile_image || ""],
     });
@@ -54,6 +55,7 @@ export class UserDialogComponent {
 
   onSubmit() {
     if (this.form.valid) {
+      console.log("Form data being sent:", this.form.value); // Add this line
       this.dialogRef.close(this.form.value);
     }
   }

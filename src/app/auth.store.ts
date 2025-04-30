@@ -20,7 +20,7 @@ function getInitialState(): AuthState {
     try {
       const payload = JSON.parse(atob(accessToken.split(".")[1]));
       user = {
-        id: payload.id_usuario,
+        id_usuario: payload.id_usuario,
         email: payload.email,
         role: payload.id_rol,
         nombre: payload.nombre,

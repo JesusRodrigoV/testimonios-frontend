@@ -15,16 +15,12 @@ export class AdminService {
   }
 
   createUser(userData: Partial<User>): Observable<User> {
-    const { id, ...userWithoutId } = userData; // Removemos el id si existe
+    const { id_usuario, ...userWithoutId } = userData; // Removemos el id si existe
     return this.http.post<User>(`${this.API_URL}/users`, userWithoutId);
   }
 
   updateUser(id_usr: number, userData: Partial<User>): Observable<User> {
-    const { id, ...userWithoutId } = userData; // Removemos el id para la actualización
-    return this.http.put<User>(
-      `${this.API_URL}/users/${id_usr}`,
-      userWithoutId,
-    );
+    return this.http.put<User>(`${this.API_URL}/users/${id_usr}`, userData);
   }
 
   deleteUser(id: number): Observable<void> {
