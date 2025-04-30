@@ -1,0 +1,33 @@
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { User } from "@app/models/user.model";
+
+@Injectable({
+  providedIn: "root",
+})
+export class AdminService {
+  private readonly API_URL = "http://localhost:4000/auth";
+  private http = inject(HttpClient);
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.API_URL}/users`);
+  }
+
+  createUser(userData: Partial<User>): Observable<User> {
+    const { id, ...userWithoutId } = userData; // Removemos el id si existe
+    return this.http.post<User>(`${this.API_URL}/users`, userWithoutId);
+  }
+
+  updateUser(id_usr: number, userData: Partial<User>): Observable<User> {
+    const { id, ...userWithoutId } = userData; // Removemos el id para la actualización
+    return this.http.put<User>(
+      `${this.API_URL}/users/${id_usr}`,
+      userWithoutId,
+    );
+  }
+
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/users/${id}`);
+  }
+}

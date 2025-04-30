@@ -3,8 +3,10 @@ export interface User {
   email: string;
   nombre: string;
   biografia?: string;
+  id_rol?: number;
   role: number;
   two_factor_enabled?: boolean;
+  profile_image?: string;
 }
 
 export interface AuthResponse {

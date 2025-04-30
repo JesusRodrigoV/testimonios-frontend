@@ -1,0 +1,79 @@
+.dashboard-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+}
+
+.mat-table {
+  width: 100%;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.role-1 {
+  // Admin
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.role-2 {
+  // Curator
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.role-3 {
+  // Visitor
+  color: #388e3c;
+  font-weight: 500;
+}
+
+td.mat-cell {
+  padding: 16px;
+}
+
+.error-snackbar {
+  background: #d32f2f;
+  color: white;
+}
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.dashboard-container {
+  padding: 1rem;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .table-container {
+    position: relative;
+    min-height: 200px;
+  }
+}
