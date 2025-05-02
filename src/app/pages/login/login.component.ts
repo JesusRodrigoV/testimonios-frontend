@@ -7,7 +7,7 @@ import {
 } from "@angular/forms";
 import { AuthStore } from "@app/auth.store";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf } from "@angular/common";
+import { NgIf, NgOptimizedImage } from "@angular/common";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -24,6 +24,7 @@ import { RouterLink } from "@angular/router";
     MatButtonModule,
     MatCardModule,
     MatIconModule,
+    NgOptimizedImage,
   ],
   templateUrl: "./login.component.html",
   styleUrl: "./login.component.scss",
