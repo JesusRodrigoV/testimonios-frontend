@@ -1,0 +1,24 @@
+<div class="feed-container">
+  <h2>Testimonios del Bicentenario</h2>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchKeyword"
+      (input)="onSearch()"
+      placeholder="Buscar testimonios..."
+    />
+  </div>
+
+  <div class="testimony-feed">
+    @for (testimony of testimonies; track testimony.id) {
+      <app-testimony [testimony]="testimony"></app-testimony>
+    }
+
+    <div class="loading" *ngIf="loading">
+      <axl-spinner />
+    </div>
+
+    <div id="loadMoreTrigger" *ngIf="hasMore && !loading"></div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+.testimony-card {
+  background: var(--card-background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimony-card h3 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+}
+
+.description {
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.media {
+  margin-bottom: 10px;
+}
+
+.media video,
+.media audio {
+  width: 100%;
+  max-height: 200px;
+  border-radius: 5px;
+}
+
+.meta {
+  color: var(--text-meta);
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+@media (max-width: 600px) {
+  .testimony-card {
+    padding: 15px;
+  }
+}

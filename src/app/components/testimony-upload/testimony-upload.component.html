@@ -1,0 +1,156 @@
+<div class="upload-container">
+  <h2>Subir un nuevo testimonio</h2>
+  <form
+    #uploadForm="ngForm"
+    class="upload-form"
+    (ngSubmit)="submitTestimony(uploadForm)"
+  >
+    <!-- File Upload -->
+    <div class="form-group">
+      <label for="media">Selecciona un video o audio:</label>
+      <input
+        type="file"
+        id="media"
+        accept=".mp4,.mov,.mp3,.wav"
+        (change)="onFileSelected($event)"
+        required
+      />
+      <div *ngIf="mediaPreview" class="media-preview">
+        <video
+          *ngIf="mediaType === 'video'"
+          [src]="mediaPreview"
+          controls
+        ></video>
+        <audio
+          *ngIf="mediaType === 'audio'"
+          [src]="mediaPreview"
+          controls
+        ></audio>
+      </div>
+    </div>
+
+    <!-- Testimony Form -->
+    <div class="form-group">
+      <label for="title">Título:</label>
+      <input
+        type="text"
+        id="title"
+        [(ngModel)]="testimony.title"
+        name="title"
+        placeholder="Título del testimonio"
+        required
+        minlength="3"
+        #title="ngModel"
+      />
+      <div *ngIf="title.invalid && title.touched" class="error-field">
+        El título debe tener al menos 3 caracteres
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Descripción:</label>
+      <textarea
+        id="description"
+        [(ngModel)]="testimony.description"
+        name="description"
+        placeholder="Descripción del testimonio"
+        required
+        minlength="5"
+        #description="ngModel"
+        (input)="clearError()"
+      ></textarea>
+      <div
+        *ngIf="description.invalid && description.touched"
+        class="error-field"
+      >
+        La descripción debe tener al menos 5 caracteres
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="content">Contenido:</label>
+      <textarea
+        id="content"
+        [(ngModel)]="testimony.content"
+        name="content"
+        placeholder="Contenido del testimonio"
+        required
+        minlength="5"
+        #content="ngModel"
+        (input)="clearError()"
+      ></textarea>
+      <div *ngIf="content.invalid && content.touched" class="error-field">
+        El contenido debe tener al menos 5 caracteres
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="tags">Etiquetas (separadas por comas):</label>
+      <input
+        type="text"
+        id="tags"
+        [(ngModel)]="testimony.tagsInput"
+        name="tags"
+        placeholder="Ej: historia, cultura"
+      />
+    </div>
+    <div class="form-group">
+      <label for="categories">Categorías (separadas por comas):</label>
+      <input
+        type="text"
+        id="categories"
+        [(ngModel)]="testimony.categoriesInput"
+        name="categories"
+        placeholder="Ej: Bolivia, Bicentenario"
+      />
+    </div>
+    <div class="form-group">
+      <label for="eventId">ID del Evento (opcional):</label>
+      <input
+        type="number"
+        id="eventId"
+        [(ngModel)]="testimony.eventId"
+        name="eventId"
+        placeholder="ID del evento histórico"
+      />
+    </div>
+    <div class="form-group location">
+      <div>
+        <label for="latitude">Latitud (opcional):</label>
+        <input
+          type="number"
+          id="latitude"
+          [(ngModel)]="testimony.latitude"
+          name="latitude"
+          placeholder="Latitud"
+          step="any"
+        />
+      </div>
+      <div>
+        <label for="longitude">Longitud (opcional):</label>
+        <input
+          type="number"
+          id="longitude"
+          [(ngModel)]="testimony.longitude"
+          name="longitude"
+          placeholder="Longitud"
+          step="any"
+        />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="!cloudinaryResult || submitting || uploadForm.invalid"
+    >
+      {{ submitting ? "Subiendo..." : "Subir Testimonio" }}
+    </button>
+
+    <!-- Error/Success Messages -->
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+      <button type="button" class="retry-button" (click)="clearError()">
+        Reintentar
+      </button>
+    </div>
+    <div *ngIf="success" class="success-message">{{ success }}</div>
+  </form>
+</div>

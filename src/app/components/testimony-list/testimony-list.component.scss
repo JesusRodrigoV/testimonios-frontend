@@ -1,0 +1,105 @@
+.testimonies-section {
+  margin: var(--spacing-md) 0;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-sm);
+
+    @media (max-width: var(--breakpoint-md)) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .search-field {
+      min-width: 300px;
+
+      @media (max-width: var(--breakpoint-md)) {
+        min-width: 100%;
+      }
+    }
+  }
+}
+
+.testimonies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+
+  @media (max-width: var(--breakpoint-sm)) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.testimony-card {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-hover-shadow);
+  }
+
+  img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  mat-card-content {
+    flex-grow: 1;
+    padding: var(--spacing-sm);
+
+    h3 {
+      margin: 0 0 var(--spacing-xs);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+
+    .testimony-meta {
+      display: flex;
+      gap: var(--spacing-sm);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .testimony-description {
+      color: var(--text-primary);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  mat-card-actions {
+    padding: var(--spacing-sm);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+
+    button {
+      flex: 1;
+
+      mat-icon {
+        margin-right: var(--spacing-xs);
+      }
+    }
+  }
+}

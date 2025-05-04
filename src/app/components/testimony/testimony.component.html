@@ -1,0 +1,26 @@
+<div class="testimony-card">
+  <h3>{{ testimony.title }}</h3>
+  <p class="description">{{ testimony.description }}</p>
+  <div class="media">
+    <video
+      *ngIf="testimony.mediaType === 'Video'"
+      [src]="testimony.mediaUrl"
+      controls
+      loading="lazy"
+    ></video>
+    <audio
+      *ngIf="testimony.mediaType === 'Audio'"
+      [src]="testimony.mediaUrl"
+      controls
+      loading="lazy"
+    ></audio>
+    <p *ngIf="testimony.mediaType === 'Texto'">{{ testimony.content }}</p>
+  </div>
+  <p class="meta">Subido por: {{ testimony.author }}</p>
+  <p class="meta">Fecha: {{ testimony.createdAt | date: "medium" }}</p>
+  <p class="meta">
+    Categorías: {{ testimony.categories.join(", ") || "Ninguna" }}
+  </p>
+  <p class="meta">Etiquetas: {{ testimony.tags.join(", ") || "Ninguna" }}</p>
+  <p class="meta" *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
+</div>

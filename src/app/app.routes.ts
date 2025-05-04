@@ -65,4 +65,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./pages/two-factor-setup/two-factor-setup.component"),
   },
+  {
+    path: "explore",
+    loadComponent: () =>
+      import("./components/testimony-feed/testimony-feed.component"),
+  },
+  {
+    path: "submit-testimony",
+    loadComponent: () =>
+      import("./components/testimony-upload/testimony-upload.component"),
+  },
 ];
