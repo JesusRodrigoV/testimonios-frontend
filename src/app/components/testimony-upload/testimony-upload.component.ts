@@ -11,13 +11,7 @@ import {
   MatAutocompleteSelectedEvent,
 } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
-import {
-  MatChipInputEvent,
-  MatChipsModule,
-  MatChipInputEvent,
-  MatChipRow,
-  MatChipRemove,
-} from "@angular/material/chips";
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
@@ -33,12 +27,8 @@ import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-testimony-upload",
-  standalone: true,
   imports: [
     FormsModule,
-    MatChipGrid,
-    MatChipRow,
-    MatChipRemove,
     ReactiveFormsModule,
     NgIf,
     NgFor,
@@ -58,7 +48,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export default class TestimonyUploadComponent implements OnInit {
   testimony: TestimonyInput & {
-selectedTags = new FormControl([]);
+    selectedTags: string[];
     selectedCategories: string[];
   } = {
     title: "",
@@ -87,8 +77,7 @@ selectedTags = new FormControl([]);
   // Listas cargadas desde el backend
   categories: { id: number; name: string; description: string }[] = [];
   tags: { id: number; name: string }[] = [];
-  events: { id: number; name: string; description: string; date: string }[] =
-    [];
+  events: { id: number; name: string; description: string; date: string }[] = [];
 
   // Para el autocompletado de etiquetas
   tagCtrl = new FormControl<string>("");
@@ -298,17 +287,21 @@ selectedTags = new FormControl([]);
     this.error = null;
   }
 
+  // Métodos para manejar etiquetas
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || "").trim();
-    if (value) {
-      this.selectedTags.setValue([...this.selectedTags.value, value]);
+    if (value && !this.testimony.selectedTags.includes(value)) {
+      this.testimony.selectedTags.push(value);
     }
     event.chipInput!.clear();
+    this.tagCtrl.setValue("");
   }
 
   removeTag(tag: string): void {
-    const tags = this.selectedTags.value.filter((t: string) => t !== tag);
-    this.selectedTags.setValue(tags);
+    const index = this.testimony.selectedTags.indexOf(tag);
+    if (index >= 0) {
+      this.testimony.selectedTags.splice(index, 1);
+    }
   }
 
   selectedTag(event: MatAutocompleteSelectedEvent): void {
