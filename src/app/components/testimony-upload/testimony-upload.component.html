@@ -5,15 +5,27 @@
     class="upload-form"
     (ngSubmit)="submitTestimony(uploadForm)"
   >
+    <!-- Subida de archivo -->
     <div class="form-group">
-      <label for="media">Selecciona un video o audio:</label>
-      <input
-        type="file"
-        id="media"
-        accept=".mp4,.mov,.mp3,.wav"
-        (change)="onFileSelected($event)"
-        required
-      />
+      <div class="file-upload">
+        <input
+          type="file"
+          id="media"
+          accept=".mp4,.mov,.mp3,.wav"
+          (change)="onFileSelected($event)"
+          required
+          style="display: none"
+          #fileInput
+        />
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="fileInput.click()"
+        >
+          Elegir archivo (video o audio)
+        </button>
+      </div>
       <div *ngIf="mediaPreview" class="media-preview">
         <video
           *ngIf="mediaType === 'video'"
@@ -28,92 +40,147 @@
       </div>
     </div>
 
-    <!-- Testimony Form -->
+    <!-- Título -->
     <div class="form-group">
-      <label for="title">Título:</label>
-      <input
-        type="text"
-        id="title"
-        [(ngModel)]="testimony.title"
-        name="title"
-        placeholder="Título del testimonio"
-        required
-        minlength="3"
-        #title="ngModel"
-      />
-      <div *ngIf="title.invalid && title.touched" class="error-field">
-        El título debe tener al menos 3 caracteres
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="description">Descripción:</label>
-      <textarea
-        id="description"
-        [(ngModel)]="testimony.description"
-        name="description"
-        placeholder="Descripción del testimonio"
-        required
-        minlength="5"
-        #description="ngModel"
-        (input)="clearError()"
-      ></textarea>
-      <div
-        *ngIf="description.invalid && description.touched"
-        class="error-field"
-      >
-        La descripción debe tener al menos 5 caracteres
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="content">Contenido:</label>
-      <textarea
-        id="content"
-        [(ngModel)]="testimony.content"
-        name="content"
-        placeholder="Contenido del testimonio"
-        required
-        minlength="5"
-        #content="ngModel"
-        (input)="clearError()"
-      ></textarea>
-      <div *ngIf="content.invalid && content.touched" class="error-field">
-        El contenido debe tener al menos 5 caracteres
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="tags">Etiquetas (separadas por comas):</label>
-      <input
-        type="text"
-        id="tags"
-        [(ngModel)]="testimony.tagsInput"
-        name="tags"
-        placeholder="Ej: historia, cultura"
-      />
-    </div>
-    <div class="form-group">
-      <label for="categories">Categorías (separadas por comas):</label>
-      <input
-        type="text"
-        id="categories"
-        [(ngModel)]="testimony.categoriesInput"
-        name="categories"
-        placeholder="Ej: Bolivia, Bicentenario"
-      />
-    </div>
-    <div class="form-group">
-      <label for="eventId">ID del Evento (opcional):</label>
-      <input
-        type="number"
-        id="eventId"
-        [(ngModel)]="testimony.eventId"
-        name="eventId"
-        placeholder="ID del evento histórico"
-      />
-    </div>
-    <div class="form-group location">
-      <div>
-        <label for="latitude">Latitud (opcional):</label>
+      <mat-form-field appearance="outline">
+        <mat-label>Título</mat-label>
         <input
+          matInput
+          id="title"
+          [(ngModel)]="testimony.title"
+          name="title"
+          placeholder="Título del testimonio"
+          required
+          minlength="3"
+          #title="ngModel"
+        />
+        <mat-error *ngIf="title.invalid && title.touched">
+          El título debe tener al menos 3 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          id="description"
+          [(ngModel)]="testimony.description"
+          name="description"
+          placeholder="Descripción del testimonio"
+          required
+          minlength="5"
+          #description="ngModel"
+          (input)="clearError()"
+        ></textarea>
+        <mat-error *ngIf="description.invalid && description.touched">
+          La descripción debe tener al menos 5 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Contenido -->
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Contenido</mat-label>
+        <textarea
+          matInput
+          id="content"
+          [(ngModel)]="testimony.content"
+          name="content"
+          placeholder="Contenido del testimonio"
+          required
+          minlength="5"
+          #content="ngModel"
+          (input)="clearError()"
+        ></textarea>
+        <mat-error *ngIf="content.invalid && content.touched">
+          El contenido debe tener al menos 5 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Categorías -->
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Categorías</mat-label>
+        <mat-select
+          [(ngModel)]="testimony.selectedCategories"
+          name="categories"
+          multiple
+        >
+          <mat-option
+            *ngFor="let category of categories"
+            [value]="category.name"
+          >
+            {{ category.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Etiquetas -->
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Etiquetas</mat-label>
+        <mat-chip-grid
+          #chipGrid
+          [(ngModel)]="testimony.selectedTags"
+          name="tags"
+          aria-label="Selección de etiquetas"
+        >
+          <mat-chip-row
+            *ngFor="let tag of testimony.selectedTags"
+            [removable]="true"
+            (removed)="removeTag(tag)"
+          >
+            {{ tag }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input
+            placeholder="Añadir etiqueta..."
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addTag($event)"
+            [formControl]="tagCtrl"
+            [matAutocomplete]="auto"
+          />
+        </mat-chip-grid>
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="selectedTag($event)"
+        >
+          <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+            {{ tag }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <!-- Evento histórico -->
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Evento histórico (opcional)</mat-label>
+        <mat-select [(ngModel)]="testimony.eventId" name="eventId">
+          <mat-option [value]="null">Ninguno</mat-option>
+          <mat-option *ngFor="let event of events" [value]="event.id">
+            {{ event.name }} ({{ event.date | date: "yyyy-MM-dd" }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Ubicación -->
+    <div class="form-group location">
+      <mat-form-field appearance="outline">
+        <mat-label>Latitud (opcional)</mat-label>
+        <input
+          matInput
           type="number"
           id="latitude"
           [(ngModel)]="testimony.latitude"
@@ -121,10 +188,11 @@
           placeholder="Latitud"
           step="any"
         />
-      </div>
-      <div>
-        <label for="longitude">Longitud (opcional):</label>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Longitud (opcional)</mat-label>
         <input
+          matInput
           type="number"
           id="longitude"
           [(ngModel)]="testimony.longitude"
@@ -132,19 +200,29 @@
           placeholder="Longitud"
           step="any"
         />
-      </div>
+      </mat-form-field>
     </div>
 
+    <!-- Botón de enviar -->
     <button
+      mat-raised-button
+      color="primary"
       type="submit"
       [disabled]="!cloudinaryResult || submitting || uploadForm.invalid"
     >
       {{ submitting ? "Subiendo..." : "Subir Testimonio" }}
     </button>
 
+    <!-- Mensajes de error y éxito -->
     <div *ngIf="error" class="error-message">
       {{ error }}
-      <button type="button" class="retry-button" (click)="clearError()">
+      <button
+        mat-button
+        color="warn"
+        type="button"
+        class="retry-button"
+        (click)="clearError()"
+      >
         Reintentar
       </button>
     </div>

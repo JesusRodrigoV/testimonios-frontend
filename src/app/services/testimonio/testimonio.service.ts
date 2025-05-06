@@ -139,4 +139,49 @@ export class TestimonioService {
       }),
     );
   }
+
+  // Nuevos métodos para categorías, etiquetas y eventos
+  getAllCategories(): Observable<
+    { id: number; name: string; description: string }[]
+  > {
+    return this.http
+      .get<
+        { id: number; name: string; description: string }[]
+      >(`${this.apiUrl}/categories`)
+      .pipe(
+        catchError((error) => {
+          return throwError(
+            () => new Error(error.message || "Error al obtener categorías"),
+          );
+        }),
+      );
+  }
+
+  getAllTags(): Observable<{ id: number; name: string }[]> {
+    return this.http
+      .get<{ id: number; name: string }[]>(`${this.apiUrl}/tags`)
+      .pipe(
+        catchError((error) => {
+          return throwError(
+            () => new Error(error.message || "Error al obtener etiquetas"),
+          );
+        }),
+      );
+  }
+
+  getAllEvents(): Observable<
+    { id: number; name: string; description: string; date: string }[]
+  > {
+    return this.http
+      .get<
+        { id: number; name: string; description: string; date: string }[]
+      >(`${this.apiUrl}/events`)
+      .pipe(
+        catchError((error) => {
+          return throwError(
+            () => new Error(error.message || "Error al obtener eventos"),
+          );
+        }),
+      );
+  }
 }

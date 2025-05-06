@@ -1,33 +1,78 @@
-import { NgIf } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { FormsModule, NgForm } from "@angular/forms";
+import { NgIf, NgFor, AsyncPipe, DatePipe } from "@angular/common";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from "@angular/core";
+import { FormsModule, NgForm, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent,
+} from "@angular/material/autocomplete";
+import { MatButtonModule } from "@angular/material/button";
+import {
+  MatChipInputEvent,
+  MatChipsModule,
+  MatChipInputEvent,
+  MatChipRow,
+  MatChipRemove,
+} from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
 import { TestimonyInput } from "@app/models/testimonio.model";
 import { TestimonioService } from "@app/services/testimonio/testimonio.service";
 import { environment } from "src/environment/environment";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map, startWith } from "rxjs/operators";
+import { FormControl } from "@angular/forms";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-testimony-upload",
-  imports: [FormsModule, NgIf],
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatChipGrid,
+    MatChipRow,
+    MatChipRemove,
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    AsyncPipe,
+    DatePipe,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatIconModule,
+  ],
   templateUrl: "./testimony-upload.component.html",
   styleUrl: "./testimony-upload.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class TestimonyUploadComponent {
-  testimony: TestimonyInput & { tagsInput?: string; categoriesInput?: string } =
-    {
-      title: "",
-      description: "",
-      content: "",
-      tagsInput: "",
-      categoriesInput: "",
-      eventId: undefined,
-      latitude: undefined,
-      longitude: undefined,
-      url: "",
-      duration: undefined,
-      format: "",
-    };
+export default class TestimonyUploadComponent implements OnInit {
+  testimony: TestimonyInput & {
+selectedTags = new FormControl([]);
+    selectedCategories: string[];
+  } = {
+    title: "",
+    description: "",
+    content: "",
+    selectedTags: [],
+    selectedCategories: [],
+    eventId: undefined,
+    latitude: undefined,
+    longitude: undefined,
+    url: "",
+    duration: undefined,
+    format: "",
+  };
   cloudinaryResult: {
     secure_url: string;
     duration?: number;
@@ -39,8 +84,72 @@ export default class TestimonyUploadComponent {
   success: string | null = null;
   submitting = false;
 
+  // Listas cargadas desde el backend
+  categories: { id: number; name: string; description: string }[] = [];
+  tags: { id: number; name: string }[] = [];
+  events: { id: number; name: string; description: string; date: string }[] =
+    [];
+
+  // Para el autocompletado de etiquetas
+  tagCtrl = new FormControl<string>("");
+  filteredTags: Observable<string[]>;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  private tagsSubject = new BehaviorSubject<string[]>([]);
+
   private http = inject(HttpClient);
   private testimonyService = inject(TestimonioService);
+
+  constructor() {
+    // Configuramos el autocompletado de etiquetas
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+      startWith(""),
+      map((value) => this._filterTags(value || "")),
+    );
+  }
+
+  ngOnInit(): void {
+    this.loadMetadata();
+  }
+
+  loadMetadata(): void {
+    // Cargar categorías
+    this.testimonyService.getAllCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: (err) => {
+        this.error = "Error al cargar categorías: " + err.message;
+      },
+    });
+
+    // Cargar etiquetas
+    this.testimonyService.getAllTags().subscribe({
+      next: (data) => {
+        this.tags = data;
+        this.tagsSubject.next(data.map((tag) => tag.name));
+      },
+      error: (err) => {
+        this.error = "Error al cargar etiquetas: " + err.message;
+      },
+    });
+
+    // Cargar eventos
+    this.testimonyService.getAllEvents().subscribe({
+      next: (data) => {
+        this.events = data;
+      },
+      error: (err) => {
+        this.error = "Error al cargar eventos: " + err.message;
+      },
+    });
+  }
+
+  private _filterTags(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.tags
+      .map((tag) => tag.name)
+      .filter((tag) => tag.toLowerCase().includes(filterValue));
+  }
 
   async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
@@ -124,18 +233,8 @@ export default class TestimonyUploadComponent {
       url: this.testimony.url,
       duration: this.testimony.duration,
       format: this.testimony.format,
-      tags: this.testimony.tagsInput
-        ? this.testimony.tagsInput
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag)
-        : [],
-      categories: this.testimony.categoriesInput
-        ? this.testimony.categoriesInput
-            .split(",")
-            .map((cat) => cat.trim())
-            .filter((cat) => cat)
-        : [],
+      tags: this.testimony.selectedTags,
+      categories: this.testimony.selectedCategories,
       eventId:
         this.testimony.eventId === null ? undefined : this.testimony.eventId,
       latitude:
@@ -164,7 +263,7 @@ export default class TestimonyUploadComponent {
             "Error con el archivo multimedia. Por favor, intenta subir el archivo nuevamente.";
         } else if (err.message.includes("eventId")) {
           errorMessage =
-            "Error con el ID del evento. Déjalo en blanco si no aplica.";
+            "Error con el evento seleccionado. Por favor, verifica la selección.";
         } else if (err.message.includes("Invalid type")) {
           errorMessage =
             "Error en los datos numéricos (evento, latitud o longitud). Déjalos en blanco si no aplican.";
@@ -180,8 +279,8 @@ export default class TestimonyUploadComponent {
       title: "",
       description: "",
       content: "",
-      tagsInput: "",
-      categoriesInput: "",
+      selectedTags: [],
+      selectedCategories: [],
       eventId: undefined,
       latitude: undefined,
       longitude: undefined,
@@ -192,9 +291,31 @@ export default class TestimonyUploadComponent {
     this.cloudinaryResult = null;
     this.mediaPreview = null;
     this.mediaType = null;
+    this.tagCtrl.setValue("");
   }
 
   clearError(): void {
     this.error = null;
+  }
+
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || "").trim();
+    if (value) {
+      this.selectedTags.setValue([...this.selectedTags.value, value]);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeTag(tag: string): void {
+    const tags = this.selectedTags.value.filter((t: string) => t !== tag);
+    this.selectedTags.setValue(tags);
+  }
+
+  selectedTag(event: MatAutocompleteSelectedEvent): void {
+    const value: string = event.option.value;
+    if (!this.testimony.selectedTags.includes(value)) {
+      this.testimony.selectedTags.push(value);
+    }
+    this.tagCtrl.setValue("");
   }
 }
