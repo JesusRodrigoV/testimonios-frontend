@@ -5,7 +5,6 @@
     class="upload-form"
     (ngSubmit)="submitTestimony(uploadForm)"
   >
-    <!-- File Upload -->
     <div class="form-group">
       <label for="media">Selecciona un video o audio:</label>
       <input
@@ -136,7 +135,6 @@
       </div>
     </div>
 
-    <!-- Submit Button -->
     <button
       type="submit"
       [disabled]="!cloudinaryResult || submitting || uploadForm.invalid"
@@ -144,7 +142,6 @@
       {{ submitting ? "Subiendo..." : "Subir Testimonio" }}
     </button>
 
-    <!-- Error/Success Messages -->
     <div *ngIf="error" class="error-message">
       {{ error }}
       <button type="button" class="retry-button" (click)="clearError()">

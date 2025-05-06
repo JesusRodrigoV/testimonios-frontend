@@ -7,8 +7,8 @@
   --text-meta: #777777;
   --border: #cccccc;
   --shadow: rgba(0, 0, 0, 0.1);
-
-  :root.dark-mode & {
+  --error: #ff0000;
+  :root.dark-mode {
     --primary: #66b0ff;
     --background: #1a1a1a;
     --card-background: #2c2c2c;
@@ -17,11 +17,12 @@
     --text-meta: #999999;
     --border: #444444;
     --shadow: rgba(0, 0, 0, 0.3);
+    --error: #ff6666;
   }
 }
 
 .feed-container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -48,16 +49,30 @@ h2 {
   color: var(--text-primary);
 }
 
-.search-bar input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 5px var(--shadow);
+.testimony-feed {
+  display: grid;
+  gap: 20px;
+  min-height: 600px; /* Asegura altura mínima */
+  border: 2px solid green; /* Depuración */
 }
 
-.testimony-feed {
-  display: flex;
-  flex-direction: column;
+.testimonies-wrapper {
+  display: grid;
   gap: 20px;
+}
+
+.skeleton-container {
+  display: grid;
+  gap: 20px;
+}
+
+.skeleton-card {
+  background: var(--card-background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--shadow);
+  height: 200px;
+  animation: pulse 1.5s infinite;
 }
 
 .loading {
@@ -66,8 +81,34 @@ h2 {
   color: var(--text-secondary);
 }
 
+.loading p {
+  margin-top: 10px;
+}
+
+.error {
+  text-align: center;
+  padding: 20px;
+  color: var(--error);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 600px) {
   .feed-container {
     padding: 10px;
+  }
+
+  .skeleton-card {
+    height: 150px;
   }
 }

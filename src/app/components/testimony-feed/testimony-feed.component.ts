@@ -51,6 +51,7 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (response) => {
+          console.log("Testimonios cargados:", response.data);
           if (append) {
             this.testimonies = [...this.testimonies, ...response.data];
           } else {

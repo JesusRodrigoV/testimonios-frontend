@@ -11,13 +11,31 @@
   </div>
 
   <div class="testimony-feed">
-    @for (testimony of testimonies; track testimony.id) {
-      <app-testimony [testimony]="testimony"></app-testimony>
-    }
-
-    <div class="loading" *ngIf="loading">
+    @defer {
+      <div class="testimonies-wrapper">
+        @for (testimony of testimonies; track testimony.id) {
+          <app-testimony [testimony]="testimony"></app-testimony>
+        } @empty {
+          <p>No hay testimonios</p>
+        }
+      </div>
+    } @placeholder (minimum 500ms) {
       <axl-spinner />
-    </div>
+      <div class="skeleton-container">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    } @loading (minimum 1s; after 500ms) {
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando testimonios...</p>
+      </div>
+    } @error {
+      <div class="error">
+        <p>Error al cargar los testimonios. Por favor, intenta de nuevo.</p>
+      </div>
+    }
 
     <div id="loadMoreTrigger" *ngIf="hasMore && !loading"></div>
   </div>

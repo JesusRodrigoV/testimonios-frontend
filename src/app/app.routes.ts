@@ -26,6 +26,17 @@ export const routes: Routes = [
         loadComponent: () => import("./pages/home/home.component"),
       },
       {
+        path: "explore",
+        loadComponent: () =>
+          import("./components/testimony-feed/testimony-feed.component"),
+      },
+      {
+        path: "submit-testimony",
+        loadComponent: () =>
+          import("./components/testimony-upload/testimony-upload.component"),
+        canActivate: [authGuard],
+      },
+      {
         path: "",
         redirectTo: "/home",
         pathMatch: "full",
@@ -64,15 +75,5 @@ export const routes: Routes = [
     path: "2fa-setup",
     loadComponent: () =>
       import("./pages/two-factor-setup/two-factor-setup.component"),
-  },
-  {
-    path: "explore",
-    loadComponent: () =>
-      import("./components/testimony-feed/testimony-feed.component"),
-  },
-  {
-    path: "submit-testimony",
-    loadComponent: () =>
-      import("./components/testimony-upload/testimony-upload.component"),
   },
 ];

@@ -3,8 +3,8 @@ export interface Testimony {
   title: string;
   description: string;
   content: string;
-  mediaUrl: string; // Changed from 'url'
-  duration: number;
+  url: string; // Changed from 'url'
+  duration: number | null;
   latitude?: number | null;
   longitude?: number | null;
   createdAt: string;
@@ -25,7 +25,7 @@ export interface TestimonyInput {
   eventId?: number;
   latitude?: number;
   longitude?: number;
-  mediaUrl: string; // Changed from 'url'
+  url: string; // Changed from 'url'
   duration?: number;
   format: string; // Expected to be 'video' or 'audio'
 }

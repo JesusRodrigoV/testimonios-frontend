@@ -6,7 +6,6 @@
     </h1>
   </div>
 
-  <!-- Buscador Desktop -->
   <div class="search-field desktop-search">
     <div class="search-wrapper">
       <div class="search-border"></div>
@@ -31,7 +30,6 @@
     </div>
   </div>
 
-  <!-- Buscador Mobile -->
   <div class="mobile-search-container">
     <button
       mat-icon-button
@@ -99,7 +97,7 @@
         mat-raised-button
         color="primary"
         routerLink="/register"
-        matTooltip="Iniciar sesión en tu cuenta"
+        matTooltip="Crear una cuenta"
         matTooltipPosition="below"
       >
         Registrarse
@@ -126,18 +124,17 @@
         matTooltipPosition="below"
         golden
       >
-        <i class="bx bxs-user-circle" style="font-size: 24px"></i>
+        <i class="bx bxs-user-circle"></i>
       </button>
     }
   </div>
 
-  <mat-menu #notificationsMenu="matMenu">
+  <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
     <div class="notifications-container">
       <h3>Notificaciones</h3>
     </div>
   </mat-menu>
 
-  <!-- Menú de usuario -->
   <mat-menu #userMenu="matMenu">
     <button mat-menu-item routerLink="/profile" golden>
       <i class="bx bx-user"></i>
@@ -158,8 +155,8 @@
     </button>
   </mat-menu>
 
-  <mat-menu #filterMenu="matMenu" golden>
-    <button mat-menu-item>
+  <mat-menu #filterMenu="matMenu">
+    <button mat-menu-item golden>
       <i class="bx bx-calendar"></i>
       Más recientes
     </button>

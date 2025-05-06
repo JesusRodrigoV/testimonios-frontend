@@ -1,13 +1,9 @@
-@use "@angular/material" as mat;
-
 :host {
-  --header-height: 64px;
-  --header-bg-color: #ffffff;
+  --header-bg-color: #fff;
   --header-text-color: #2c3e50;
-  --header-button-text-color: #fff;
   --header-border-color: #dee2e6;
   --notification-badge-bg: #dc3545;
-  --notification-badge-color: #ffffff;
+  --notification-badge-color: #fff;
   --header-hover-color: #b8860b;
   --header-accent-color: rgba(184, 134, 11, 0.15);
   --bolivia-red: rgba(218, 41, 28, 0.6);
@@ -18,14 +14,13 @@
     --header-bg-color: #1a1a1a;
     --header-text-color: #e9ecef;
     --header-border-color: #2c3e50;
-    --header-button-text-color: #2c3e50;
     --header-accent-color: rgba(184, 134, 11, 0.25);
   }
 }
 
 .header {
-  height: var(--header-height);
-  background-color: var(--header-bg-color);
+  height: 64px;
+  background: var(--header-bg-color);
   border-bottom: 1px solid var(--header-border-color);
   display: flex;
   align-items: center;
@@ -37,309 +32,203 @@
   right: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+}
 
-  .logo {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
-  }
+.logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    min-width: 200px;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 
-    h1 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: var(--header-text-color);
-    }
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-
-    .create-post-btn {
-      i.bx {
-        color: var(--header-button-text-color);
-        font-size: 20px;
-        display: flex;
-        align-items: center;
-      }
-    }
-
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-  }
-
-  .app-title {
+  h1 {
     margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-
-    .title-text {
-      color: var(--header-text-color);
-      position: relative;
-      transition: all 0.3s ease;
-      padding: 0 8px;
-      text-decoration: none;
-
-      &:hover {
-        color: #b8860b;
-      }
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100%;
-        height: 3px; // Un poco más gruesa para que se note el blur
-        background: linear-gradient(
-          to right,
-          rgba(218, 41, 28, 0.6),
-          rgba(244, 228, 0, 0.6),
-          rgba(0, 121, 52, 0.6)
-        );
-        opacity: 0;
-        transform: scaleX(0);
-        transition: all 0.4s ease;
-        filter: blur(1px); // Agregamos un efecto blur sutil
-      }
-
-      &:hover {
-        &::after {
-          opacity: 0.8;
-          transform: scaleX(1);
-        }
-      }
-    }
-  }
-
-  .menu-btn {
-    margin-right: 0.5rem;
-  }
-
-  .mobile-search-btn {
-    display: none;
-  }
-
-  // Estilos para el buscador desktop
-  .desktop-search {
-    flex: 1;
-    max-width: 600px;
-    margin: 0;
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
-  // Contenedor del buscador mobile
-  .mobile-search-container {
-    display: none;
-    position: relative;
-
-    @media (max-width: 768px) {
-      display: block;
-    }
-
-    .mobile-search-toggle {
-      i {
-        font-size: 24px;
-      }
-    }
-  }
-
-  // Estilos para el buscador mobile
-  .mobile-search {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: var(--header-height);
-    background: var(--header-bg-color);
-    z-index: 1100;
-    padding: 0 1rem;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease-in-out;
-
-    &.active {
-      display: flex;
-      align-items: center;
-      transform: translateY(0);
-    }
-
-    .search-wrapper {
-      width: 100%;
-    }
-
-    .close-search {
-      i {
-        font-size: 24px;
-      }
-    }
-  }
-
-  // Ajustes responsive adicionales
-  @media (max-width: 768px) {
-    .header-left {
-      flex: 1;
-    }
-
-    .app-title {
-      font-size: 1.2rem;
-    }
-
-    .search-input-wrapper {
-      padding: 0 12px;
-    }
-  }
-
-  // Ajustes adicionales para pantallas más pequeñas
-  @media (max-width: 480px) {
-    .header {
-      padding: 0 1rem;
-    }
-
-    .app-title {
-      font-size: 1rem !important;
-    }
-  }
-
-  .search-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 640px;
-  }
-
-  .search-border {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 40px;
-    padding: 2px;
-    background: linear-gradient(
-      45deg,
-      rgba(218, 41, 28, 0.5),
-      rgba(244, 228, 0, 0.5),
-      rgba(0, 121, 52, 0.5)
-    );
-    opacity: 0.3;
-    transition: opacity 0.3s ease;
-  }
-
-  .search-input-wrapper {
-    position: relative;
-    width: 100%;
-    background: var(--header-bg-color);
-    border-radius: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    border: 1px solid var(--header-border-color);
-  }
-
-  .input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    height: 100%;
-    padding: 0 48px;
-    font-size: 16px;
+    font-size: 1.25rem;
+    font-weight: 500;
     color: var(--header-text-color);
-
-    &::placeholder {
-      color: var(--header-text-color);
-      :root.dark-mode & {
-        color: rgba(255, 255, 255, 0.5);
-      }
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .search-wrapper:hover .search-border,
-  .search-wrapper:focus-within .search-border {
-    opacity: 0.6;
-  }
-
-  .search-icon,
-  .filter-icon {
-    position: absolute;
-    font-size: 20px;
-    color: var(--header-text-color);
-    opacity: 0.7;
-  }
-
-  .search-icon {
-    left: 16px;
-  }
-
-  .filter-button {
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: -8px;
-
-    i {
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.3s ease;
-    }
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .notification-btn {
-    position: relative;
   }
 }
 
-// Menu Styles
-::ng-deep {
-  .notifications-menu {
-    max-width: 300px;
-    min-width: 250px;
-    padding: 8px 0;
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-    .unread {
-      background-color: rgba(0, 0, 0, 0.04);
-      font-weight: 500;
+.app-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  .title-text {
+    color: var(--header-text-color);
+    padding: 0 8px;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--header-hover-color);
+
+      &::after {
+        opacity: 0.8;
+        transform: scaleX(1);
+      }
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(
+        to right,
+        var(--bolivia-red),
+        var(--bolivia-yellow),
+        var(--bolivia-green)
+      );
+      opacity: 0;
+      transform: scaleX(0);
+      transition: all 0.4s;
+      filter: blur(1px);
+    }
+  }
+}
+
+.desktop-search {
+  flex: 1;
+  max-width: 600px;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.mobile-search-container {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.mobile-search {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--header-bg-color);
+  z-index: 1100;
+  padding: 0 1rem;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+
+  &.active {
+    display: flex;
+    align-items: center;
+    transform: translateY(0);
+  }
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+}
+
+.search-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  padding: 2px;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.search-input-wrapper {
+  background: var(--header-bg-color);
+  border-radius: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border: 1px solid var(--header-border-color);
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  height: 100%;
+  padding: 0 48px;
+  font-size: 16px;
+  color: var(--header-text-color);
+
+  &::placeholder {
+    color: var(--header-text-color);
+    .dark-mode & {
+      color: rgba(255, 255, 255, 0.5);
     }
   }
 
-  .mat-mdc-menu-panel {
-    margin-top: 8px;
+  &:focus {
+    outline: none;
   }
+}
+
+.search-wrapper:hover .search-border,
+.search-wrapper:focus-within .search-border {
+  opacity: 0.6;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 20px;
+  color: var(--header-text-color);
+  opacity: 0.7;
+}
+
+.create-post-btn,
+.notification-btn,
+.avatar-button,
+.mobile-search-toggle,
+.close-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  i.bx {
+    font-size: 24px;
+    transition: color 0.3s;
+  }
+}
+
+.login-btn,
+button[mat-raised-button] {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+.notifications-menu {
+  max-width: 300px;
+  min-width: 250px;
+  padding: 8px 0;
 
   .notifications-container {
     padding: 8px 16px;
@@ -352,50 +241,82 @@
     }
   }
 
-  .mat-mdc-menu-item {
-    height: 48px;
-    line-height: 48px;
-
-    i {
-      margin-right: 8px;
-      font-size: 1.2rem;
-      vertical-align: middle;
-    }
-
-    .mat-icon {
-      margin-right: 8px;
-      vertical-align: middle;
-    }
+  .unread {
+    background: rgba(0, 0, 0, 0.04);
+    font-weight: 500;
   }
 }
 
-// Icon Styles
-i.bx {
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--header-text-color);
-  transition: color 0.3s ease;
-}
+::ng-deep .mat-mdc-menu-item {
+  height: 48px;
+  line-height: 48px;
 
-// Estilos específicos para los botones principales
-.notification-btn,
-.avatar-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-
-  i.bx {
-    margin: 0;
-    font-size: 24px;
-  }
-}
-
-.mat-mdc-menu-item {
   i.bx {
     margin-right: 8px;
+    font-size: 1.2rem;
     vertical-align: middle;
+    color: var(--header-text-color);
+  }
+}
+
+@media (max-width: 768px) {
+  .header-left {
+    flex: 1;
+  }
+
+  .app-title {
+    font-size: 1.2rem;
+  }
+
+  .search-input-wrapper {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 0.75rem;
+  }
+
+  .header-left {
+    gap: 0.5rem;
+    min-width: unset;
+  }
+
+  .app-title {
+    font-size: 1rem;
+  }
+
+  .header-right {
+    gap: 0.25rem;
+  }
+
+  .login-btn,
+  button[mat-raised-button] {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .header {
+    padding: 0 0.5rem;
+  }
+
+  .logo {
+    height: 32px;
+  }
+
+  .create-post-btn,
+  .notification-btn,
+  .avatar-button,
+  .mobile-search-toggle,
+  .close-search {
+    width: 36px;
+    height: 36px;
+
+    i.bx {
+      font-size: 20px;
+    }
   }
 }

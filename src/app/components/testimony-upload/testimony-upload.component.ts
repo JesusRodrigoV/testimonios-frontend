@@ -24,7 +24,7 @@ export default class TestimonyUploadComponent {
       eventId: undefined,
       latitude: undefined,
       longitude: undefined,
-      mediaUrl: "",
+      url: "",
       duration: undefined,
       format: "",
     };
@@ -39,10 +39,8 @@ export default class TestimonyUploadComponent {
   success: string | null = null;
   submitting = false;
 
-  constructor(
-    private http: HttpClient,
-    private testimonyService: TestimonioService,
-  ) {}
+  private http = inject(HttpClient);
+  private testimonyService = inject(TestimonioService);
 
   async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
@@ -78,6 +76,11 @@ export default class TestimonyUploadComponent {
         duration: result.duration,
         format: result.format,
       };
+      this.testimony.url = result.secure_url;
+      this.testimony.duration = result.duration
+        ? Math.round(result.duration)
+        : undefined;
+      this.testimony.format = this.mediaType || "audio";
       this.error = null;
     } catch (error) {
       console.error("Upload error details:", error);
@@ -115,12 +118,12 @@ export default class TestimonyUploadComponent {
     this.success = null;
 
     const payload: TestimonyInput = {
-      ...this.testimony,
-      mediaUrl: this.cloudinaryResult.secure_url,
-      duration: this.cloudinaryResult.duration
-        ? Math.round(this.cloudinaryResult.duration)
-        : undefined,
-      format: this.mediaType || "audio",
+      title: this.testimony.title,
+      description: this.testimony.description,
+      content: this.testimony.content,
+      url: this.testimony.url,
+      duration: this.testimony.duration,
+      format: this.testimony.format,
       tags: this.testimony.tagsInput
         ? this.testimony.tagsInput
             .split(",")
@@ -133,6 +136,14 @@ export default class TestimonyUploadComponent {
             .map((cat) => cat.trim())
             .filter((cat) => cat)
         : [],
+      eventId:
+        this.testimony.eventId === null ? undefined : this.testimony.eventId,
+      latitude:
+        this.testimony.latitude === null ? undefined : this.testimony.latitude,
+      longitude:
+        this.testimony.longitude === null
+          ? undefined
+          : this.testimony.longitude,
     };
 
     console.log("Submitting testimony payload:", payload);
@@ -148,15 +159,15 @@ export default class TestimonyUploadComponent {
         console.error("Backend submission error:", err);
         let errorMessage =
           err.message || "Error al enviar testimonio al servidor";
-        if (
-          err.message.includes("url_medio") ||
-          err.message.includes("mediaUrl")
-        ) {
+        if (err.message.includes("url")) {
           errorMessage =
             "Error con el archivo multimedia. Por favor, intenta subir el archivo nuevamente.";
         } else if (err.message.includes("eventId")) {
           errorMessage =
             "Error con el ID del evento. Déjalo en blanco si no aplica.";
+        } else if (err.message.includes("Invalid type")) {
+          errorMessage =
+            "Error en los datos numéricos (evento, latitud o longitud). Déjalos en blanco si no aplican.";
         }
         this.error = errorMessage;
         this.submitting = false;
@@ -174,7 +185,7 @@ export default class TestimonyUploadComponent {
       eventId: undefined,
       latitude: undefined,
       longitude: undefined,
-      mediaUrl: "",
+      url: "",
       duration: undefined,
       format: "",
     };
