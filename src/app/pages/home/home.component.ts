@@ -2,11 +2,11 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { HeroSectionComponent } from "./components/hero-section";
-import { TestimonioService } from "@app/services/testimonio/testimonio.service";
-import { Testimony } from "@app/models/testimonio.model";
-import { CacheService } from "@app/services/cache";
-import { TestimonyComponent } from "@app/features/testimony/testimony";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
+import { TestimonyComponent } from "@app/features/testimony/components/testimony";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
+import { TestimonioService } from "@app/core/services/testimonio";
+import { CacheService } from "@app/core/services/cache";
 
 @Component({
   selector: "app-home",
@@ -24,11 +24,8 @@ import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 export default class HomeComponent {
   highlightedTestimonies: Testimony[] = [];
   loading = false;
-
-  constructor(
-    private testimonioService: TestimonioService,
-    private cacheService: CacheService,
-  ) {}
+  private testimonioService = inject(TestimonioService);
+  private cacheService = inject(CacheService);
 
   ngOnInit() {
     this.loadHighlightedTestimonies();

@@ -2,7 +2,7 @@ import { DatePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Testimony } from "@app/models/testimonio.model";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
 
 @Component({
   selector: "app-testimony-dialog",

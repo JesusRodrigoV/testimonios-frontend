@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Testimony } from "@app/models/testimonio.model";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
 
 @Injectable({
   providedIn: "root",

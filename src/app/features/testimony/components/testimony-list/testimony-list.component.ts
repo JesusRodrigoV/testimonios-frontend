@@ -15,7 +15,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { Testimony } from "@app/models/testimonio.model";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
 
 @Component({
   selector: "app-testimony-list",

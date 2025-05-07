@@ -5,7 +5,7 @@ import {
   Testimony,
   TestimonyVersion,
   MapPoint,
-} from "@app/models/testimonio.model";
+} from "@app/features/testimony/models/testimonio.model";
 import { Observable, catchError, throwError } from "rxjs";
 import { environment } from "src/environment/environment";
 

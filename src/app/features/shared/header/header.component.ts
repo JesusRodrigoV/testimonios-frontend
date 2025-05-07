@@ -16,7 +16,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatBadgeModule } from "@angular/material/badge";
 import { AuthStore } from "@app/auth.store";
 import { Router, RouterLink } from "@angular/router";
-import { GoldenDirective } from "@app/directives/golden.directive";
+import { GoldenDirective } from "@app/core/directives/golden.directive";
 
 export const Rol = {
   ADMIN: 1,

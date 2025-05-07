@@ -5,7 +5,7 @@ import {
   Testimony,
   TestimonyInput,
   TestimonyVersion,
-} from "@app/models/testimonio.model";
+} from "@app/features/testimony/models/testimonio.model";
 import { catchError, Observable, throwError } from "rxjs";
 import { environment } from "src/environment/environment";
 

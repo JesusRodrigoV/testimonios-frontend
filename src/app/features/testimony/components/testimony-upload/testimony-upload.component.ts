@@ -16,14 +16,14 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { TestimonyInput } from "@app/models/testimonio.model";
-import { TestimonioService } from "@app/services/testimonio/testimonio.service";
+import { TestimonyInput } from "@app/features/testimony/models/testimonio.model";
 import { environment } from "src/environment/environment";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { FormControl } from "@angular/forms";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { HttpClient } from "@angular/common/http";
+import { TestimonioService } from "@app/core/services/testimonio";
 
 @Component({
   selector: "app-testimony-upload",

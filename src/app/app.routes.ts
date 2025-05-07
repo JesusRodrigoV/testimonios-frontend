@@ -4,7 +4,7 @@ import { authGuard, loginGuard } from "./guards/auth";
 export const routes: Routes = [
   {
     path: "",
-    loadComponent: () => import("./layout/layout.component"),
+    loadComponent: () => import("./pages/layout/layout.component"),
     children: [
       {
         path: "profile",
@@ -28,12 +28,12 @@ export const routes: Routes = [
       {
         path: "explore",
         loadComponent: () =>
-          import("./features/testimony/testimony-feed/testimony-feed.component"),
+          import("./features/testimony/components/testimony-feed/testimony-feed.component"),
       },
       {
         path: "submit-testimony",
         loadComponent: () =>
-          import("./features/testimony/testimony-upload/testimony-upload.component"),
+          import("./features/testimony/components/testimony-upload/testimony-upload.component"),
         canActivate: [authGuard],
       },
       {

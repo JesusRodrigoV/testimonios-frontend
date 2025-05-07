@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { FooterComponent } from "../features/shared/footer";
-import { HeaderComponent } from "../features/shared/header";
-import { ThemeService } from "../services/theme";
+import { ThemeService } from "@app/core/services/theme";
+import { FooterComponent } from "@app/features/shared/footer";
+import { HeaderComponent } from "@app/features/shared/header";
+
 
 @Component({
   selector: "app-layout",

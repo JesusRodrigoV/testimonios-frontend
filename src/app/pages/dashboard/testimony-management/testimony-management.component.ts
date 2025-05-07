@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { Testimony } from "@app/models/testimonio.model";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { Subject, takeUntil } from "rxjs";
 import { TestimonioService } from "../services";
 import { TestimonyDialogComponent } from "./testimony-dialog";

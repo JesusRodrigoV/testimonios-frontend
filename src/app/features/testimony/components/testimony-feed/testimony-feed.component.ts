@@ -3,15 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Testimony } from "@app/models/testimonio.model";
-import { TestimonioService } from "@app/services/testimonio/testimonio.service";
-import { TestimonyComponent } from "../testimony/";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
+import { TestimonyComponent } from "../testimony/testimony.component";
+import { TestimonioService } from "@app/core/services/testimonio";
 
 @Component({
   selector: "app-testimony-feed",
@@ -31,8 +32,7 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
 
   @ViewChild("loadMoreTrigger", { static: false }) loadMoreTrigger!: ElementRef;
-
-  constructor(private testimonioService: TestimonioService) { }
+  private testimonioService = inject(TestimonioService);
 
   ngOnInit() {
     this.loadTestimonies();
