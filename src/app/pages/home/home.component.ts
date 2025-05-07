@@ -5,7 +5,7 @@ import { HeroSectionComponent } from "./components/hero-section";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyComponent } from "@app/features/testimony/components/testimony";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
-import { TestimonioService } from "@app/core/services/testimonio";
+import { TestimonioService } from "@app/features/testimony/services";
 import { CacheService } from "@app/core/services/cache";
 
 @Component({

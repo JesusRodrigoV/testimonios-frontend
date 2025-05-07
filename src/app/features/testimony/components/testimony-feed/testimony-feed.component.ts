@@ -12,7 +12,7 @@ import { FormsModule } from "@angular/forms";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { TestimonyComponent } from "../testimony/testimony.component";
-import { TestimonioService } from "@app/core/services/testimonio";
+import { TestimonioService } from "@app/features/testimony/services";
 
 @Component({
   selector: "app-testimony-feed",

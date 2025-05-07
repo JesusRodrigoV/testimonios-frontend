@@ -147,7 +147,7 @@ export class TestimonioService {
     return this.http
       .get<
         { id: number; name: string; description: string }[]
-      >(`${this.apiUrl}/categories`)
+      >(`${this.apiUrl}/categorias`)
       .pipe(
         catchError((error) => {
           return throwError(

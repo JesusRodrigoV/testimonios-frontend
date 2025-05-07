@@ -23,7 +23,7 @@ import { map, startWith } from "rxjs/operators";
 import { FormControl } from "@angular/forms";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { HttpClient } from "@angular/common/http";
-import { TestimonioService } from "@app/core/services/testimonio";
+import { TestimonioService } from "@app/features/testimony/services";
 
 @Component({
   selector: "app-testimony-upload",
