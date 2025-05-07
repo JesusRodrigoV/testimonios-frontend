@@ -1,0 +1,131 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.custom-input,
+textarea {
+  width: 100%;
+  background: var(--input-bg);
+  border: none;
+  outline: none;
+  padding: 12px 48px 12px 40px;
+  font-size: 15px;
+  border-radius: 12px;
+  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.1);
+  color: var(--text);
+  transition: box-shadow 0.2s ease;
+  resize: vertical;
+
+  &::placeholder {
+    color: rgba(var(--text-rgb), 0.5);
+  }
+
+  &:focus {
+    box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.2), 0 0 4px rgba(52, 152, 219, 0.3);
+  }
+}
+
+textarea {
+  padding: 12px 40px;
+  min-height: 60px;
+}
+
+mat-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--input-icon);
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.visibility-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  z-index: 2;
+
+  mat-icon {
+    color: var(--input-icon);
+    font-size: 18px;
+    position: static;
+  }
+}
+
+.error-text {
+  font-size: 0.8rem;
+  color: #ef4444;
+  margin-left: 12px;
+  opacity: 0.85;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.action-button {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  font-size: 0.95rem;
+  background: linear-gradient(45deg, var(--accent), var(--accent-dark));
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover:not([disabled]) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.login-link {
+  margin-top: 0.75rem;
+  text-align: center;
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.error-message {
+  margin-top: 0.5rem;
+  text-align: center;
+  padding: 0.6rem;
+  border-radius: 8px;
+  background: var(--error-bg);
+  color: var(--text);
+  font-size: 0.85rem;
+}

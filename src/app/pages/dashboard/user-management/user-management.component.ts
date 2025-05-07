@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { User } from "@app/models/user.model";
+import { User } from "@app/features/auth/models/user.model";
 import { Subject, takeUntil } from "rxjs";
 import { AdminService } from "../services";
 import { UserDialogComponent } from "./user-dialog";

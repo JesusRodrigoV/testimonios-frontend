@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { FooterComponent } from "../components/footer";
-import { HeaderComponent } from "../components/header";
+import { FooterComponent } from "../features/shared/footer";
+import { HeaderComponent } from "../features/shared/header";
 import { ThemeService } from "../services/theme";
 
 @Component({

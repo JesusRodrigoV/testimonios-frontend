@@ -5,8 +5,8 @@ import { HeroSectionComponent } from "./components/hero-section";
 import { TestimonioService } from "@app/services/testimonio/testimonio.service";
 import { Testimony } from "@app/models/testimonio.model";
 import { CacheService } from "@app/services/cache";
-import { SpinnerComponent } from "@app/components/ui/spinner";
-import { TestimonyComponent } from "@app/components/testimony";
+import { TestimonyComponent } from "@app/features/testimony/testimony";
+import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 
 @Component({
   selector: "app-home",

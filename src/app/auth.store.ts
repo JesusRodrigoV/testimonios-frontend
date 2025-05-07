@@ -6,8 +6,8 @@ import {
   withState,
   patchState,
 } from "@ngrx/signals";
-import { AuthService } from "./services/auth";
-import { LoginCredentials, AuthState } from "@app/models/user.model";
+import { AuthService } from "./features/auth/services/auth";
+import { LoginCredentials, AuthState } from "@app/features/auth/models/user.model";
 import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { catchError, firstValueFrom, map, of } from "rxjs";
