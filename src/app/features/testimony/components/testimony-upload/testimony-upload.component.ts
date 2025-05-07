@@ -74,12 +74,10 @@ export default class TestimonyUploadComponent implements OnInit {
   success: string | null = null;
   submitting = false;
 
-  // Listas cargadas desde el backend
-  categories: { id: number; name: string; description: string }[] = [];
+  categories: { id_categoria: number; nombre: string; descripcion: string }[] = [];
   tags: { id: number; name: string }[] = [];
   events: { id: number; name: string; description: string; date: string }[] = [];
 
-  // Para el autocompletado de etiquetas
   tagCtrl = new FormControl<string>("");
   filteredTags: Observable<string[]>;
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -89,7 +87,6 @@ export default class TestimonyUploadComponent implements OnInit {
   private testimonyService = inject(TestimonioService);
 
   constructor() {
-    // Configuramos el autocompletado de etiquetas
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(""),
       map((value) => this._filterTags(value || "")),
@@ -101,17 +98,16 @@ export default class TestimonyUploadComponent implements OnInit {
   }
 
   loadMetadata(): void {
-    // Cargar categorías
     this.testimonyService.getAllCategories().subscribe({
       next: (data) => {
         this.categories = data;
+        console.log("Categorías cargadas:", this.categories);
       },
       error: (err) => {
         this.error = "Error al cargar categorías: " + err.message;
       },
     });
 
-    // Cargar etiquetas
     this.testimonyService.getAllTags().subscribe({
       next: (data) => {
         this.tags = data;
@@ -122,7 +118,6 @@ export default class TestimonyUploadComponent implements OnInit {
       },
     });
 
-    // Cargar eventos
     this.testimonyService.getAllEvents().subscribe({
       next: (data) => {
         this.events = data;
@@ -201,7 +196,6 @@ export default class TestimonyUploadComponent implements OnInit {
       return;
     }
 
-    // Validación personalizada para longitud mínima
     if (this.testimony.description.length < 5) {
       this.error = "La descripción debe tener al menos 5 caracteres";
       return;
@@ -287,7 +281,6 @@ export default class TestimonyUploadComponent implements OnInit {
     this.error = null;
   }
 
-  // Métodos para manejar etiquetas
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || "").trim();
     if (value && !this.testimony.selectedTags.includes(value)) {

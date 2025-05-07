@@ -4,7 +4,7 @@
   <div class="media">
     @defer (on viewport) {
       <video
-        *ngIf="testimony.mediaType === 'Video'"
+        *ngIf="testimony.mediaType === 'video'"
         [src]="testimony.url"
         controls
         loading="lazy"

@@ -13,12 +13,13 @@ import { environment } from "src/environment/environment";
   providedIn: "root",
 })
 export class TestimonioService {
-  private apiUrl = `${environment.apiUrl}/media`;
+  private apiUrl = `${environment.apiUrl}`;
+  private mediaUrl = this.apiUrl + "/media"
 
   constructor(private http: HttpClient) {}
 
   createTestimony(data: TestimonyInput): Observable<Testimony> {
-    return this.http.post<Testimony>(this.apiUrl, data).pipe(
+    return this.http.post<Testimony>(this.mediaUrl, data).pipe(
       catchError((error) => {
         console.error("Create testimony error:", error);
         const errorMessage =
@@ -29,7 +30,7 @@ export class TestimonioService {
   }
 
   getTestimony(id: number): Observable<Testimony> {
-    return this.http.get<Testimony>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.get<Testimony>(`${this.mediaUrl}/${id}`).pipe(
       catchError((error) => {
         return throwError(
           () => new Error(error.message || "Testimonio no encontrado"),
@@ -80,7 +81,7 @@ export class TestimonioService {
         total: number;
         page: number;
         limit: number;
-      }>(this.apiUrl, { params: httpParams })
+      }>(this.mediaUrl, { params: httpParams })
       .pipe(
         catchError((error) => {
           return throwError(
@@ -98,7 +99,7 @@ export class TestimonioService {
       .post<{
         id: number;
         status: string;
-      }>(`${this.apiUrl}/validate`, { testimonyId, approve })
+      }>(`${this.mediaUrl}/validate`, { testimonyId, approve })
       .pipe(
         catchError((error) => {
           return throwError(
@@ -110,7 +111,7 @@ export class TestimonioService {
 
   getTestimonyVersions(id: number): Observable<TestimonyVersion[]> {
     return this.http
-      .get<TestimonyVersion[]>(`${this.apiUrl}/${id}/versions`)
+      .get<TestimonyVersion[]>(`${this.mediaUrl}/${id}/versions`)
       .pipe(
         catchError((error) => {
           return throwError(
@@ -121,7 +122,7 @@ export class TestimonioService {
   }
 
   getTestimonyMap(): Observable<MapPoint[]> {
-    return this.http.get<MapPoint[]>(`${this.apiUrl}/map/data`).pipe(
+    return this.http.get<MapPoint[]>(`${this.mediaUrl}/map/data`).pipe(
       catchError((error) => {
         return throwError(
           () => new Error(error.message || "Error al obtener datos del mapa"),
@@ -131,7 +132,7 @@ export class TestimonioService {
   }
 
   deleteTestimony(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.delete<{ message: string }>(`${this.mediaUrl}/${id}`).pipe(
       catchError((error) => {
         return throwError(
           () => new Error(error.message || "Error al eliminar testimonio"),
@@ -142,12 +143,12 @@ export class TestimonioService {
 
   // Nuevos métodos para categorías, etiquetas y eventos
   getAllCategories(): Observable<
-    { id: number; name: string; description: string }[]
+    { id_categoria: number; nombre: string; descripcion: string }[]
   > {
     return this.http
       .get<
-        { id: number; name: string; description: string }[]
-      >(`${this.apiUrl}/categorias`)
+        { id_categoria: number; nombre: string; descripcion: string }[]
+      >(`${this.apiUrl}/categories`)
       .pipe(
         catchError((error) => {
           return throwError(
