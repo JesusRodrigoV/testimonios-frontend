@@ -5,7 +5,6 @@
     class="upload-form"
     (ngSubmit)="submitTestimony(uploadForm)"
   >
-    <!-- Subida de archivo -->
     <div class="form-group">
       <div class="file-upload">
         <input
@@ -26,18 +25,15 @@
           Elegir archivo (video o audio)
         </button>
       </div>
-      <div *ngIf="mediaPreview" class="media-preview">
-        <video
-          *ngIf="mediaType === 'video'"
-          [src]="mediaPreview"
-          controls
-        ></video>
-        <audio
-          *ngIf="mediaType === 'audio'"
-          [src]="mediaPreview"
-          controls
-        ></audio>
-      </div>
+      @if (mediaPreview) {
+        <div class="media-preview">
+          @if (mediaType === "video") {
+            <video [src]="mediaPreview" controls></video>
+          } @else if (mediaType === "audio") {
+            <audio [src]="mediaPreview" controls></audio>
+          }
+        </div>
+      }
     </div>
 
     <!-- Título -->
@@ -60,7 +56,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Descripción -->
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Descripción</mat-label>
@@ -81,7 +76,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Contenido -->
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Contenido</mat-label>
@@ -177,30 +171,13 @@
 
     <!-- Ubicación -->
     <div class="form-group location">
-      <mat-form-field appearance="outline">
-        <mat-label>Latitud (opcional)</mat-label>
-        <input
-          matInput
-          type="number"
-          id="latitude"
-          [(ngModel)]="testimony.latitude"
-          name="latitude"
-          placeholder="Latitud"
-          step="any"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Longitud (opcional)</mat-label>
-        <input
-          matInput
-          type="number"
-          id="longitude"
-          [(ngModel)]="testimony.longitude"
-          name="longitude"
-          placeholder="Longitud"
-          step="any"
-        />
-      </mat-form-field>
+      <mat-checkbox
+        [(ngModel)]="shareLocation"
+        name="shareLocation"
+        (change)="onShareLocationChange()"
+      >
+        Compartir mi ubicación actual
+      </mat-checkbox>
     </div>
 
     <!-- Botón de enviar -->
@@ -212,20 +189,5 @@
     >
       {{ submitting ? "Subiendo..." : "Subir Testimonio" }}
     </button>
-
-    <!-- Mensajes de error y éxito -->
-    <div *ngIf="error" class="error-message">
-      {{ error }}
-      <button
-        mat-button
-        color="warn"
-        type="button"
-        class="retry-button"
-        (click)="clearError()"
-      >
-        Reintentar
-      </button>
-    </div>
-    <div *ngIf="success" class="success-message">{{ success }}</div>
   </form>
 </div>

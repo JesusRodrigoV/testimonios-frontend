@@ -9,7 +9,6 @@ export interface Testimony {
   longitude?: number | null;
   createdAt: string;
   status: string;
-  mediaType: string; // Changed from 'format'
   author: string;
   categories: string[];
   tags: string[];

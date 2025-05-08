@@ -22,8 +22,9 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { FormControl } from "@angular/forms";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { HttpClient } from "@angular/common/http";
 import { TestimonioService } from "@app/features/testimony/services";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-testimony-upload",
@@ -41,6 +42,8 @@ import { TestimonioService } from "@app/features/testimony/services";
     MatChipsModule,
     MatAutocompleteModule,
     MatIconModule,
+    MatCheckboxModule,
+    MatSnackBarModule,
   ],
   templateUrl: "./testimony-upload.component.html",
   styleUrl: "./testimony-upload.component.scss",
@@ -70,21 +73,22 @@ export default class TestimonyUploadComponent implements OnInit {
   } | null = null;
   mediaPreview: string | null = null;
   mediaType: "video" | "audio" | null = null;
-  error: string | null = null;
-  success: string | null = null;
+  shareLocation: boolean = false;
   submitting = false;
 
-  categories: { id_categoria: number; nombre: string; descripcion: string }[] = [];
+  categories: { id_categoria: number; nombre: string; descripcion: string }[] =
+    [];
   tags: { id: number; name: string }[] = [];
-  events: { id: number; name: string; description: string; date: string }[] = [];
+  events: { id: number; name: string; description: string; date: string }[] =
+    [];
 
   tagCtrl = new FormControl<string>("");
   filteredTags: Observable<string[]>;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   private tagsSubject = new BehaviorSubject<string[]>([]);
 
-  private http = inject(HttpClient);
   private testimonyService = inject(TestimonioService);
+  private snackBar = inject(MatSnackBar);
 
   constructor() {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
@@ -104,7 +108,11 @@ export default class TestimonyUploadComponent implements OnInit {
         console.log("Categorías cargadas:", this.categories);
       },
       error: (err) => {
-        this.error = "Error al cargar categorías: " + err.message;
+        this.openSnackBar(
+          "Error al cargar categorías: " + err.message,
+          "Cerrar",
+          "error",
+        );
       },
     });
 
@@ -114,7 +122,11 @@ export default class TestimonyUploadComponent implements OnInit {
         this.tagsSubject.next(data.map((tag) => tag.name));
       },
       error: (err) => {
-        this.error = "Error al cargar etiquetas: " + err.message;
+        this.openSnackBar(
+          "Error al cargar etiquetas: " + err.message,
+          "Cerrar",
+          "error",
+        );
       },
     });
 
@@ -123,7 +135,11 @@ export default class TestimonyUploadComponent implements OnInit {
         this.events = data;
       },
       error: (err) => {
-        this.error = "Error al cargar eventos: " + err.message;
+        this.openSnackBar(
+          "Error al cargar eventos: " + err.message,
+          "Cerrar",
+          "error",
+        );
       },
     });
   }
@@ -159,7 +175,6 @@ export default class TestimonyUploadComponent implements OnInit {
       );
       const result = await response.json();
       if (!response.ok) {
-        console.error("Cloudinary upload error:", result);
         throw new Error(
           result.error?.message || "Error al subir archivo a Cloudinary",
         );
@@ -174,40 +189,95 @@ export default class TestimonyUploadComponent implements OnInit {
         ? Math.round(result.duration)
         : undefined;
       this.testimony.format = this.mediaType || "audio";
-      this.error = null;
+      this.openSnackBar("Archivo subido exitosamente", "Cerrar", "success");
     } catch (error) {
       console.error("Upload error details:", error);
-      this.error =
+      const errorMessage =
         error instanceof Error ? error.message : "Error al subir archivo";
+      this.openSnackBar(errorMessage, "Reintentar", "error");
       this.cloudinaryResult = null;
       this.mediaPreview = null;
       this.mediaType = null;
     }
   }
 
+  onShareLocationChange(): void {
+    if (this.shareLocation) {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.testimony.latitude = position.coords.latitude;
+            this.testimony.longitude = position.coords.longitude;
+            this.openSnackBar(
+              "Ubicación obtenida exitosamente",
+              "Cerrar",
+              "success",
+            );
+          },
+          (error) => {
+            console.error("Geolocation error:", error);
+            this.shareLocation = false;
+            this.testimony.latitude = undefined;
+            this.testimony.longitude = undefined;
+            this.openSnackBar(
+              "No se pudo obtener la ubicación: " + error.message,
+              "Cerrar",
+              "error",
+            );
+          },
+          { enableHighAccuracy: true, timeout: 10000 },
+        );
+      } else {
+        this.shareLocation = false;
+        this.openSnackBar(
+          "La geolocalización no está disponible en este navegador",
+          "Cerrar",
+          "error",
+        );
+      }
+    } else {
+      this.testimony.latitude = undefined;
+      this.testimony.longitude = undefined;
+    }
+  }
+
   submitTestimony(form: NgForm): void {
     if (!this.cloudinaryResult) {
-      this.error = "Por favor, sube un archivo antes de enviar";
+      this.openSnackBar(
+        "Por favor, sube un archivo antes de enviar",
+        "Cerrar",
+        "error",
+      );
       return;
     }
 
     if (form.invalid) {
-      this.error = "Por favor, completa todos los campos requeridos";
+      this.openSnackBar(
+        "Por favor, completa todos los campos requeridos",
+        "Cerrar",
+        "error",
+      );
       return;
     }
 
     if (this.testimony.description.length < 5) {
-      this.error = "La descripción debe tener al menos 5 caracteres";
+      this.openSnackBar(
+        "La descripción debe tener al menos 5 caracteres",
+        "Cerrar",
+        "error",
+      );
       return;
     }
     if (this.testimony.content && this.testimony.content.length < 5) {
-      this.error = "El contenido debe tener al menos 5 caracteres";
+      this.openSnackBar(
+        "El contenido debe tener al menos 5 caracteres",
+        "Cerrar",
+        "error",
+      );
       return;
     }
 
     this.submitting = true;
-    this.error = null;
-    this.success = null;
 
     const payload: TestimonyInput = {
       title: this.testimony.title,
@@ -232,7 +302,11 @@ export default class TestimonyUploadComponent implements OnInit {
 
     this.testimonyService.createTestimony(payload).subscribe({
       next: () => {
-        this.success = "Testimonio subido exitosamente";
+        this.openSnackBar(
+          "Testimonio subido exitosamente",
+          "Cerrar",
+          "success",
+        );
         this.submitting = false;
         this.resetForm();
         form.resetForm();
@@ -251,7 +325,7 @@ export default class TestimonyUploadComponent implements OnInit {
           errorMessage =
             "Error en los datos numéricos (evento, latitud o longitud). Déjalos en blanco si no aplican.";
         }
-        this.error = errorMessage;
+        this.openSnackBar(errorMessage, "Reintentar", "error");
         this.submitting = false;
       },
     });
@@ -274,16 +348,21 @@ export default class TestimonyUploadComponent implements OnInit {
     this.cloudinaryResult = null;
     this.mediaPreview = null;
     this.mediaType = null;
+    this.shareLocation = false;
     this.tagCtrl.setValue("");
   }
 
   clearError(): void {
-    this.error = null;
+    this.snackBar.dismiss();
   }
 
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || "").trim();
-    if (value && !this.testimony.selectedTags.includes(value)) {
+    if (
+      value &&
+      this.testimony &&
+      !this.testimony.selectedTags.includes(value)
+    ) {
       this.testimony.selectedTags.push(value);
     }
     event.chipInput!.clear();
@@ -303,5 +382,19 @@ export default class TestimonyUploadComponent implements OnInit {
       this.testimony.selectedTags.push(value);
     }
     this.tagCtrl.setValue("");
+  }
+
+  openSnackBar(
+    message: string,
+    action: string,
+    type: "success" | "error",
+  ): void {
+    this.snackBar.open(message, action, {
+      duration: type === "success" ? 3000 : 5000,
+      panelClass:
+        type === "success" ? ["snackbar-success"] : ["snackbar-error"],
+      verticalPosition: "bottom",
+      horizontalPosition: "center",
+    });
   }
 }

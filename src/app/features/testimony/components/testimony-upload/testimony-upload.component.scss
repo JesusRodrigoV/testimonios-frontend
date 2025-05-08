@@ -1,5 +1,4 @@
 :host {
-  // Colores modo claro
   --background-color: #f5f5f5;
   --text-color: #333;
   --primary-color: #3f51b5;
@@ -10,7 +9,6 @@
   --media-background: transparent;
 
   :root.dark-mode & {
-    // Colores modo oscuro
     --background-color: #424242;
     --text-color: #f5f5f5;
     --primary-color: #7986cb;
@@ -39,85 +37,71 @@
     .media-preview audio {
       background-color: var(--media-background);
     }
+  }
 
-    .error-message {
-      color: var(--error-color);
+  .upload-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group.location {
+    flex-direction: column;
+    gap: 1rem;
+
+    mat-checkbox {
+      margin-bottom: 0.5rem;
     }
 
-    .success-message {
-      color: var(--success-color);
+    .location-inputs {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+
+      mat-form-field {
+        flex: 1;
+      }
     }
   }
-}
 
-// El resto de tus estilos (sin colores) permanecen igual:
-.upload-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-}
+  .media-preview {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
 
-h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
+    video,
+    audio {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 4px;
+    }
+  }
 
-.upload-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group.location {
-  flex-direction: row;
-  gap: 1rem;
-  
   mat-form-field {
-    flex: 1;
+    width: 100%;
+  }
+
+  button[type="submit"] {
+    align-self: center;
+    padding: 0.5rem 2rem;
+    margin-top: 1rem;
   }
 }
 
-.media-preview {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  
-  video, audio {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 4px;
-  }
-}
-
-mat-form-field {
-  width: 100%;
-}
-
-button[type="submit"] {
-  align-self: center;
-  padding: 0.5rem 2rem;
-  margin-top: 1rem;
-}
-
-.error-message,
-.success-message {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.error-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.retry-button {
-  padding: 0.25rem 1rem;
-}
