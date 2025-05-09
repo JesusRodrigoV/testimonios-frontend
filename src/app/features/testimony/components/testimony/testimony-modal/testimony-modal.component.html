@@ -1,0 +1,45 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h2>{{ testimony.title }}</h2>
+    <button mat-icon-button (click)="closeModal()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="description">{{ testimony.description }}</p>
+    <div class="media">
+      @if (testimony.format === 'Video') {
+        <video [src]="testimony.url" controls></video>
+      } @else if (testimony.format === 'Audio') {
+        <audio [src]="testimony.url" controls></audio>
+      } @else if (testimony.format === 'Texto') {
+        <p>{{ testimony.content }}</p>
+      }
+    </div>
+    <div class="meta">
+      <p>Subido por: {{ testimony.author }}</p>
+      <p>Fecha: {{ testimony.createdAt | date: 'medium' }}</p>
+      <p>Categorías: {{ testimony.categories.join(', ') || 'Ninguna' }}</p>
+      <p>Etiquetas: {{ testimony.tags.join(', ') || 'Ninguna' }}</p>
+      <p *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
+      <p *ngIf="testimony.latitude && testimony.longitude">
+        Ubicación: {{ testimony.latitude }}, {{ testimony.longitude }}
+      </p>
+    </div>
+    <div class="actions">
+      <button mat-icon-button class="action-btn">
+        <mat-icon>favorite_border</mat-icon>
+        <span>Me gusta</span>
+      </button>
+      <button mat-icon-button class="action-btn">
+        <mat-icon>bookmark_border</mat-icon>
+        <span>Guardar</span>
+      </button>
+      <button mat-icon-button class="action-btn">
+        <mat-icon>share</mat-icon>
+        <span>Compartir</span>
+      </button>
+    </div>
+    <app-testimony-comments [testimonyId]="testimony.id"></app-testimony-comments>
+  </div>
+</div>

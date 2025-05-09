@@ -1,0 +1,35 @@
+<div class="comments-section">
+  <h3>Comentarios</h3>
+  <div class="comments-list">
+    @if (isLoading) {
+    <div class="loading">
+      <axl-spinner />
+      <p>Cargando comentarios...</p>
+    </div>
+    } @else {
+
+    @for (comment of comments; track comment.id) {
+    <div class="comment">
+      <p class="comment-content">{{ comment.contenido }}</p>
+      <p class="comment-meta">
+        Por {{ comment.creado_por_id_usuario }} el
+        {{ comment.fecha_creacion | date: 'medium' }}
+      </p>
+    </div>
+    } @empty {
+    <p>No hay comentarios aún.</p>
+    }
+
+    }
+  </div>
+  <form class="comment-form" (ngSubmit)="submitComment()">
+    <mat-form-field appearance="outline" class="comment-input">
+      <mat-label>Escribe un comentario</mat-label>
+      <textarea matInput [(ngModel)]="newComment" name="comment" required minlength="5" maxlength="500"></textarea>
+      <mat-error *ngIf="formErrors['comment']">Mínimo 5 caracteres</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!newComment || newComment.length < 5">
+      Comentar
+    </button>
+  </form>
+</div>

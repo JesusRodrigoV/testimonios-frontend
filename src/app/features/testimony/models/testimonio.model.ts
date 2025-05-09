@@ -43,3 +43,12 @@ export interface MapPoint {
   title: string;
   coordinates: [number, number];
 } 
+
+export interface Comment {
+  id: number;
+  contenido: string;
+  id_estado: number;
+  fecha_creacion: string;
+  creado_por_id_usuario: number;
+  id_testimonio: number;
+}

@@ -1,0 +1,71 @@
+:host {
+  --background: #fff;
+  --text: #000;
+  --border: #e0e0e0;
+
+  :root.dark-mode & {
+    --background: #333;
+    --text: #fff;
+    --border: #555;
+  }
+}
+
+.comments-section {
+  background: var(--background);
+  color: var(--text);
+  padding: 16px;
+  border-top: 1px solid var(--border);
+
+  h3 {
+    margin: 0 0 16px;
+    font-size: 1.3rem;
+  }
+
+  .comments-list {
+    margin-bottom: 16px;
+
+    .comment {
+      border-bottom: 1px solid var(--border);
+      padding: 8px 0;
+
+      .comment-content {
+        font-size: 1rem;
+        margin: 0 0 4px;
+      }
+
+      .comment-meta {
+        font-size: 0.8rem;
+        color: var(--text);
+        opacity: 0.7;
+        margin: 0;
+      }
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100px;
+    }
+  }
+
+  .comment-form {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+
+    .comment-input {
+      flex: 1;
+
+      textarea {
+        min-height: 60px;
+        color: var(--text);
+      }
+    }
+
+    button {
+      height: 40px;
+    }
+  }
+}
