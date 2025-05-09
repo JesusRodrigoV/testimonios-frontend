@@ -3,12 +3,14 @@ export interface Testimony {
   title: string;
   description: string;
   content: string;
-  url: string; // Changed from 'url'
-  duration: number | null;
+  url: string;
+  duration: number;
   latitude?: number | null;
   longitude?: number | null;
   createdAt: string;
+  updatedAt?: string;
   status: string;
+  format: string;
   author: string;
   categories: string[];
   tags: string[];
@@ -18,15 +20,15 @@ export interface Testimony {
 export interface TestimonyInput {
   title: string;
   description: string;
-  content: string;
+  content?: string;
   tags?: string[];
   categories?: string[];
-  eventId?: number;
-  latitude?: number;
-  longitude?: number;
-  url: string; // Changed from 'url'
+  url: string;
   duration?: number;
-  format: string; // Expected to be 'video' or 'audio'
+  format: string;
+  eventId?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface TestimonyVersion {
@@ -40,4 +42,4 @@ export interface MapPoint {
   id: number;
   title: string;
   coordinates: [number, number];
-}
+} 

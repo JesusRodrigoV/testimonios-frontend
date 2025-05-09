@@ -27,9 +27,9 @@
       </div>
       @if (mediaPreview) {
         <div class="media-preview">
-          @if (mediaType === "video") {
+          @if (mediaType === "Video") {
             <video [src]="mediaPreview" controls></video>
-          } @else if (mediaType === "audio") {
+          } @else if (mediaType === "Audio") {
             <audio [src]="mediaPreview" controls></audio>
           }
         </div>

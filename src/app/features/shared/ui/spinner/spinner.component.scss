@@ -1,3 +1,13 @@
+:host {
+  --line-color: #000;
+  --transparent-color: #0000;
+
+  :host-context(.dark-mode) {
+    --line-color: #fff;
+    --transparent-color: #0000;
+  }
+}
+
 .loader {
   --_lineThickness: var(--line-thickness, 10%);
 
@@ -5,21 +15,25 @@
   height: 60px;
   background:
     linear-gradient(
-      #0000 calc(1 * 160% / 6),
-      #fff 0 calc(3 * 115% / 6),
-      #0000 0
+      var(--transparent-color) calc(1 * 160% / 6),
+      var(--line-color) 0 calc(3 * 115% / 6),
+      var(--transparent-color) 0
     ),
     linear-gradient(
-      #0000 calc(2 * 110% / 6),
-      #fff 0 calc(4 * 110% / 6),
-      #0000 0
+      var(--transparent-color) calc(2 * 110% / 6),
+      var(--line-color) 0 calc(4 * 110% / 6),
+      var(--transparent-color) 0
     ),
     linear-gradient(
-      #0000 calc(3 * 100% / 6),
-      #fff 0 calc(5 * 107.6% / 6),
-      #0000 0
+      var(--transparent-color) calc(3 * 100% / 6),
+      var(--line-color) 0 calc(5 * 107.6% / 6),
+      var(--transparent-color) 0
     ),
-    linear-gradient(#0000 calc(2 * 0% / 6), #fff 0 calc(4 * 22% / 6), #0000 0);
+    linear-gradient(
+      var(--transparent-color) calc(2 * 0% / 6),
+      var(--line-color) 0 calc(4 * 22% / 6),
+      var(--transparent-color) 0
+    );
   background-size: var(--_lineThickness) 400%;
   background-repeat: no-repeat;
   background-color: none;

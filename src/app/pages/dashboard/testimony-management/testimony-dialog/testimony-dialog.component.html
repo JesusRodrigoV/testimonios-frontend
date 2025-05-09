@@ -24,7 +24,7 @@
     @if (testimony.url) {
       <div class="media-container">
         <strong>Medio:</strong>
-        @if (testimony.mediaType === "video") {
+        @if (testimony.format === "video") {
           <video controls [src]="testimony.url" class="media"></video>
         } @else {
           <img [src]="testimony.url" [alt]="testimony.title" class="media" />

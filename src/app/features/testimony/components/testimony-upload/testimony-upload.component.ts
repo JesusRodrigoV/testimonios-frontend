@@ -72,7 +72,7 @@ export default class TestimonyUploadComponent implements OnInit {
     format: string;
   } | null = null;
   mediaPreview: string | null = null;
-  mediaType: "video" | "audio" | null = null;
+  mediaType: "Video" | "Audio" | null = null;
   shareLocation: boolean = false;
   submitting = false;
 
@@ -156,7 +156,7 @@ export default class TestimonyUploadComponent implements OnInit {
     if (!input.files?.length) return;
 
     const file = input.files[0];
-    this.mediaType = file.type.startsWith("video") ? "video" : "audio";
+    this.mediaType = file.type.startsWith("video") ? "Video" : "Audio";
     this.mediaPreview = URL.createObjectURL(file);
 
     const formData = new FormData();

@@ -4,18 +4,18 @@
   <div class="media">
     @defer (on viewport) {
       <video
-        *ngIf="testimony.mediaType === 'Video'"
+        *ngIf="testimony.format === 'Video'"
         [src]="testimony.url"
         controls
         loading="lazy"
       ></video>
       <audio
-        *ngIf="testimony.mediaType === 'Audio'"
+        *ngIf="testimony.format === 'Audio'"
         [src]="testimony.url"
         controls
         loading="lazy"
       ></audio>
-      <p *ngIf="testimony.mediaType === 'Texto'">{{ testimony.content }}</p>
+      <p *ngIf="testimony.format === 'Texto'">{{ testimony.content }}</p>
     } @placeholder (minimum 500ms) {
       <div class="skeleton-media"></div>
     } @loading (minimum 1s; after 500ms) {
