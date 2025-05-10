@@ -1,0 +1,51 @@
+:host {
+  --background: #fff;
+  --text: #000;
+  --border: #e0e0e0;
+  --accent: #007bff;
+
+  :root.dark-mode & {
+    --background: #333;
+    --text: #fff;
+    --border: #555;
+    --accent: #66b0ff;
+  }
+}
+
+.sidenav {
+  background: var(--background);
+  color: var(--text);
+  border-right: 1px solid var(--border);
+  transition: width 0.3s ease;
+  width: 60px;
+  height: 100vh;
+  overflow-y: auto;
+
+  &.expanded {
+    width: 250px;
+  }
+
+  .toggle-button {
+    padding: 8px;
+    text-align: right;
+  }
+
+  mat-list-item {
+    cursor: pointer;
+    padding: 0 8px;
+    transition: background 0.2s;
+
+    &.active {
+      color: var(--accent);
+    }
+
+    i.bx {
+      font-size: 24px;
+      margin-right: 16px;
+    }
+
+    span {
+      font-size: 16px;
+    }
+  }
+}

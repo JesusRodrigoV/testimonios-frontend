@@ -6,7 +6,7 @@ import {
   TestimonyInput,
   TestimonyVersion,
 } from "@app/features/testimony/models/testimonio.model";
-import { catchError, Observable, throwError } from "rxjs";
+import { catchError, Observable, of, throwError } from "rxjs";
 import { environment } from "src/environment/environment";
 
 @Injectable({
@@ -141,7 +141,6 @@ export class TestimonioService {
     );
   }
 
-  // Nuevos métodos para categorías, etiquetas y eventos
   getAllCategories(): Observable<
     { id_categoria: number; nombre: string; descripcion: string }[]
   > {
@@ -184,5 +183,30 @@ export class TestimonioService {
           );
         }),
       );
+  }
+
+  //Añadir todo esto corregido para ir con el backend
+  addFavorite(testimonyId: number): Observable<void> {
+    return this.http.post<void>(`/api/testimonies/${testimonyId}/favorite`, {});
+  }
+
+  removeFavorite(testimonyId: number): Observable<void> {
+    return this.http.delete<void>(`/api/testimonies/${testimonyId}/favorite`);
+  }
+
+  rateTestimony(testimonyId: number, rating: number): Observable<number> {
+    return this.http.post<number>(`/api/testimonies/${testimonyId}/rate`, { rating });
+  }
+
+  downloadTestimony(testimonyId: number): Observable<Blob> {
+    return this.http.get(`/api/testimonies/${testimonyId}/download`, { responseType: 'blob' });
+  }
+
+  getTranscription(testimonyId: number): Observable<string> {
+    return of('Transcripción automática de ejemplo...'); // Mock
+  }
+
+  suggestImprovement(testimonyId: number, field: string, value: string): Observable<void> {
+    return this.http.post<void>(`/api/testimonies/${testimonyId}/suggestions`, { field, value });
   }
 }
