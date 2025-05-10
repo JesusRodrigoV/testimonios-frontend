@@ -67,7 +67,7 @@ export class CommentManagementComponent {
   }
 
   approveComment(id: number) {
-    this.commentService.updateCommentStatus(id, 1).subscribe({
+    this.commentService.updateCommentStatus(id, 2).subscribe({
       next: () => {
         this.loadComments();
       },

@@ -16,7 +16,7 @@ private apiUrl = `${environment.apiUrl}/comments`;
   }
 
   getAllComments(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.apiUrl}`);
+    return this.http.get<Comment[]>(`${this.apiUrl}/pending`);
   }
 
   updateCommentStatus(id: number, id_estado: number): Observable<Comment> {

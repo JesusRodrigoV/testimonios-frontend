@@ -32,12 +32,12 @@
               <span
                 [ngClass]="{
                   'status-badge': true,
-                  'status-aprobado': comment.id_estado === 1,
-                  'status-pendiente': comment.id_estado === 2,
+                  'status-pendiente': comment.id_estado === 1,
+                  'status-aprobado': comment.id_estado === 2,
                   'status-rechazado': comment.id_estado === 3
                 }"
               >
-                {{ comment.id_estado === 1 ? 'Aprobado' : comment.id_estado === 2 ? 'Pendiente' : 'Rechazado' }}
+                {{ comment.id_estado === 1 ? 'Pendiente' : comment.id_estado === 2 ? 'Aprobado' : 'Rechazado' }}
               </span>
             </td>
             <td>
@@ -49,7 +49,7 @@
                 >
                   <i class="bx bx-show"></i>
                 </button>
-                @if (comment.id_estado !== 1) {
+                @if (comment.id_estado !== 2) {
                   <button
                     class="btn-icon approve"
                     (click)="approveComment(comment.id_comentario)"

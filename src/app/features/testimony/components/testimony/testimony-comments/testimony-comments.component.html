@@ -30,7 +30,7 @@
       <p>Cargando comentarios...</p>
     </div>
     } @else {
-    @for (comment of comments; track comment.id) {
+    @for (comment of comments; track comment.id_comentario) {
     <div class="comment">
       <p class="comment-content">{{ comment.contenido }}</p>
       <p class="comment-meta">
