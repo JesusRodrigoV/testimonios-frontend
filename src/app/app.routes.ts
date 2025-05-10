@@ -37,6 +37,10 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: "maps",
+        loadComponent: () => import("./pages/maps/maps.component"),
+      },
+      {
         path: "",
         redirectTo: "/home",
         pathMatch: "full",
@@ -50,7 +54,7 @@ export const routes: Routes = [
   },
   {
     path: "register",
-    loadComponent: () => import("./features/auth/components/register/register.component"),  
+    loadComponent: () => import("./features/auth/components/register/register.component"),
     canActivate: [loginGuard],
   },
   {
@@ -76,4 +80,5 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./features/auth/components/two-factor-setup/two-factor-setup.component"),
   },
+
 ];

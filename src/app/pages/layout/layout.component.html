@@ -4,22 +4,24 @@
   </header>
 
   <main class="app-main">
-    <router-outlet />
+    <mat-drawer-container class="example-container" autosize>
+      <mat-drawer #drawer class="example-sidenav" mode="side">
+        <p>Hola</p>
+      </mat-drawer>
+
+      <div class="example-sidenav-content">
+        <button type="button" mat-button (click)="drawer.toggle()">
+          Toggle sidenav
+        </button>
+
+      </div>
+      
+    </mat-drawer-container>
+<router-outlet />
   </main>
 
   <footer class="app-footer">
-    <button (click)="themeService.toggleTheme()">Change theme</button>
+    <button mat-button (click)="themeService.toggleTheme()">Cambiar tema</button>
     <app-footer />
   </footer>
 </div>
-<!--Esto debo ponerlo aqui en este layout dentor del main: -->
-<mat-sidenav-container class="layout-container">
-  <mat-sidenav mode="side" opened [ngClass]="{ 'expanded': isSidenavExpanded }">
-    <app-sidenav (toggleSidenav)="onToggleSidenav()"></app-sidenav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
