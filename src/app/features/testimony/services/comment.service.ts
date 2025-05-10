@@ -8,7 +8,7 @@ import { Comment } from '../models/testimonio.model';
   providedIn: 'root'
 })
 export class CommentService {
-  private apiUrl = `${environment.apiUrl}/comentarios`;
+  private apiUrl = `${environment.apiUrl}/comments`;
   private http = inject(HttpClient);
 
   getComments(testimonyId: number): Observable<Comment[]> {
