@@ -1,43 +1,111 @@
 :host {
   --background: #fff;
-  --text: #000;
+  --text: #0f0f0f;
   --border: #e0e0e0;
+  --accent: #065fd4;
 
   :root.dark-mode & {
-    --background: #333;
-    --text: #fff;
-    --border: #555;
+    --background: #0f0f0f;
+    --text: #f1f1f1;
+    --border: #f1f1f1;
+    --accent: #3ea6ff;
   }
 }
 
 .comments-section {
-  background: var(--background);
   color: var(--text);
-  padding: 16px;
-  border-top: 1px solid var(--border);
+  overflow-x: hidden;
 
   h3 {
     margin: 0 0 16px;
     font-size: 1.3rem;
+    font-weight: 500;
+  }
+
+  .comment-form {
+    .input-container {
+      position: relative;
+      margin-bottom: 16px;
+
+      input[type="text"] {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 0;
+        background: transparent;
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+
+        &:focus~.label,
+        &:not(:placeholder-shown)~.label {
+          transform: translateY(-20px) scale(0.85);
+          color: var(--accent);
+        }
+      }
+
+      .label {
+        position: absolute;
+        left: 0;
+        top: 10px;
+        color: var(--border);
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+
+      .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+      }
+
+      input:focus~.underline {
+        transform: scaleX(1);
+      }
+
+      .error-message {
+        color: #ff4b4b;
+        font-size: 12px;
+        margin-top: 4px;
+        display: none;
+
+        &[ngIf="true"] {
+          display: block;
+        }
+      }
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: flex-start;
+      gap: 12px;
+      margin-top: 8px;
+    }
   }
 
   .comments-list {
-    margin-bottom: 16px;
+    margin-top: 24px;
 
     .comment {
+      padding: 12px 0;
       border-bottom: 1px solid var(--border);
-      padding: 8px 0;
 
       .comment-content {
-        font-size: 1rem;
+        font-size: 14px;
         margin: 0 0 4px;
+        line-height: 1.5;
       }
 
       .comment-meta {
-        font-size: 0.8rem;
+        font-size: 12px;
         color: var(--text);
         opacity: 0.7;
-        margin: 0;
       }
     }
 
@@ -45,27 +113,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      height: 100px;
-    }
-  }
-
-  .comment-form {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-
-    .comment-input {
-      flex: 1;
-
-      textarea {
-        min-height: 60px;
-        color: var(--text);
-      }
-    }
-
-    button {
-      height: 40px;
+      padding: 20px;
     }
   }
 }

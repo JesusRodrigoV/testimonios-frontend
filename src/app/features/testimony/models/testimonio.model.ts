@@ -45,7 +45,7 @@ export interface MapPoint {
 } 
 
 export interface Comment {
-  id: number;
+  id_comentario: number;
   contenido: string;
   id_estado: number;
   fecha_creacion: string;

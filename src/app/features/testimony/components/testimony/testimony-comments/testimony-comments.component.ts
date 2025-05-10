@@ -3,14 +3,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SpinnerComponent } from '@app/features/shared/ui/spinner';
 import { Comment } from '@app/features/testimony/models/testimonio.model';
 import { CommentService } from '@app/features/testimony/services';
 
 @Component({
   selector: 'app-testimony-comments',
-  imports: [SpinnerComponent, MatFormFieldModule, MatInputModule, FormsModule, DatePipe, NgIf, MatButtonModule],
+  imports: [SpinnerComponent, MatFormFieldModule, MatInputModule, FormsModule, DatePipe, NgIf, MatButtonModule,MatIconModule],
   templateUrl: './testimony-comments.component.html',
   styleUrl: './testimony-comments.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,9 +23,10 @@ export class TestimonyCommentsComponent implements OnInit {
   newComment = '';
   isLoading = false;
   formErrors: { [key: string]: boolean } = {};
-
+  
   private ref = inject(ChangeDetectorRef);
   private commentService = inject(CommentService);
+  private snackBar = inject(MatSnackBar);
 
   ngOnInit() {
     this.loadComments();
@@ -49,6 +52,7 @@ export class TestimonyCommentsComponent implements OnInit {
   submitComment() {
     if (this.newComment.length < 2) {
       this.formErrors['comment'] = true;
+      this.ref.detectChanges();
       return;
     }
     this.formErrors['comment'] = false;
@@ -56,14 +60,18 @@ export class TestimonyCommentsComponent implements OnInit {
       contenido: this.newComment,
       id_testimonio: this.testimonyId
     }).subscribe({
-      next: (comment) => {
-        this.comments.unshift(comment);
+      next: () => {
         this.newComment = '';
-        this.ref.detectChanges();
+        this.loadComments(); 
+        this.openSnackBar('Comentario creado. Esperando a la aprobación', 'Cerrar');
       },
       error: () => {
         this.ref.detectChanges();
       }
     });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action);
   }
 }
