@@ -15,6 +15,10 @@ export class CommentService {
     return this.http.get<Comment[]>(`${this.apiUrl}?id_testimonio=${testimonyId}`);
   }
 
+  getByTestimonioId(testimonyId: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl}/testimonio/${testimonyId}`);
+  }
+
   createComment(comment: { contenido: string; id_testimonio: number }): Observable<Comment> {
     return this.http.post<Comment>(this.apiUrl, comment);
   }
