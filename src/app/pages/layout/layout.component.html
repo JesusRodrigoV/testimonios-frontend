@@ -12,3 +12,14 @@
     <app-footer />
   </footer>
 </div>
+<!--Esto debo ponerlo aqui en este layout dentor del main: -->
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav mode="side" opened [ngClass]="{ 'expanded': isSidenavExpanded }">
+    <app-sidenav (toggleSidenav)="onToggleSidenav()"></app-sidenav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

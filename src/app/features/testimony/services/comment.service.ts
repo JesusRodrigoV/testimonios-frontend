@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
 import { Comment } from '../models/testimonio.model';
 
@@ -11,8 +11,13 @@ export class CommentService {
   private apiUrl = `${environment.apiUrl}/comments`;
   private http = inject(HttpClient);
 
-  getComments(testimonyId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.apiUrl}?id_testimonio=${testimonyId}`);
+  getComments(): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl}`);
+  }
+  getCommentsByTestimonyId(testimonyId: number): Observable<Comment[]> {
+    return this.getComments().pipe(
+      map(comments => comments.filter(comment => comment.id_testimonio === testimonyId))
+    );
   }
 
   createComment(comment: { contenido: string; id_testimonio: number }): Observable<Comment> {

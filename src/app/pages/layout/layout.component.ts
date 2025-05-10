@@ -1,17 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThemeService } from "@app/core/services/theme";
 import { FooterComponent } from "@app/features/shared/footer";
 import { HeaderComponent } from "@app/features/shared/header";
+import { SidenavComponent } from "@app/features/shared/sidenav";
+import { NgClass } from "@angular/common";
 
 
 @Component({
   selector: "app-layout",
-  imports: [RouterOutlet, FooterComponent, HeaderComponent],
+  imports: [RouterOutlet, NgClass, MatSidenavModule, SidenavComponent, FooterComponent, HeaderComponent],
   templateUrl: "./layout.component.html",
   styleUrl: "./layout.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LayoutComponent {
+  isSidenavExpanded = true;
+
   readonly themeService = inject(ThemeService);
+
+  onToggleSidenav() {
+    this.isSidenavExpanded = !this.isSidenavExpanded;
+  }
 }

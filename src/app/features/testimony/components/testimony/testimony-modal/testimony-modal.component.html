@@ -18,27 +18,59 @@
         }
       </div>
       <div class="actions">
-        <button mat-icon-button class="action-btn">
-          <mat-icon>favorite</mat-icon>
+        <button mat-icon-button class="action-btn" (click)="toggleFavorite()" >
+          <mat-icon>favorite_border'</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn">
-          <mat-icon>bookmark_border</mat-icon>
-        </button>
-        <button mat-icon-button class="action-btn">
+        <mat-form-field appearance="outline" class="rating-field">
+          <mat-label>Calificar</mat-label>
+          <mat-select [formControl]="ratingControl" (selectionChange)="rateTestimony()">
+            <mat-option value="1">1 estrella</mat-option>
+            <mat-option value="2">2 estrellas</mat-option>
+            <mat-option value="3">3 estrellas</mat-option>
+            <mat-option value="4">4 estrellas</mat-option>
+            <mat-option value="5">5 estrellas</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button class="action-btn" (click)="shareTestimony()" matTooltip="Compartir">
           <mat-icon>share</mat-icon>
+        </button>
+        <button mat-icon-button class="action-btn" *ngIf="canDownload" (click)="downloadTestimony()" matTooltip="Descargar">
+          <mat-icon>download</mat-icon>
+        </button>
+        <button mat-icon-button class="action-btn" (click)="suggestImprovement()" matTooltip="Sugerir mejora">
+          <mat-icon>edit</mat-icon>
         </button>
       </div>
       <div class="meta">
-        <p>Subido por: {{ testimony.author }}</p>
-        <p>Fecha: {{ testimony.createdAt | date: 'medium' }}</p>
-        <p>Categorías: {{ testimony.categories.join(', ') || 'Ninguna' }}</p>
-        <p>Etiquetas: {{ testimony.tags.join(', ') || 'Ninguna' }}</p>
-        <p *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
-        <p *ngIf="testimony.latitude && testimony.longitude">
-          Ubicación: {{ testimony.latitude }}, {{ testimony.longitude }}
-        </p>
+        <div class="meta-header">
+          <p>{{ getRelativeTime(testimony.createdAt) }}</p>
+          <button mat-icon-button (click)="toggleMeta()" class="meta-toggle-btn">
+            <mat-icon>{{ isMetaExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </div>
+        <div class="meta-details" [ngClass]="{ 'expanded': isMetaExpanded }">
+          <p>Subido por: {{ testimony.author }}</p>
+          <p>Fecha: {{ testimony.createdAt | date: 'medium' }}</p>
+          <p>Categorías: {{ testimony.categories.join(', ') || 'Ninguna' }}</p>
+          <p>Etiquetas: {{ testimony.tags.join(', ') || 'Ninguna' }}</p>
+          <p *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
+          <p *ngIf="testimony.latitude && testimony.longitude">
+            Ubicación: {{ testimony.latitude }}, {{ testimony.longitude }}
+            <a [routerLink]="['/map']" [queryParams]="{ lat: testimony.latitude, lng: testimony.longitude }">(Ver en mapa)</a>
+          </p>
+        </div>
       </div>
-      
+      <div class="transcription" *ngIf="testimony.format !== 'Texto'">
+        <div class="transcription-header">
+          <p>Transcripción</p>
+          <button mat-icon-button (click)="toggleTranscription()" class="transcription-toggle-btn">
+            <mat-icon>{{ isTranscriptionExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </div>
+        <div class="transcription-content" [ngClass]="{ 'expanded': isTranscriptionExpanded }">
+         
+        </div>
+      </div>
     </div>
     <div class="comments-sidebar">
       <app-testimony-comments [testimonyId]="testimony.id"></app-testimony-comments>

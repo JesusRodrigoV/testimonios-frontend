@@ -34,7 +34,7 @@ export class TestimonyCommentsComponent implements OnInit {
 
   loadComments() {
     this.isLoading = true;
-    this.commentService.getComments(this.testimonyId).subscribe({
+    this.commentService.getCommentsByTestimonyId(this.testimonyId).subscribe({
       next: (comments) => {
         this.comments = comments.sort((a, b) => 
           new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
