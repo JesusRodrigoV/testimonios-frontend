@@ -31,8 +31,7 @@ import { AudioPlayerComponent } from '@app/features/shared/audio-player';
     ReactiveFormsModule,
     MatMenuModule,
     FormsModule,
-    VideoPlayerComponent,
-    AudioPlayerComponent
+    VideoPlayerComponent
   ],
   templateUrl: './testimony-modal.component.html',
   styleUrl: './testimony-modal.component.scss',

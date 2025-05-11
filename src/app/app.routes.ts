@@ -41,6 +41,14 @@ export const routes: Routes = [
         loadComponent: () => import("./pages/maps/maps.component"),
       },
       {
+        path: 'collections',
+        loadComponent: () => import("./features/collections/components/collection-list")
+      },
+      {
+        path: 'collections/:id',
+        loadComponent: () => import("./features/collections/components/collection-detail")
+      },
+      {
         path: "",
         redirectTo: "/home",
         pathMatch: "full",
