@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgIf } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,10 +13,11 @@ import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { TestimonyComponent } from "../testimony/testimony.component";
 import { TestimonioService } from "@app/features/testimony/services";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-testimony-feed",
-  imports: [CommonModule, FormsModule, TestimonyComponent, SpinnerComponent],
+  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf],
   templateUrl: "./testimony-feed.component.html",
   styleUrl: "./testimony-feed.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,7 @@
 <div class="feed-container">
-  <h2>Testimonios del Bicentenario</h2>
+  <div class="feed-header">
+    <h2>Testimonios del Bicentenario</h2>
+  </div>
 
   <div class="search-bar">
     <input
@@ -16,11 +18,13 @@
         @for (testimony of testimonies; track testimony.id) {
           <app-testimony [testimony]="testimony"></app-testimony>
         } @empty {
-          <p>No hay testimonios</p>
+          <div class="empty-state">
+            <mat-icon>info</mat-icon>
+            <p>No hay testimonios</p>
+          </div>
         }
       </div>
     } @placeholder (minimum 500ms) {
-      <axl-spinner />
       <div class="skeleton-container">
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
@@ -33,6 +37,7 @@
       </div>
     } @error {
       <div class="error">
+        <mat-icon>error</mat-icon>
         <p>Error al cargar los testimonios. Por favor, intenta de nuevo.</p>
       </div>
     }

@@ -1,17 +1,14 @@
-<mat-nav-list class="sidenav" [ngClass]="{ 'expanded': isExpanded }">
-  <div class="toggle-button">
-    <button mat-icon-button (click)="toggle()">
-      <i class="bx" [ngClass]="isExpanded ? 'bx-x' : 'bx-menu'"></i>
-    </button>
-  </div>
-
-  <mat-list-item routerLink="/home" routerLinkActive="active">
-    <i class="bx bx-home" matListIcon></i>
-    <span *ngIf="isExpanded" matListItemTitle>Inicio</span>
-  </mat-list-item>
-
-  <mat-list-item routerLink="/maps" routerLinkActive="active">
-    <i class="bx bx-map" matListIcon></i>
-    <span *ngIf="isExpanded" matListItemTitle>Mapas</span>
-  </mat-list-item>
-</mat-nav-list>
+<div class="sidenav-items">
+  <button mat-button routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <mat-icon>home</mat-icon>
+    <span class="sidenav-text">Inicio</span>
+  </button>
+  <button mat-button routerLink="/explore" routerLinkActive="active">
+    <mat-icon>explore</mat-icon>
+    <span class="sidenav-text">Explorar</span>
+  </button>
+  <button mat-button routerLink="/maps" routerLinkActive="active">
+    <mat-icon>map</mat-icon>
+    <span class="sidenav-text">Mapas</span>
+  </button>
+</div>

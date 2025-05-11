@@ -12,58 +12,84 @@
   }
 }
 
-.sidenav {
-  background: var(--background);
-  color: var(--text);
-  width: 60px;
+.sidenav-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  align-items: center;
+  padding: 16px 0;
   height: 100%;
-  overflow-y: auto;
-  transition: width 0.3s ease;
+  color: var(--text);
+  border-right: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background 0.3s ease, border 0.3s ease;
 
-  &.expanded {
-    width: 250px;
+  :root.dark-mode & {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 16px;
+  text-align: left;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
   }
 
-  .toggle-button {
-    padding: 8px;
-    text-align: right;
-
-    button {
-      margin-right: 8px;
+  :root.dark-mode & {
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
   }
 
-  mat-list-item {
-    cursor: pointer;
-    padding: 0 16px;
-    transition: background 0.2s;
+  &.active {
+    color: var(--accent);
+    font-weight: bold;
+    background: rgba(0, 123, 255, 0.1);
 
-    &.active {
-      color: var(--accent);
-      font-weight: bold;
-      
-    }
-
-    i.bx {
-      font-size: 24px;
-      margin-right: 16px;
-    }
-
-    span {
-      font-size: 16px;
+    :root.dark-mode & {
+      background: rgba(102, 176, 255, 0.2);
     }
   }
 }
 
-@media (max-width: 768px) {
-  .sidenav {
-    width: 0;
-    visibility: hidden;
-    overflow-x: hidden;
+mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+}
 
-    &.expanded {
-      width: 250px;
-      visibility: visible;
-    }
+.sidenav-text {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .sidenav-items {
+    padding: 8px 0;
+    gap: 12px;
+  }
+
+  button {
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .sidenav-text {
+    display: none;
+  }
+
+  mat-icon {
+    margin-right: 0;
   }
 }

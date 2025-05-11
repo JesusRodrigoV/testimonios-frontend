@@ -46,12 +46,6 @@ export default class MapsComponent {
             riseOnHover: true,
             alt: testimonio.title,
           }).addTo(map);
-          const circulo = circle([coords[0], coords[1]], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 500
-          }).addTo(map);
           marca.bindPopup(testimonio.title);
         });
       },

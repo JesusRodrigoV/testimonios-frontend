@@ -7,12 +7,11 @@ import { ThemeService } from '@app/core/services/theme';
 import { FooterComponent } from '@app/features/shared/footer';
 import { HeaderComponent } from '@app/features/shared/header';
 import { SidenavComponent } from '@app/features/shared/sidenav';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, NgClass, MatSidenavModule, MatButtonModule, MatIconModule, SidenavComponent, FooterComponent, HeaderComponent],
+  imports: [RouterOutlet, MatSidenavModule, MatButtonModule, MatIconModule, SidenavComponent, FooterComponent, HeaderComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

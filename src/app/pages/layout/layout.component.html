@@ -1,27 +1,18 @@
 <div class="app-container">
-  <header class="app-header">
-    <app-header />
-  </header>
-
+   <header class="app-header">
+      <app-header />
+    </header>
+  
   <main class="app-main">
-    <!--
-    <mat-drawer-container class="example-container" autosize>
-      <mat-drawer #drawer class="example-sidenav" mode="side">
-        <app-sidenav />
-      </mat-drawer>
-
-      <div class="example-sidenav-content">
-        <button type="button" mat-button (click)="drawer.toggle()">
-          Toggle sidenav
-        </button>
-      </div>
-    </mat-drawer-container>
-  -->
-    <router-outlet />
+  <div class="sidenav">
+    <app-sidenav />
+  </div> 
+    <div class="router-content">
+      <router-outlet />
+    </div>
   </main>
-
-  <footer class="app-footer">
-    <button mat-button (click)="themeService.toggleTheme()">Cambiar tema</button>
-    <app-footer />
-  </footer>
 </div>
+<footer class="app-footer">
+  <button mat-button (click)="themeService.toggleTheme()">Cambiar tema</button>
+  <app-footer />
+</footer>

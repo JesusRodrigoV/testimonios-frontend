@@ -1,13 +1,14 @@
-import { CommonModule, DatePipe } from "@angular/common";
+import { CommonModule, DatePipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyModalComponent } from "./testimony-modal";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-testimony",
-  imports: [CommonModule, DatePipe, SpinnerComponent],
+  imports: [DatePipe, SpinnerComponent, MatIconModule, NgIf],
   templateUrl: "./testimony.component.html",
   styleUrl: "./testimony.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

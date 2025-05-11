@@ -1,6 +1,6 @@
-import { DatePipe, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,15 +9,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { Testimony } from '@app/features/testimony/models/testimonio.model';
 import { TestimonyCommentsComponent } from '../testimony-comments';
 import { MatDialogModule } from '@angular/material/dialog';
-import { tap } from 'rxjs';
 import { TestimonioService } from '@app/features/testimony/services';
 import { AuthService } from '@app/features/auth/services/auth';
-import { RouterLink } from '@angular/router';
 import { SuggestionDialogComponent } from '../../suggestion-dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-testimony-modal',
-  standalone: true,
   imports: [
     MatIconModule,
     MatButtonModule,
@@ -29,13 +27,17 @@ import { SuggestionDialogComponent } from '../../suggestion-dialog';
     NgIf,
     NgClass,
     ReactiveFormsModule,
-    RouterLink
+    MatMenuModule,
+    FormsModule
   ],
   templateUrl: './testimony-modal.component.html',
   styleUrl: './testimony-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestimonyModalComponent {
+  isFavorite = false;
+  showRating = false;
+  currentRating = 0;
   isMetaExpanded = false;
   isTranscriptionExpanded = false;
   ratingControl = new FormControl<number | null>(null);
@@ -59,7 +61,7 @@ export class TestimonyModalComponent {
     if (!this.testimony) {
       this.testimonyService.getTranscription(this.testimony).subscribe({
         next: (transcription) => {
-         
+
           this.isTranscriptionExpanded = true;
         },
         error: () => alert('Error al cargar la transcripción')
@@ -70,17 +72,28 @@ export class TestimonyModalComponent {
   }
 
   toggleFavorite() {
-    
+
   }
 
-  rateTestimony() {
-    const rating = this.ratingControl.value;
-    if (rating) {
-      this.testimonyService.rateTestimony(this.testimony.id, rating).subscribe({
-        next: (avgRating) => {
-          
-        }
-      });
+  toggleRating() {
+    this.showRating = !this.showRating;
+  }
+
+  rateTestimony(rating: number) {
+    this.currentRating = rating;
+    console.log('Calificación:', rating);
+    this.showRating = false;
+
+    setTimeout(() => {
+      this.showRating = false;
+    }, 1000);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.rating-container')) {
+      this.showRating = false;
     }
   }
 

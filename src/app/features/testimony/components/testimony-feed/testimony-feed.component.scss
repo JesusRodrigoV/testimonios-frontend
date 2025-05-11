@@ -4,17 +4,16 @@
   --card-background: #ffffff;
   --text-primary: #333333;
   --text-secondary: #555555;
-  --text-meta: #777777;
   --border: #cccccc;
   --shadow: rgba(0, 0, 0, 0.1);
   --error: #ff0000;
-  :root.dark-mode {
+
+  :root.dark-mode & {
     --primary: #66b0ff;
     --background: #1a1a1a;
     --card-background: #2c2c2c;
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
-    --text-meta: #999999;
     --border: #444444;
     --shadow: rgba(0, 0, 0, 0.3);
     --error: #ff6666;
@@ -22,93 +21,166 @@
 }
 
 .feed-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background: var(--background);
+  padding: 32px;
+  background: linear-gradient(180deg, var(--background), rgba(var(--background), 0.9));
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background 0.3s ease;
 }
 
-h2 {
+.feed-header {
   text-align: center;
+  margin-bottom: 32px;
+}
+
+.feed-header h2 {
   color: var(--text-primary);
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px var(--shadow);
+  margin: 0;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .search-bar {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px;
+  padding: 12px 16px;
   border: 1px solid var(--border);
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 1rem;
   background: var(--card-background);
   color: var(--text-primary);
+  box-shadow: inset 0 2px 4px var(--shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: inset 0 2px 6px var(--shadow), 0 0 8px rgba(var(--primary), 0.2);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(var(--primary), 0.4);
+    transform: scale(1.01);
+  }
 }
 
 .testimony-feed {
-  display: grid;
-  gap: 20px;
-  min-height: 600px; /* Asegura altura mínima */
-  border: 2px solid green; /* Depuración */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 100vh;
 }
 
 .testimonies-wrapper {
   display: grid;
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
 }
 
 .skeleton-container {
   display: grid;
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
 }
 
 .skeleton-card {
-  background: var(--card-background);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px var(--shadow);
+  background: linear-gradient(
+    90deg,
+    var(--card-background) 0%,
+    rgba(var(--card-background), 0.8) 50%,
+    var(--card-background) 100%
+  );
+  background-size: 200% 100%;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow);
   height: 200px;
-  animation: pulse 1.5s infinite;
+  animation: skeleton-pulse 2s infinite ease-in-out;
+  transition: box-shadow 0.3s ease;
 }
 
-.loading {
-  text-align: center;
-  padding: 20px;
+.empty-state,
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: var(--card-background);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow);
   color: var(--text-secondary);
+  text-align: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-.loading p {
-  margin-top: 10px;
+.empty-state mat-icon,
+.error mat-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
 }
 
 .error {
-  text-align: center;
-  padding: 20px;
   color: var(--error);
 }
 
-@keyframes pulse {
+.error mat-icon {
+  color: var(--error);
+}
+
+.loading p {
+  margin-top: 16px;
+  font-size: 1.1rem;
+}
+
+@keyframes skeleton-pulse {
   0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
+    background-position: 200% 0;
   }
   100% {
-    opacity: 1;
+    background-position: -200% 0;
   }
 }
 
 @media (max-width: 600px) {
   .feed-container {
-    padding: 10px;
+    padding: 16px;
+  }
+
+  .feed-header h2 {
+    font-size: 2rem;
+  }
+
+  .search-bar input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .testimonies-wrapper,
+  .skeleton-container {
+    grid-template-columns: 1fr;
   }
 
   .skeleton-card {
-    height: 150px;
+    height: 120px;
+  }
+
+  .empty-state,
+  .loading,
+  .error {
+    padding: 24px;
   }
 }

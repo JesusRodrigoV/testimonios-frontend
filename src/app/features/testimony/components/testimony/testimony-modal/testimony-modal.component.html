@@ -13,33 +13,55 @@
           <video [src]="testimony.url" controls></video>
         } @else if (testimony.format === 'Audio') {
           <audio [src]="testimony.url" controls></audio>
-        } @else if (testimony.format === 'Texto') {
-          <p>{{ testimony.content }}</p>
         }
       </div>
       <div class="actions">
-        <button mat-icon-button class="action-btn" (click)="toggleFavorite()" >
-          <mat-icon>favorite_border'</mat-icon>
+        <button mat-icon-button class="action-btn favorite-btn" (click)="toggleFavorite()" matTooltip="Favorito">
+          <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
         </button>
-        <mat-form-field appearance="outline" class="rating-field">
-          <mat-label>Calificar</mat-label>
-          <mat-select [formControl]="ratingControl" (selectionChange)="rateTestimony()">
-            <mat-option value="1">1 estrella</mat-option>
-            <mat-option value="2">2 estrellas</mat-option>
-            <mat-option value="3">3 estrellas</mat-option>
-            <mat-option value="4">4 estrellas</mat-option>
-            <mat-option value="5">5 estrellas</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-icon-button class="action-btn" (click)="shareTestimony()" matTooltip="Compartir">
+        <button mat-icon-button class="action-btn share-btn"  matTooltip="Guardar en una coleccion">
+          <mat-icon>label</mat-icon>
+        </button>
+        <button mat-icon-button class="action-btn share-btn" (click)="shareTestimony()" matTooltip="Compartir">
           <mat-icon>share</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn" *ngIf="canDownload" (click)="downloadTestimony()" matTooltip="Descargar">
+        <button mat-icon-button class="action-btn download-btn" *ngIf="canDownload" (click)="downloadTestimony()" matTooltip="Descargar">
           <mat-icon>download</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn" (click)="suggestImprovement()" matTooltip="Sugerir mejora">
+        <button mat-icon-button class="action-btn suggest-btn" (click)="suggestImprovement()" matTooltip="Sugerir mejora">
           <mat-icon>edit</mat-icon>
         </button>
+        
+        <div class="rating-container">
+      <button mat-icon-button class="action-btn rating-btn" (click)="toggleRating()" matTooltip="Calificar">
+        <mat-icon>{{ currentRating ? 'star' : 'star_border' }}</mat-icon>
+      </button>
+      
+      <div class="rating-dropdown" [class.active]="showRating">
+        <div class="rating">
+          <input type="radio" id="star-5" name="star-radio" value="5" [(ngModel)]="currentRating" (change)="rateTestimony(5)">
+          <label for="star-5">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input type="radio" id="star-4" name="star-radio" value="4" [(ngModel)]="currentRating" (change)="rateTestimony(4)">
+          <label for="star-4">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input type="radio" id="star-3" name="star-radio" value="3" [(ngModel)]="currentRating" (change)="rateTestimony(3)">
+          <label for="star-3">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input type="radio" id="star-2" name="star-radio" value="2" [(ngModel)]="currentRating" (change)="rateTestimony(2)">
+          <label for="star-2">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input type="radio" id="star-1" name="star-radio" value="1" [(ngModel)]="currentRating" (change)="rateTestimony(1)">
+          <label for="star-1">
+            <mat-icon>star</mat-icon>
+          </label>
+        </div>
+      </div>
+    </div>
       </div>
       <div class="meta">
         <div class="meta-header">
@@ -54,10 +76,6 @@
           <p>Categorías: {{ testimony.categories.join(', ') || 'Ninguna' }}</p>
           <p>Etiquetas: {{ testimony.tags.join(', ') || 'Ninguna' }}</p>
           <p *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
-          <p *ngIf="testimony.latitude && testimony.longitude">
-            Ubicación: {{ testimony.latitude }}, {{ testimony.longitude }}
-            <a [routerLink]="['/map']" [queryParams]="{ lat: testimony.latitude, lng: testimony.longitude }">(Ver en mapa)</a>
-          </p>
         </div>
       </div>
       <div class="transcription" *ngIf="testimony.format !== 'Texto'">
@@ -68,7 +86,7 @@
           </button>
         </div>
         <div class="transcription-content" [ngClass]="{ 'expanded': isTranscriptionExpanded }">
-         
+          <!-- Contenido de transcripción -->
         </div>
       </div>
     </div>
