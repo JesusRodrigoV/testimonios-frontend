@@ -5,10 +5,12 @@ import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyModalComponent } from "./testimony-modal";
 import { MatIconModule } from "@angular/material/icon";
+import { VideoPlayerComponent } from "@app/features/shared/video-player";
+
 
 @Component({
   selector: "app-testimony",
-  imports: [DatePipe, SpinnerComponent, MatIconModule, NgIf],
+  imports: [DatePipe, SpinnerComponent, MatIconModule, NgIf, VideoPlayerComponent],
   templateUrl: "./testimony.component.html",
   styleUrl: "./testimony.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

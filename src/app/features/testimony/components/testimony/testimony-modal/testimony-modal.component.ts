@@ -13,6 +13,8 @@ import { TestimonioService } from '@app/features/testimony/services';
 import { AuthService } from '@app/features/auth/services/auth';
 import { SuggestionDialogComponent } from '../../suggestion-dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { VideoPlayerComponent } from '@app/features/shared/video-player';
+import { AudioPlayerComponent } from '@app/features/shared/audio-player';
 
 @Component({
   selector: 'app-testimony-modal',
@@ -28,7 +30,9 @@ import { MatMenuModule } from '@angular/material/menu';
     NgClass,
     ReactiveFormsModule,
     MatMenuModule,
-    FormsModule
+    FormsModule,
+    VideoPlayerComponent,
+    AudioPlayerComponent
   ],
   templateUrl: './testimony-modal.component.html',
   styleUrl: './testimony-modal.component.scss',
