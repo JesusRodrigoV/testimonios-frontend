@@ -42,11 +42,11 @@ export const routes: Routes = [
       },
       {
         path: 'collections',
-        loadComponent: () => import("./features/collections/components/collection-list")
+        loadComponent: () => import("./features/collections/components/collection-list/collection-list.component")
       },
       {
         path: 'collections/:id',
-        loadComponent: () => import("./features/collections/components/collection-detail")
+        loadComponent: () => import("./features/collections/components/collection-detail/collection-detail.component")
       },
       {
         path: "",

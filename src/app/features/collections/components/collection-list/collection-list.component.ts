@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './collection-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CollectionListComponent {
+export default class CollectionListComponent {
 
 }
