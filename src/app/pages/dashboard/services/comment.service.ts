@@ -19,6 +19,10 @@ private apiUrl = `${environment.apiUrl}/comments`;
     return this.http.get<Comment[]>(`${this.apiUrl}/pending`);
   }
 
+  getByTestimonioId(testimonyId: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl}/testimonio/${testimonyId}`);
+  }
+
   updateCommentStatus(id: number, id_estado: number): Observable<Comment> {
     return this.http.put<Comment>(`${this.apiUrl}/${id}`, { id_estado });
   }
