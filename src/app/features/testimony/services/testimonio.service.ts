@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import {
   MapPoint,
   Testimony,
@@ -16,7 +16,7 @@ export class TestimonioService {
   private apiUrl = `${environment.apiUrl}`;
   private mediaUrl = this.apiUrl + "/media"
 
-  constructor(private http: HttpClient) {}
+private http = inject(HttpClient);
 
   createTestimony(data: TestimonyInput): Observable<Testimony> {
     return this.http.post<Testimony>(this.mediaUrl, data).pipe(

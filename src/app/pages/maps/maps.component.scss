@@ -1,0 +1,125 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  margin: 0;
+  animation: fadeIn 0.8s ease-out;
+  transition: color 0.3s ease;
+}
+
+.subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text);
+  text-align: center;
+  margin: 0;
+  opacity: 0.85;
+  animation: fadeIn 1s ease-out 0.2s backwards;
+  transition: color 0.3s ease, opacity 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: scaleIn 0.5s ease-out;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+
+  :root.dark-mode & {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    border-color: var(--border);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+
+    :root.dark-mode & {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  .map {
+    width: 600px;
+    height: 600px;
+
+  }
+}
+
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .map-container {
+    max-height: 450px;
+    min-height: 300px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    :root.dark-mode & {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
