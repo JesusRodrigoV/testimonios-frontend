@@ -1,18 +1,22 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Collection, CollectionTestimony } from '../../models/collection.model';
-import { Testimony } from '@app/features/testimony/models/testimonio.model';
-import { CollectionService } from '../../services';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TestimonyComponent } from '@app/features/testimony/components/testimony';
-import { SpinnerComponent } from '@app/features/shared/ui/spinner';
-import { DatePipe } from '@angular/common';
-
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { Collection, CollectionTestimony } from "../../models/collection.model";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
+import { CollectionService } from "../../services";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { TestimonyComponent } from "@app/features/testimony/components/testimony";
+import { SpinnerComponent } from "@app/features/shared/ui/spinner";
+import { DatePipe } from "@angular/common";
 
 @Component({
-  selector: 'app-collection-detail',
+  selector: "app-collection-detail",
   imports: [
     MatIconModule,
     MatButtonModule,
@@ -20,8 +24,8 @@ import { DatePipe } from '@angular/common';
     SpinnerComponent,
     DatePipe,
   ],
-  templateUrl: './collection-detail.component.html',
-  styleUrl: './collection-detail.component.scss',
+  templateUrl: "./collection-detail.component.html",
+  styleUrl: "./collection-detail.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CollectionDetailComponent {
@@ -35,12 +39,12 @@ export default class CollectionDetailComponent {
   private route = inject(ActivatedRoute);
 
   constructor() {
-    const id = parseInt(this.route.snapshot.paramMap.get('id') || '0', 10);
+    const id = parseInt(this.route.snapshot.paramMap.get("id") || "0", 10);
     if (id) {
       this.loadCollection(id);
       this.loadTestimonies(id);
     } else {
-      this.error.set('ID de colección no válido');
+      this.error.set("ID de colección no válido");
     }
   }
 
@@ -52,8 +56,10 @@ export default class CollectionDetailComponent {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Error al cargar la colección');
-        this.snackBar.open('Error al cargar la colección', 'Cerrar', { duration: 3000 });
+        this.error.set("Error al cargar la colección");
+        this.snackBar.open("Error al cargar la colección", "Cerrar", {
+          duration: 3000,
+        });
         this.loading.set(false);
       },
     });
@@ -70,10 +76,13 @@ export default class CollectionDetailComponent {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Error al cargar los testimonios');
-        this.snackBar.open('Error al cargar los testimonios', 'Cerrar', { duration: 3000 });
+        this.error.set("Error al cargar los testimonios");
+        this.snackBar.open("Error al cargar los testimonios", "Cerrar", {
+          duration: 3000,
+        });
         this.loading.set(false);
       },
     });
   }
 }
+

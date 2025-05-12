@@ -9,9 +9,9 @@
     <div class="main-content">
       <p class="description">{{ testimony.description }}</p>
       <div class="media">
-        @if (testimony.format === 'Video') {
+        @if (testimony.format === "Video") {
           <app-video-player [videoUrl]="testimony.url" />
-        } @else if (testimony.format === 'Audio') {
+        } @else if (testimony.format === "Audio") {
           <audio [src]="testimony.url" controls></audio>
           <!--
           <app-audio-player
@@ -21,44 +21,110 @@
         }
       </div>
       <div class="actions">
-        <button mat-icon-button class="action-btn favorite-btn" (click)="toggleFavorite()" matTooltip="Favorito">
-          <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+        <button
+          mat-icon-button
+          class="action-btn favorite-btn"
+          (click)="addToFavorites()"
+          matTooltip="Favorito"
+        >
+          <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn share-btn" (click)="addToCollection()" matTooltip="Guardar en una colección">
+        <button
+          mat-icon-button
+          class="action-btn share-btn"
+          (click)="addToCollection()"
+          matTooltip="Guardar en una colección"
+        >
           <mat-icon>label</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn share-btn" (click)="shareTestimony()" matTooltip="Compartir">
+        <button
+          mat-icon-button
+          class="action-btn share-btn"
+          (click)="shareTestimony()"
+          matTooltip="Compartir"
+        >
           <mat-icon>share</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn download-btn" *ngIf="canDownload" (click)="downloadTestimony()" matTooltip="Descargar">
+        <button
+          mat-icon-button
+          class="action-btn download-btn"
+          *ngIf="canDownload"
+          (click)="downloadTestimony()"
+          matTooltip="Descargar"
+        >
           <mat-icon>download</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn suggest-btn" (click)="suggestImprovement()" matTooltip="Sugerir mejora">
+        <button
+          mat-icon-button
+          class="action-btn suggest-btn"
+          (click)="suggestImprovement()"
+          matTooltip="Sugerir mejora"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         <div class="rating-container">
-          <button mat-icon-button class="action-btn rating-btn" (click)="toggleRating()" matTooltip="Calificar">
-            <mat-icon>{{ currentRating ? 'star' : 'star_border' }}</mat-icon>
+          <button
+            mat-icon-button
+            class="action-btn rating-btn"
+            (click)="toggleRating()"
+            matTooltip="Calificar"
+          >
+            <mat-icon>{{ currentRating ? "star" : "star_border" }}</mat-icon>
           </button>
           <div class="rating-dropdown" [class.active]="showRating">
             <div class="rating">
-              <input type="radio" id="star-5" name="star-radio" value="5" [(ngModel)]="currentRating" (change)="rateTestimony(5)">
+              <input
+                type="radio"
+                id="star-5"
+                name="star-radio"
+                value="5"
+                [(ngModel)]="currentRating"
+                (change)="rateTestimony(5)"
+              />
               <label for="star-5">
                 <mat-icon>star</mat-icon>
               </label>
-              <input type="radio" id="star-4" name="star-radio" value="4" [(ngModel)]="currentRating" (change)="rateTestimony(4)">
+              <input
+                type="radio"
+                id="star-4"
+                name="star-radio"
+                value="4"
+                [(ngModel)]="currentRating"
+                (change)="rateTestimony(4)"
+              />
               <label for="star-4">
                 <mat-icon>star</mat-icon>
               </label>
-              <input type="radio" id="star-3" name="star-radio" value="3" [(ngModel)]="currentRating" (change)="rateTestimony(3)">
+              <input
+                type="radio"
+                id="star-3"
+                name="star-radio"
+                value="3"
+                [(ngModel)]="currentRating"
+                (change)="rateTestimony(3)"
+              />
               <label for="star-3">
                 <mat-icon>star</mat-icon>
               </label>
-              <input type="radio" id="star-2" name="star-radio" value="2" [(ngModel)]="currentRating" (change)="rateTestimony(2)">
+              <input
+                type="radio"
+                id="star-2"
+                name="star-radio"
+                value="2"
+                [(ngModel)]="currentRating"
+                (change)="rateTestimony(2)"
+              />
               <label for="star-2">
                 <mat-icon>star</mat-icon>
               </label>
-              <input type="radio" id="star-1" name="star-radio" value="1" [(ngModel)]="currentRating" (change)="rateTestimony(1)">
+              <input
+                type="radio"
+                id="star-1"
+                name="star-radio"
+                value="1"
+                [(ngModel)]="currentRating"
+                (change)="rateTestimony(1)"
+              />
               <label for="star-1">
                 <mat-icon>star</mat-icon>
               </label>
@@ -69,33 +135,49 @@
       <div class="meta">
         <div class="meta-header">
           <p>{{ getRelativeTime(testimony.createdAt) }}</p>
-          <button mat-icon-button (click)="toggleMeta()" class="meta-toggle-btn">
-            <mat-icon>{{ isMetaExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+          <button
+            mat-icon-button
+            (click)="toggleMeta()"
+            class="meta-toggle-btn"
+          >
+            <mat-icon>{{
+              isMetaExpanded ? "expand_less" : "expand_more"
+            }}</mat-icon>
           </button>
         </div>
-        <div class="meta-details" [ngClass]="{ 'expanded': isMetaExpanded }">
+        <div class="meta-details" [ngClass]="{ expanded: isMetaExpanded }">
           <p>Subido por: {{ testimony.author }}</p>
-          <p>Fecha: {{ testimony.createdAt | date: 'medium' }}</p>
-          <p>Categorías: {{ testimony.categories.join(', ') || 'Ninguna' }}</p>
-          <p>Etiquetas: {{ testimony.tags.join(', ') || 'Ninguna' }}</p>
+          <p>Fecha: {{ testimony.createdAt | date: "medium" }}</p>
+          <p>Categorías: {{ testimony.categories.join(", ") || "Ninguna" }}</p>
+          <p>Etiquetas: {{ testimony.tags.join(", ") || "Ninguna" }}</p>
           <p *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
         </div>
       </div>
       <div class="transcription" *ngIf="testimony.format !== 'Texto'">
         <div class="transcription-header">
           <p>Transcripción</p>
-          <button mat-icon-button (click)="toggleTranscription()" class="transcription-toggle-btn">
-            <mat-icon>{{ isTranscriptionExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+          <button
+            mat-icon-button
+            (click)="toggleTranscription()"
+            class="transcription-toggle-btn"
+          >
+            <mat-icon>{{
+              isTranscriptionExpanded ? "expand_less" : "expand_more"
+            }}</mat-icon>
           </button>
         </div>
-        <div class="transcription-content" [ngClass]="{ 'expanded': isTranscriptionExpanded }">
+        <div
+          class="transcription-content"
+          [ngClass]="{ expanded: isTranscriptionExpanded }"
+        >
           Algo algo
         </div>
       </div>
     </div>
     <div class="comments-sidebar">
-      <app-testimony-comments [testimonyId]="testimony.id"></app-testimony-comments>
+      <app-testimony-comments
+        [testimonyId]="testimony.id"
+      ></app-testimony-comments>
     </div>
   </div>
 </div>
-

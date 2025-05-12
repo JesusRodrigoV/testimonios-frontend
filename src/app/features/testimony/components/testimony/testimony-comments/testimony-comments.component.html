@@ -2,8 +2,16 @@
   <h3>Comentarios</h3>
   <form class="comment-form" (ngSubmit)="submitComment()">
     <div class="input-container">
-      <input type="text" id="comment" name="comment" [(ngModel)]="newComment" required minlength="2" maxlength="500"
-        placeholder=" " />
+      <input
+        type="text"
+        id="comment"
+        name="comment"
+        [(ngModel)]="newComment"
+        required
+        minlength="2"
+        maxlength="500"
+        placeholder=" "
+      />
       <label for="comment" class="label">Escribe un comentario</label>
       <div class="underline"></div>
       <div class="error-message" *ngIf="formErrors['comment']">
@@ -11,37 +19,46 @@
       </div>
     </div>
 
-    @if(newComment && newComment.length >= 2) {
-    <div class="form-buttons" *ngIf="newComment && newComment.length >= 2">
-      <button mat-button type="button" class="btn-cancel" (click)="newComment = ''">
-        Cancelar
-      </button>
-      <button mat-raised-button type="submit" class="btn-comment" [disabled]="!newComment || newComment.length < 2">
-        Comentar
-      </button>
-    </div>
+    @if (newComment && newComment.length >= 2) {
+      <div class="form-buttons" *ngIf="newComment && newComment.length >= 2">
+        <button
+          mat-button
+          type="button"
+          class="btn-cancel"
+          (click)="newComment = ''"
+        >
+          Cancelar
+        </button>
+        <button
+          mat-raised-button
+          type="submit"
+          class="btn-comment"
+          [disabled]="!newComment || newComment.length < 2"
+        >
+          Comentar
+        </button>
+      </div>
     }
-
   </form>
   <div class="comments-list">
     @if (isLoading) {
-    <div class="loading">
-      <axl-spinner />
-      <p>Cargando comentarios...</p>
-    </div>
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando comentarios...</p>
+      </div>
     } @else {
-    @for (comment of comments; track comment.id_comentario) {
-    <div class="comment">
-      <p class="comment-content">{{ comment.contenido }}</p>
-      <p class="comment-meta">
-        Por {{ comment.creado_por_id_usuario }} el
-        {{ comment.fecha_creacion | date: 'medium' }}
-      </p>
-    </div>
-    } @empty {
-    <p>No hay comentarios aún.</p>
-    }
+      @for (comment of comments; track comment.id_comentario) {
+        <div class="comment">
+          <p class="comment-content">{{ comment.contenido }}</p>
+          <p class="comment-meta">
+            Por {{ comment.creado_por_id_usuario }} el
+            {{ comment.fecha_creacion | date: "medium" }}
+          </p>
+        </div>
+      } @empty {
+        <p>No hay comentarios aún.</p>
+      }
     }
   </div>
-
 </div>
+

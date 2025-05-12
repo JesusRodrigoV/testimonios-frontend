@@ -36,7 +36,6 @@
       }
     </div>
 
-    <!-- Título -->
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Título</mat-label>
@@ -156,7 +155,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Evento histórico -->
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Evento histórico (opcional)</mat-label>
@@ -169,7 +167,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Ubicación -->
     <div class="form-group location">
       <mat-checkbox
         [(ngModel)]="shareLocation"
@@ -180,14 +177,17 @@
       </mat-checkbox>
     </div>
 
-    <!-- Botón de enviar -->
     <button
       mat-raised-button
       color="primary"
       type="submit"
       [disabled]="!cloudinaryResult || submitting || uploadForm.invalid"
     >
-      {{ submitting ? "Subiendo..." : "Subir Testimonio" }}
+      @if (submitting) {
+        <axl-spinner size="small" />
+      } @else {
+        Subir Testimonio
+      }
     </button>
   </form>
 </div>

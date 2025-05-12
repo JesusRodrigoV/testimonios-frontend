@@ -25,6 +25,8 @@ import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { TestimonioService } from "@app/features/testimony/services";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { SpinnerComponent } from "@app/features/shared/ui/spinner";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-testimony-upload",
@@ -44,6 +46,7 @@ import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
     MatIconModule,
     MatCheckboxModule,
     MatSnackBarModule,
+    SpinnerComponent,
   ],
   templateUrl: "./testimony-upload.component.html",
   styleUrl: "./testimony-upload.component.scss",
@@ -89,6 +92,7 @@ export default class TestimonyUploadComponent implements OnInit {
 
   private testimonyService = inject(TestimonioService);
   private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
 
   constructor() {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
@@ -157,6 +161,7 @@ export default class TestimonyUploadComponent implements OnInit {
 
     const file = input.files[0];
     this.mediaType = file.type.startsWith("video") ? "Video" : "Audio";
+    console.log("El tipo del testimonio" + this.mediaType);
     this.mediaPreview = URL.createObjectURL(file);
 
     const formData = new FormData();
@@ -188,7 +193,8 @@ export default class TestimonyUploadComponent implements OnInit {
       this.testimony.duration = result.duration
         ? Math.round(result.duration)
         : undefined;
-      this.testimony.format = this.mediaType || "audio";
+      this.testimony.format = this.mediaType;
+      console.log("Formato del testimonio", this.testimony.format);
       this.openSnackBar("Archivo subido exitosamente", "Cerrar", "success");
     } catch (error) {
       console.error("Upload error details:", error);
@@ -310,6 +316,7 @@ export default class TestimonyUploadComponent implements OnInit {
         this.submitting = false;
         this.resetForm();
         form.resetForm();
+        this.router.navigate(["/explore"]);
       },
       error: (err) => {
         console.error("Backend submission error:", err);

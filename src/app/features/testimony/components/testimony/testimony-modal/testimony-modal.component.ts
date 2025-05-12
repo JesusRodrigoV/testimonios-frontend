@@ -1,26 +1,34 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { Testimony } from '@app/features/testimony/models/testimonio.model';
-import { TestimonyCommentsComponent } from '../testimony-comments';
-import { MatDialogModule } from '@angular/material/dialog';
-import { TestimonioService } from '@app/features/testimony/services';
-import { AuthService } from '@app/features/auth/services/auth';
-import { SuggestionDialogComponent } from '../../suggestion-dialog';
-import { MatMenuModule } from '@angular/material/menu';
-import { VideoPlayerComponent } from '@app/features/shared/video-player';
-import { AudioPlayerComponent } from '@app/features/shared/audio-player';
-import { AddToCollectionComponent } from '@app/features/collections/components/add-to-collection';
-import { AuthStore } from '@app/auth.store';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatePipe, NgClass, NgIf } from "@angular/common";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+} from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialog,
+} from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSelectModule } from "@angular/material/select";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
+import { TestimonyCommentsComponent } from "../testimony-comments";
+import { MatDialogModule } from "@angular/material/dialog";
+import { TestimonioService } from "@app/features/testimony/services";
+import { SuggestionDialogComponent } from "../../suggestion-dialog";
+import { MatMenuModule } from "@angular/material/menu";
+import { VideoPlayerComponent } from "@app/features/shared/video-player";
+import { AddToCollectionComponent } from "@app/features/collections/components/add-to-collection";
+import { AuthStore } from "@app/auth.store";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { CollectionService } from "@app/features/collections/services";
 
 @Component({
-  selector: 'app-testimony-modal',
+  selector: "app-testimony-modal",
   imports: [
     MatIconModule,
     MatButtonModule,
@@ -34,11 +42,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     MatMenuModule,
     FormsModule,
-    VideoPlayerComponent
+    VideoPlayerComponent,
   ],
-  templateUrl: './testimony-modal.component.html',
-  styleUrl: './testimony-modal.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "./testimony-modal.component.html",
+  styleUrl: "./testimony-modal.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestimonyModalComponent {
   isFavorite = false;
@@ -55,6 +63,7 @@ export class TestimonyModalComponent {
   readonly testimonyService = inject(TestimonioService);
   readonly authStore = inject(AuthStore);
   readonly snackBar = inject(MatSnackBar);
+  readonly collectionService = inject(CollectionService);
 
   closeModal() {
     this.dialogRef.close();
@@ -90,7 +99,7 @@ export class TestimonyModalComponent {
 
   rateTestimony(rating: number) {
     this.currentRating = rating;
-    console.log('Calificación:', rating);
+    console.log("Calificación:", rating);
     this.showRating = false;
 
     setTimeout(() => {
@@ -98,10 +107,10 @@ export class TestimonyModalComponent {
     }, 1000);
   }
 
-  @HostListener('document:click', ['$event'])
+  @HostListener("document:click", ["$event"])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.rating-container')) {
+    if (!target.closest(".rating-container")) {
       this.showRating = false;
     }
   }
@@ -109,11 +118,13 @@ export class TestimonyModalComponent {
   shareTestimony() {
     const url = `${window.location.origin}/testimonies/${this.testimony.id}`;
     if (navigator.share) {
-      navigator.share({
-        title: this.testimony.title,
-        text: this.testimony.description,
-        url,
-      }).catch(() => this.copyLink(url));
+      navigator
+        .share({
+          title: this.testimony.title,
+          text: this.testimony.description,
+          url,
+        })
+        .catch(() => this.copyLink(url));
     } else {
       this.copyLink(url);
     }
@@ -121,26 +132,48 @@ export class TestimonyModalComponent {
 
   addToCollection() {
     if (!this.authStore.isAuthenticated()) {
-      this.snackBar.open('Debes iniciar sesión para agregar a una colección', 'Cerrar', { duration: 3000 });
+      this.snackBar.open(
+        "Debes iniciar sesión para agregar a una colección",
+        "Cerrar",
+        { duration: 3000 },
+      );
       return;
     }
     this.dialog.open(AddToCollectionComponent, {
       data: { testimonyId: this.testimony.id },
-      width: '500px',
+      width: "500px",
     });
   }
+
+  addToFavorites() {
+    this.collectionService.addTestimony(1, this.testimony.id).subscribe({
+      next: () => {
+        this.snackBar.open("Testimonio agregado a favoritos", "Cerrar", {
+          duration: 3000,
+        });
+        return;
+      },
+      error: () => {
+        this.snackBar.open("Error al agregar el testimonio", "Cerrar", {
+          duration: 3000,
+        });
+      },
+    });
+  }
+
+  removeFromFavorites() {}
 
   downloadTestimony() {
     this.testimonyService.downloadTestimony(this.testimony.id).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = `${this.testimony.title}.${this.testimony.format.toLowerCase()}`;
         a.click();
         window.URL.revokeObjectURL(url);
       },
-      error: () => alert('Error al descargar el testimonio'),
+      error: () => alert("Error al descargar el testimonio"),
     });
   }
 
@@ -154,8 +187,8 @@ export class TestimonyModalComponent {
         this.testimonyService
           .suggestImprovement(this.testimony.id, result.field, result.value)
           .subscribe({
-            next: () => alert('Sugerencia enviada con éxito'),
-            error: () => alert('Error al enviar la sugerencia'),
+            next: () => alert("Sugerencia enviada con éxito"),
+            error: () => alert("Error al enviar la sugerencia"),
           });
       }
     });
@@ -163,16 +196,17 @@ export class TestimonyModalComponent {
 
   private copyLink(url: string) {
     navigator.clipboard.writeText(url).then(() => {
-      alert('Enlace copiado al portapapeles');
+      alert("Enlace copiado al portapapeles");
     });
   }
 
   getRelativeTime(createdAt: string | Date): string {
-    if (!createdAt) return 'Desconocido';
+    if (!createdAt) return "Desconocido";
 
     const now = new Date();
-    const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
-    if (isNaN(date.getTime())) return 'Fecha inválida';
+    const date =
+      typeof createdAt === "string" ? new Date(createdAt) : createdAt;
+    if (isNaN(date.getTime())) return "Fecha inválida";
 
     const diffMs = now.getTime() - date.getTime();
     const diffSec = Math.floor(diffMs / 1000);
@@ -183,17 +217,17 @@ export class TestimonyModalComponent {
     const diffYear = Math.floor(diffMonth / 12);
 
     if (diffSec < 60) {
-      return 'hace un instante';
+      return "hace un instante";
     } else if (diffMin < 60) {
-      return `hace ${diffMin} minuto${diffMin === 1 ? '' : 's'}`;
+      return `hace ${diffMin} minuto${diffMin === 1 ? "" : "s"}`;
     } else if (diffHr < 24) {
-      return `hace ${diffHr} hora${diffHr === 1 ? '' : 's'}`;
+      return `hace ${diffHr} hora${diffHr === 1 ? "" : "s"}`;
     } else if (diffDay < 30) {
-      return `hace ${diffDay} día${diffDay === 1 ? '' : 's'}`;
+      return `hace ${diffDay} día${diffDay === 1 ? "" : "s"}`;
     } else if (diffMonth < 12) {
-      return `hace ${diffMonth} mes${diffMonth === 1 ? '' : 'es'}`;
+      return `hace ${diffMonth} mes${diffMonth === 1 ? "" : "es"}`;
     } else {
-      return `hace ${diffYear} año${diffYear === 1 ? '' : 's'}`;
+      return `hace ${diffYear} año${diffYear === 1 ? "" : "s"}`;
     }
   }
 

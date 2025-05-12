@@ -24,6 +24,7 @@
     @if (testimony.url) {
       <div class="media-container">
         <strong>Medio:</strong>
+        {{ testimony.format }}
         @if (testimony.format === "Video") {
           <video controls [src]="testimony.url" class="media"></video>
         } @else {
