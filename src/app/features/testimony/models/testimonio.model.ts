@@ -15,6 +15,7 @@ export interface Testimony {
   categories: string[];
   tags: string[];
   event?: string;
+  transcription?: string;
 }
 
 export interface TestimonyInput {

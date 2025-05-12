@@ -15,6 +15,9 @@ import { SuggestionDialogComponent } from '../../suggestion-dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { VideoPlayerComponent } from '@app/features/shared/video-player';
 import { AudioPlayerComponent } from '@app/features/shared/audio-player';
+import { AddToCollectionComponent } from '@app/features/collections/components/add-to-collection';
+import { AuthStore } from '@app/auth.store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-testimony-modal',
@@ -50,7 +53,8 @@ export class TestimonyModalComponent {
   readonly data = inject(MAT_DIALOG_DATA);
   readonly testimony: Testimony = this.data.testimony;
   readonly testimonyService = inject(TestimonioService);
-  readonly authService = inject(AuthService);
+  readonly authStore = inject(AuthStore);
+  readonly snackBar = inject(MatSnackBar);
 
   closeModal() {
     this.dialogRef.close();
@@ -61,21 +65,23 @@ export class TestimonyModalComponent {
   }
 
   toggleTranscription() {
-    if (!this.testimony) {
+    /*
+    if (!this.testimony.transcription) {
       this.testimonyService.getTranscription(this.testimony).subscribe({
         next: (transcription) => {
-
+          this.testimony.transcription = transcription;
           this.isTranscriptionExpanded = true;
         },
-        error: () => alert('Error al cargar la transcripción')
+        error: () => alert('Error al cargar la transcripción'),
       });
     } else {
       this.isTranscriptionExpanded = !this.isTranscriptionExpanded;
     }
+      */
   }
 
   toggleFavorite() {
-
+    this.isFavorite = !this.isFavorite;
   }
 
   toggleRating() {
@@ -106,11 +112,22 @@ export class TestimonyModalComponent {
       navigator.share({
         title: this.testimony.title,
         text: this.testimony.description,
-        url
+        url,
       }).catch(() => this.copyLink(url));
     } else {
       this.copyLink(url);
     }
+  }
+
+  addToCollection() {
+    if (!this.authStore.isAuthenticated()) {
+      this.snackBar.open('Debes iniciar sesión para agregar a una colección', 'Cerrar', { duration: 3000 });
+      return;
+    }
+    this.dialog.open(AddToCollectionComponent, {
+      data: { testimonyId: this.testimony.id },
+      width: '500px',
+    });
   }
 
   downloadTestimony() {
@@ -123,21 +140,22 @@ export class TestimonyModalComponent {
         a.click();
         window.URL.revokeObjectURL(url);
       },
-      error: () => alert('Error al descargar el testimonio')
+      error: () => alert('Error al descargar el testimonio'),
     });
   }
 
   suggestImprovement() {
     const dialogRef = this.dialog.open(SuggestionDialogComponent, {
-      data: { testimonyId: this.testimony.id }
+      data: { testimonyId: this.testimony.id },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.testimonyService.suggestImprovement(this.testimony.id, result.field, result.value)
+        this.testimonyService
+          .suggestImprovement(this.testimony.id, result.field, result.value)
           .subscribe({
             next: () => alert('Sugerencia enviada con éxito'),
-            error: () => alert('Error al enviar la sugerencia')
+            error: () => alert('Error al enviar la sugerencia'),
           });
       }
     });

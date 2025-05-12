@@ -1,0 +1,134 @@
+:host {
+  --background: #ffffff;
+  --text: #333333;
+  --primary: #007bff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --border: #e0e0e0;
+  --error-text: #d32f2f;
+
+  :root.dark-mode & {
+    --background: #2c2c2c;
+    --text: #ffffff;
+    --primary: #66b0ff;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --border: #444444;
+    --error-text: #ff6666;
+  }
+}
+
+.collections-page {
+  padding: 24px;
+  background: var(--background);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+}
+
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.collection-card {
+  background: var(--background);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+
+  .collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+  }
+
+  .description {
+    font-size: 1rem;
+    color: var(--text);
+    margin: 0 0 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .meta {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+}
+
+.loading, .error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--text);
+}
+
+.error mat-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--error-text);
+}
+
+.full-width {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .collections-page {
+    padding: 16px;
+  }
+
+  .header h2 {
+    font-size: 1.5rem;
+  }
+
+  .collections-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .collection-card {
+    padding: 12px;
+
+    .collection-header h3 {
+      font-size: 1.2rem;
+    }
+
+    .description {
+      font-size: 0.9rem;
+    }
+  }
+}

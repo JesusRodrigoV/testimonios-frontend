@@ -1,4 +1,4 @@
-import { Testimony } from "../../testimony/models/testimonio.model";
+import { Testimony } from "@app/features/testimony/models/testimonio.model";
 
 export interface Collection {
   id_coleccion: number;

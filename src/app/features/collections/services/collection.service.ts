@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from 'src/environment/environment';
 import { Collection, CollectionTestimony } from '../models/collection.model';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Testimony } from '@app/features/testimony/models/testimonio.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,9 @@ export class CollectionService {
     return this.http.delete<void>(`${this.apiUrl}/${collectionId}/testimonios/${testimonyId}`);
   }
 
-  getTestimonies(collectionId: number): Observable<CollectionTestimony[]> {
-    return this.http.get<CollectionTestimony[]>(`${this.apiUrl}/${collectionId}/testimonios`);
+  getTestimonies(collectionId: number): Observable<Testimony[]> {
+    return this.http.get<{ data: Testimony[] }>(`${this.apiUrl}/${collectionId}/testimonios`).pipe(
+      map(response => response.data)
+    );
   }
 }

@@ -1,0 +1,108 @@
+:host {
+  --background: #ffffff;
+  --text: #333333;
+  --primary: #007bff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --border: #e0e0e0;
+
+  :root.dark-mode & {
+    --background: #2c2c2c;
+    --text: #ffffff;
+    --primary: #66b0ff;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --border: #444444;
+  }
+}
+
+.collection-detail {
+  padding: 16px;
+  background: var(--background);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  mat-form-field {
+    width: 300px;
+  }
+}
+
+.collection-info {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--background);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow);
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+}
+
+.testimony-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--text);
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: var(--primary);
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 8px 0 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  .collection-info {
+    padding: 12px;
+  }
+
+  .testimony-grid {
+    grid-template-columns: 1fr;
+  }
+}
