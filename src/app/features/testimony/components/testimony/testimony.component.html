@@ -5,27 +5,32 @@
   </div>
   <div class="media">
     @defer (on viewport) {
-    @if (testimony.format === 'Video') {
-    <app-video-player class="media-content" [videoUrl]="testimony.url" />
-    } @else if (testimony.format ==='Audio') {
-    <!--
+      @if (testimony.format === "Video") {
+        <app-video-player class="media-content" [videoUrl]="testimony.url" />
+      } @else if (testimony.format === "Audio") {
+        <!--
         <app-audio-player 
         [testimonyData]="{title: testimony.title, url: testimony.url, author: testimony.author, duration:testimony.duration}" />
       -->
-    <audio [src]="testimony.url" controls loading="lazy" class="media-content"></audio>
-    }
+        <audio
+          [src]="testimony.url"
+          controls
+          loading="lazy"
+          class="media-content"
+        ></audio>
+      }
     } @placeholder (minimum 500ms) {
-    <div class="skeleton-media"></div>
+      <div class="skeleton-media"></div>
     } @loading (minimum 1s; after 500ms) {
-    <div class="loading">
-      <axl-spinner />
-      <p>Cargando medio...</p>
-    </div>
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando medio...</p>
+      </div>
     } @error {
-    <div class="error">
-      <mat-icon>error</mat-icon>
-      <p>Error al cargar el medio.</p>
-    </div>
+      <div class="error">
+        <mat-icon>error</mat-icon>
+        <p>Error al cargar el medio.</p>
+      </div>
     }
   </div>
   <div class="meta-grid">
@@ -51,3 +56,4 @@
     </div>
   </div>
 </div>
+

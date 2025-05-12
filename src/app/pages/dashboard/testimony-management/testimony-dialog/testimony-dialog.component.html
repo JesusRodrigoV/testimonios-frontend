@@ -26,9 +26,14 @@
         <strong>Medio:</strong>
         {{ testimony.format }}
         @if (testimony.format === "Video") {
-          <video controls [src]="testimony.url" class="media"></video>
+          <app-video-player class="media" [videoUrl]="testimony.url" />
         } @else {
-          <img [src]="testimony.url" [alt]="testimony.title" class="media" />
+          <audio
+            [src]="testimony.url"
+            controls
+            loading="lazy"
+            class="media"
+          ></audio>
         }
       </div>
     }
