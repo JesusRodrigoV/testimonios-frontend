@@ -1,5 +1,6 @@
 <header class="header">
   <div class="header-left">
+    <ng-content select="[sidenav-button]" />
     <img src="assets/images/logo-Sfondo.png" alt="Logo" class="logo" />
     <h1 class="app-title manuscript-text">
       <a routerLink="/" class="title-text">Legado de Bolivia</a>
@@ -11,19 +12,9 @@
       <div class="search-border"></div>
       <div golden class="search-input-wrapper">
         <i class="bx bx-search search-icon"></i>
-        <input
-          type="text"
-          class="input"
-          placeholder="Buscar testimonios..."
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()"
-        />
-        <button
-          mat-icon-button
-          matTooltip="Filtros de búsqueda"
-          [matMenuTriggerFor]="filterMenu"
-          golden
-        >
+        <input type="text" class="input" placeholder="Buscar testimonios..." [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()" />
+        <button mat-icon-button matTooltip="Filtros de búsqueda" [matMenuTriggerFor]="filterMenu" golden>
           <i class="bx bx-filter"></i>
         </button>
       </div>
@@ -31,39 +22,20 @@
   </div>
 
   <div class="mobile-search-container">
-    <button
-      mat-icon-button
-      class="mobile-search-toggle"
-      (click)="toggleMobileSearch()"
-      matTooltip="Buscar"
-      golden
-      *ngIf="!isMobileSearchActive"
-    >
+    <button mat-icon-button class="mobile-search-toggle" (click)="toggleMobileSearch()" matTooltip="Buscar" golden
+      *ngIf="!isMobileSearchActive">
       <i class="bx bx-search"></i>
     </button>
 
-    <div
-      class="search-field mobile-search"
-      [class.active]="isMobileSearchActive"
-    >
+    <div class="search-field mobile-search" [class.active]="isMobileSearchActive">
       <div class="search-wrapper">
         <div class="search-border"></div>
         <div golden class="search-input-wrapper">
           <i class="bx bx-search search-icon"></i>
-          <input
-            type="text"
-            class="input"
-            placeholder="Buscar testimonios..."
-            [(ngModel)]="searchQuery"
-            (keyup.enter)="onSearch()"
-          />
-          <button
-            mat-icon-button
-            class="close-search"
-            (click)="toggleMobileSearch()"
-            matTooltip="Cerrar búsqueda"
-            golden
-          >
+          <input type="text" class="input" placeholder="Buscar testimonios..." [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()" />
+          <button mat-icon-button class="close-search" (click)="toggleMobileSearch()" matTooltip="Cerrar búsqueda"
+            golden>
             <i class="bx bx-x"></i>
           </button>
         </div>
@@ -72,60 +44,30 @@
   </div>
 
   <div class="header-right">
-    <button
-      mat-flat-button
-      class="create-post-btn"
-      routerLink="/submit-testimony"
-      matTooltip="Crear nuevo testimonio"
-      matTooltipPosition="below"
-    >
+    <button mat-flat-button class="create-post-btn" routerLink="/submit-testimony" matTooltip="Crear nuevo testimonio"
+      matTooltipPosition="below">
       <i class="bx bx-plus"></i>
     </button>
 
     @if (!authStore.isAuthenticated()) {
-      <button
-        mat-button
-        routerLink="/login"
-        class="login-btn"
-        matTooltip="Iniciar sesión en tu cuenta"
-        matTooltipPosition="below"
-        golden
-      >
-        Iniciar Sesión
-      </button>
-      <button
-        mat-raised-button
-        color="primary"
-        routerLink="/register"
-        matTooltip="Crear una cuenta"
-        matTooltipPosition="below"
-      >
-        Registrarse
-      </button>
+    <button mat-button routerLink="/login" class="login-btn" matTooltip="Iniciar sesión en tu cuenta"
+      matTooltipPosition="below" golden>
+      Iniciar Sesión
+    </button>
+    <button mat-raised-button color="primary" routerLink="/register" matTooltip="Crear una cuenta"
+      matTooltipPosition="below">
+      Registrarse
+    </button>
     } @else {
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="notificationsMenu"
-        [matBadge]="unreadNotifications"
-        [matBadgeHidden]="unreadNotifications === 0"
-        matBadgeColor="warn"
-        class="notification-btn"
-        matTooltip="Notificaciones"
-        matTooltipPosition="below"
-        golden
-      >
-        <i class="bx bx-bell"></i>
-      </button>
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="userMenu"
-        class="avatar-button"
-        matTooltip="Menú de usuario"
-        matTooltipPosition="below"
-        golden
-      >
-        <i class="bx bxs-user-circle"></i>
-      </button>
+    <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" [matBadge]="unreadNotifications"
+      [matBadgeHidden]="unreadNotifications === 0" matBadgeColor="warn" class="notification-btn"
+      matTooltip="Notificaciones" matTooltipPosition="below" golden>
+      <i class="bx bx-bell"></i>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" class="avatar-button" matTooltip="Menú de usuario"
+      matTooltipPosition="below" golden>
+      <i class="bx bxs-user-circle"></i>
+    </button>
     }
   </div>
 
