@@ -3,6 +3,15 @@
     <span class="particle particle-1"></span>
     <span class="particle particle-2"></span>
     <span class="particle particle-3"></span>
+    <div class="grid-container">
+      @for (row of rowsArray; track $index) {
+      <div class="row" [ngClass]="getRowClass($index)">
+        @for (col of colsArray; track $index) {
+        <div class="square" #squareItem></div>
+        }
+      </div>
+      }
+    </div>
   </div>
 
   <h1 class="manuscript-text">
