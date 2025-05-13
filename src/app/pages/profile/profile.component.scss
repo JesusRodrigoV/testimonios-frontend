@@ -24,27 +24,24 @@
   }
 }
 
-/* Contenedor principal que ocupa el 100% */
 .profile-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 64px); /* Ajusta según la altura de tu navbar */
+  min-height: calc(100vh - 64px);
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Contenedor de las tarjetas */
 .profile-wrapper {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   width: 100%;
-  max-width: 800px; /* Limita el ancho máximo para pantallas grandes */
+  max-width: 800px;
   margin: 0 auto;
 }
 
-/* Estilo base para las tarjetas */
 .profile-card {
   background: var(--card-background);
   border-radius: 16px;
@@ -57,7 +54,6 @@
   }
 }
 
-/* Tarjeta superior (hero) */
 .profile-card-hero {
   text-align: center;
   padding: 3rem 2rem;
@@ -87,7 +83,6 @@
   }
 }
 
-/* Tarjeta de información */
 .info-card {
   padding: 1.5rem;
 
@@ -111,7 +106,7 @@
 
     .info-group {
       display: grid;
-      grid-template-columns: 120px 1fr; /* Etiqueta fija, valor flexible */
+      grid-template-columns: 120px 1fr;
       align-items: center;
       padding: 0.75rem 0;
       border-bottom: 1px solid var(--border-color);
@@ -140,7 +135,6 @@
   }
 }
 
-/* Estilo para el badge de rol */
 .role-badge {
   display: inline-flex;
   align-items: center;
@@ -158,7 +152,6 @@
   }
 }
 
-/* Estilo para el estado de 2FA */
 .two-factor-enabled {
   color: var(--success-color);
   font-weight: 500;
@@ -169,7 +162,6 @@
   font-weight: 500;
 }
 
-/* Contenedor de acciones */
 .actions-container {
   display: flex;
   justify-content: center;
@@ -177,7 +169,6 @@
   padding: 1.5rem 0;
 }
 
-/* Responsividad */
 @media (max-width: 768px) {
   .profile-container {
     padding: 1.5rem;
@@ -236,7 +227,7 @@
     padding: 0.75rem;
 
     .info-group {
-      grid-template-columns: 1fr; /* Apila etiqueta y valor */
+      grid-template-columns: 1fr;
       gap: 0.5rem;
 
       label {

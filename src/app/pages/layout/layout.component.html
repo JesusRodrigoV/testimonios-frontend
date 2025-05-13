@@ -1,18 +1,17 @@
 <div class="app-container">
-   <header class="app-header">
-      <app-header />
-    </header>
-  
+  <header class="app-header">
+    <app-header />
+  </header>
+
   <main class="app-main">
-  <div class="sidenav">
-    <app-sidenav />
-  </div> 
+    <div class="sidenav">
+      <app-sidenav />
+    </div>
     <div class="router-content">
       <router-outlet />
     </div>
   </main>
 </div>
 <footer class="app-footer">
-  <button mat-button (click)="themeService.toggleTheme()">Cambiar tema</button>
   <app-footer />
 </footer>

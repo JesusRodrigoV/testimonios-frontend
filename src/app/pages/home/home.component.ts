@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { HeroSectionComponent } from "./components/hero-section";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
@@ -24,8 +24,11 @@ import { CacheService } from "@app/core/services/cache";
 export default class HomeComponent {
   highlightedTestimonies: Testimony[] = [];
   loading = false;
+
+  private ref = inject(ChangeDetectorRef);
   private testimonioService = inject(TestimonioService);
   private cacheService = inject(CacheService);
+
 
   ngOnInit() {
     this.loadHighlightedTestimonies();
@@ -44,6 +47,7 @@ export default class HomeComponent {
         this.highlightedTestimonies = response.data;
         this.cacheService.setHighlightedTestimonies(response.data);
         this.loading = false;
+        this.ref.detectChanges();
       },
       error: (err) => {
         console.error("Error loading highlighted testimonies:", err);
