@@ -3,66 +3,149 @@
   --secondary-color: #424242;
   --text-primary: #444;
   --text-secondary: #666;
+  --background-card: #fff;
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
   --spacing-md: 2rem;
   --spacing-lg: 4rem;
   --border-radius: 8px;
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --card-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  --max-width: 1400px;
+  --card-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
 
   :root.dark-mode & {
-    --primary-color: #1976d2;
-    --secondary-color: #424242;
+    --primary-color: #90caf9;
+    --secondary-color: #616161;
     --text-primary: #e0e0e0;
     --text-secondary: #bdbdbd;
+    --background-card: #333;
   }
 }
 
 .home-container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--spacing-sm);
+  width: 100%;
+}
+
+.feed-section {
+  width: 100%; /* Full width of parent */
 }
 
 h1 {
   text-align: center;
   color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-p {
-  text-align: center;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+  animation: fadeIn 0.8s ease-out;
 }
 
 h2 {
   text-align: center;
   color: var(--text-primary);
-  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  animation: fadeIn 1s ease-out;
+}
+
+p {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
 }
 
 .highlighted-feed {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  width: 100%; /* Ensure full width */
+  align-items: center;
 }
 
 .loading {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  text-align: center;
-  padding: 20px;
+  padding: var(--spacing-lg);
   color: var(--text-secondary);
+  font-size: 1.2rem;
+  animation: fadeIn 1s ease-out;
+  width: 100%;
+  max-width: 800px; /* Match testimony cards */
+  margin: 0 auto;
+
+  axl-spinner {
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+  }
 }
 
-@media (max-width: 600px) {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
   .home-container {
-    padding: 10px;
+    padding: var(--spacing-xs) 0;
+  }
+
+  .feed-section {
+    padding: var(--spacing-sm);
+  }
+
+  .highlighted-feed {
+    gap: var(--spacing-sm);
+  }
+
+  :host ::ng-deep app-testimony,
+  .loading {
+    max-width: 100%; /* Full width on mobile */
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .feed-section {
+    padding: var(--spacing-xs);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .loading {
+    font-size: 1rem;
+    padding: var(--spacing-md);
   }
 }

@@ -1,12 +1,15 @@
 <div class="home-container">
   <app-hero-section></app-hero-section>
-  <h2>Testimonios Destacados</h2>
-  <div class="highlighted-feed">
-    @for (testimony of highlightedTestimonies; track testimony.id) {
-      <app-testimony [testimony]="testimony"></app-testimony>
-    }
-    <div class="loading" *ngIf="loading">
-      <axl-spinner />
+  <section class="feed-section">
+    <h2>Testimonios Destacados</h2>
+    <div class="highlighted-feed">
+      @for (testimony of highlightedTestimonies; track testimony.id) {
+        <app-testimony [testimony]="testimony"></app-testimony>
+      }
+      <div class="loading" *ngIf="loading">
+        <axl-spinner></axl-spinner>
+        <p>Cargando testimonios...</p>
+      </div>
     </div>
-  </div>
+  </section>
 </div>
