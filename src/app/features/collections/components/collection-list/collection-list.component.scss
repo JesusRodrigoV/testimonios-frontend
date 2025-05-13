@@ -2,77 +2,95 @@
   --background: #ffffff;
   --text: #333333;
   --primary: #007bff;
+  --secondary: #6c757d;
   --shadow: rgba(0, 0, 0, 0.1);
   --border: #e0e0e0;
   --error-text: #d32f2f;
+  --card-hover: #f8f9fa;
 
   :root.dark-mode & {
-    --background: #2c2c2c;
-    --text: #ffffff;
+    --background: #1e1e1e;
+    --text: #e0e0e0;
     --primary: #66b0ff;
-    --shadow: rgba(0, 0, 0, 0.3);
+    --secondary: #adb5bd;
+    --shadow: rgba(0, 0, 0, 0.4);
     --border: #444444;
     --error-text: #ff6666;
+    --card-hover: #2c2c2c;
   }
 }
 
 .collections-page {
-  padding: 24px;
-  background: var(--background);
+  padding: 32px;
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: calc(100vh - 64px); 
+  width: 100%;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 
   h2 {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 700;
     color: var(--text);
+    margin: 0;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 8px 16px;
   }
 }
 
 .collections-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
 
 .collection-card {
   background: var(--background);
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 12px;
+  padding: 20px;
   box-shadow: 0 4px 12px var(--shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 16px var(--shadow);
+    box-shadow: 0 8px 20px var(--shadow);
+    background: var(--card-hover);
   }
 
   .collection-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 
     h3 {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 600;
       color: var(--text);
+    }
+
+    button {
+      color: var(--secondary);
     }
   }
 
   .description {
     font-size: 1rem;
     color: var(--text);
-    margin: 0 0 12px;
+    opacity: 0.85;
+    margin: 0 0 16px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -81,24 +99,31 @@
   }
 
   .meta {
-    font-size: 0.9rem;
-    color: var(--text);
+    font-size: 0.875rem;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
-.loading, .error {
+.loading,
+.error {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 32px;
   color: var(--text);
+  background: var(--background);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .error mat-icon {
-  font-size: 2rem;
-  width: 2rem;
-  height: 2rem;
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
   color: var(--error-text);
 }
 
@@ -111,8 +136,19 @@
     padding: 16px;
   }
 
-  .header h2 {
-    font-size: 1.5rem;
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    button {
+      width: 100%;
+    }
   }
 
   .collections-grid {
@@ -121,14 +157,18 @@
   }
 
   .collection-card {
-    padding: 12px;
+    padding: 16px;
 
     .collection-header h3 {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
 
     .description {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      font-size: 0.8rem;
     }
   }
 }

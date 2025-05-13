@@ -2,67 +2,89 @@
   --background: #ffffff;
   --text: #333333;
   --primary: #007bff;
+  --secondary: #6c757d;
   --shadow: rgba(0, 0, 0, 0.1);
   --border: #e0e0e0;
+  --card-bg: #f8f9fa;
 
   :root.dark-mode & {
     --background: #2c2c2c;
     --text: #ffffff;
     --primary: #66b0ff;
+    --secondary: #a0a0a0;
     --shadow: rgba(0, 0, 0, 0.3);
     --border: #444444;
+    --card-bg: #2d2d2d;
   }
 }
 
 .collection-detail {
-  padding: 16px;
-  background: var(--background);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.header {
+.collection-card {
+  margin-bottom: 32px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.header-section {
+  margin-bottom: 16px;
+  
+  .title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--primary);
+    text-align: center;
+  }
+}
+
+.metadata {
   display: flex;
-  justify-content: space-between;
+  gap: 24px;
+  justify-content: center;
   align-items: center;
   margin-bottom: 16px;
-
-  h2 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  mat-form-field {
-    width: 300px;
+  color: var(--secondary);
+  
+  mat-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
   }
 }
 
-.collection-info {
-  margin-bottom: 16px;
-  padding: 16px;
-  background: var(--background);
-  border-radius: 16px;
-  box-shadow: 0 4px 12px var(--shadow);
-
-  h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 8px;
-    color: var(--text);
-  }
-
-  p {
-    font-size: 1rem;
-    margin: 0 0 8px;
-    color: var(--text);
-  }
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 800px;
+  color: var(--text);
 }
 
 .testimony-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
+  gap: 24px;
+  padding: 16px 0;
+}
+
+.testimony-card {
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: translateY(-3px);
+  }
 }
 
 .loading,
@@ -71,37 +93,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  color: var(--text);
-
+  min-height: 300px;
+  gap: 16px;
+  
   mat-icon {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
-    color: var(--primary);
+    font-size: 2.5rem;
+    width: auto;
+    height: auto;
   }
-
+  
   p {
-    font-size: 1rem;
-    margin: 8px 0 0;
+    font-size: 1.2rem;
   }
 }
 
-@media (max-width: 600px) {
-  .header {
+.empty-message,
+.not-found {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--secondary);
+  padding: 32px;
+}
+
+@media (max-width: 768px) {
+  .collection-detail {
+    padding: 16px;
+  }
+  
+  .header-section .title {
+    font-size: 1.8rem;
+  }
+  
+  .metadata {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-
-    mat-form-field {
-      width: 100%;
-    }
+    gap: 12px;
   }
-
-  .collection-info {
-    padding: 12px;
-  }
-
+  
   .testimony-grid {
     grid-template-columns: 1fr;
   }

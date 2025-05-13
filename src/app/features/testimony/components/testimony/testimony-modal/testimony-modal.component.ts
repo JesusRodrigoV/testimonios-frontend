@@ -4,6 +4,8 @@ import {
   Component,
   HostListener,
   inject,
+  OnDestroy,
+  OnInit,
 } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
@@ -26,6 +28,7 @@ import { AddToCollectionComponent } from "@app/features/collections/components/a
 import { AuthStore } from "@app/auth.store";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CollectionService } from "@app/features/collections/services";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-testimony-modal",
@@ -48,13 +51,15 @@ import { CollectionService } from "@app/features/collections/services";
   styleUrl: "./testimony-modal.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestimonyModalComponent {
-  isFavorite = false;
+export class TestimonyModalComponent implements OnInit, OnDestroy {
   showRating = false;
   currentRating = 0;
   isMetaExpanded = false;
   isTranscriptionExpanded = false;
   ratingControl = new FormControl<number | null>(null);
+  favoritosMios: number[] = [];
+  isFavorite = false;
+  private favoritosSubscription: Subscription | undefined;
 
   readonly dialogRef = inject(MatDialogRef<TestimonyModalComponent>);
   readonly dialog = inject(MatDialog);
@@ -65,6 +70,30 @@ export class TestimonyModalComponent {
   readonly snackBar = inject(MatSnackBar);
   readonly collectionService = inject(CollectionService);
 
+  ngOnInit() {
+    this.favoritosSubscription = this.collectionService.getFavorites().subscribe({
+      next: (favs) => {
+        this.favoritosMios = favs;
+        this.isFavorite = this.favoritosMios.includes(this.testimony.id);
+      },
+      error: (error) => {
+        console.error('Error al obtener favoritos:', error);
+        this.snackBar.open('Error al cargar favoritos', 'Cerrar', { duration: 3000 });
+      },
+    });
+  }
+
+  ngOnDestroy() {
+    
+    if (this.favoritosSubscription) {
+      this.favoritosSubscription.unsubscribe();
+    }
+  }
+
+  esFavorito(): boolean {
+    return this.favoritosMios.includes(this.testimony.id);
+  }
+
   closeModal() {
     this.dialogRef.close();
   }
@@ -74,23 +103,7 @@ export class TestimonyModalComponent {
   }
 
   toggleTranscription() {
-    /*
-    if (!this.testimony.transcription) {
-      this.testimonyService.getTranscription(this.testimony).subscribe({
-        next: (transcription) => {
-          this.testimony.transcription = transcription;
-          this.isTranscriptionExpanded = true;
-        },
-        error: () => alert('Error al cargar la transcripción'),
-      });
-    } else {
-      this.isTranscriptionExpanded = !this.isTranscriptionExpanded;
-    }
-      */
-  }
-
-  toggleFavorite() {
-    this.isFavorite = !this.isFavorite;
+    
   }
 
   toggleRating() {
@@ -99,7 +112,7 @@ export class TestimonyModalComponent {
 
   rateTestimony(rating: number) {
     this.currentRating = rating;
-    console.log("Calificación:", rating);
+    console.log('Calificación:', rating);
     this.showRating = false;
 
     setTimeout(() => {
@@ -107,10 +120,10 @@ export class TestimonyModalComponent {
     }, 1000);
   }
 
-  @HostListener("document:click", ["$event"])
+  @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest(".rating-container")) {
+    if (!target.closest('.rating-container')) {
       this.showRating = false;
     }
   }
@@ -132,48 +145,58 @@ export class TestimonyModalComponent {
 
   addToCollection() {
     if (!this.authStore.isAuthenticated()) {
-      this.snackBar.open(
-        "Debes iniciar sesión para agregar a una colección",
-        "Cerrar",
-        { duration: 3000 },
-      );
+      this.snackBar.open('Debes iniciar sesión para agregar a una colección', 'Cerrar', {
+        duration: 3000,
+      });
       return;
     }
     this.dialog.open(AddToCollectionComponent, {
       data: { testimonyId: this.testimony.id },
-      width: "500px",
+      width: '500px',
     });
   }
 
   addToFavorites() {
-    this.collectionService.addTestimony(1, this.testimony.id).subscribe({
-      next: () => {
-        this.snackBar.open("Testimonio agregado a favoritos", "Cerrar", {
-          duration: 3000,
-        });
-        return;
+    if (!this.authStore.isAuthenticated()) {
+      this.snackBar.open('Debes iniciar sesión para agregar a favoritos', 'Cerrar', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    this.collectionService.toggleFavorite(this.testimony.id).subscribe({
+      next: (response) => {
+        if (this.isFavorite) {
+          this.favoritosMios = this.favoritosMios.filter((id) => id !== this.testimony.id);
+          this.snackBar.open('Testimonio eliminado de favoritos', 'Cerrar', {
+            duration: 3000,
+          });
+        } else {
+          this.favoritosMios = [...this.favoritosMios, this.testimony.id];
+          this.snackBar.open('Testimonio agregado a favoritos', 'Cerrar', {
+            duration: 3000,
+          });
+        }
+        this.isFavorite = !this.isFavorite;
       },
-      error: () => {
-        this.snackBar.open("Error al agregar el testimonio", "Cerrar", {
-          duration: 3000,
-        });
+      error: (error) => {
+        console.error('Error al togglear favorito:', error);
+        this.snackBar.open('Error al actualizar favoritos', 'Cerrar', { duration: 3000 });
       },
     });
   }
-
-  removeFromFavorites() {}
 
   downloadTestimony() {
     this.testimonyService.downloadTestimony(this.testimony.id).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = url;
         a.download = `${this.testimony.title}.${this.testimony.format.toLowerCase()}`;
         a.click();
         window.URL.revokeObjectURL(url);
       },
-      error: () => alert("Error al descargar el testimonio"),
+      error: () => alert('Error al descargar el testimonio'),
     });
   }
 
@@ -187,8 +210,8 @@ export class TestimonyModalComponent {
         this.testimonyService
           .suggestImprovement(this.testimony.id, result.field, result.value)
           .subscribe({
-            next: () => alert("Sugerencia enviada con éxito"),
-            error: () => alert("Error al enviar la sugerencia"),
+            next: () => alert('Sugerencia enviada con éxito'),
+            error: () => alert('Error al enviar la sugerencia'),
           });
       }
     });
@@ -196,17 +219,16 @@ export class TestimonyModalComponent {
 
   private copyLink(url: string) {
     navigator.clipboard.writeText(url).then(() => {
-      alert("Enlace copiado al portapapeles");
+      alert('Enlace copiado al portapapeles');
     });
   }
 
   getRelativeTime(createdAt: string | Date): string {
-    if (!createdAt) return "Desconocido";
+    if (!createdAt) return 'Desconocido';
 
     const now = new Date();
-    const date =
-      typeof createdAt === "string" ? new Date(createdAt) : createdAt;
-    if (isNaN(date.getTime())) return "Fecha inválida";
+    const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
+    if (isNaN(date.getTime())) return 'Fecha inválida';
 
     const diffMs = now.getTime() - date.getTime();
     const diffSec = Math.floor(diffMs / 1000);
@@ -217,17 +239,17 @@ export class TestimonyModalComponent {
     const diffYear = Math.floor(diffMonth / 12);
 
     if (diffSec < 60) {
-      return "hace un instante";
+      return 'hace un instante';
     } else if (diffMin < 60) {
-      return `hace ${diffMin} minuto${diffMin === 1 ? "" : "s"}`;
+      return `hace ${diffMin} minuto${diffMin === 1 ? '' : 's'}`;
     } else if (diffHr < 24) {
-      return `hace ${diffHr} hora${diffHr === 1 ? "" : "s"}`;
+      return `hace ${diffHr} hora${diffHr === 1 ? '' : 's'}`;
     } else if (diffDay < 30) {
-      return `hace ${diffDay} día${diffDay === 1 ? "" : "s"}`;
+      return `hace ${diffDay} día${diffDay === 1 ? '' : 's'}`;
     } else if (diffMonth < 12) {
-      return `hace ${diffMonth} mes${diffMonth === 1 ? "" : "es"}`;
+      return `hace ${diffMonth} mes${diffMonth === 1 ? '' : 'es'}`;
     } else {
-      return `hace ${diffYear} año${diffYear === 1 ? "" : "s"}`;
+      return `hace ${diffYear} año${diffYear === 1 ? '' : 's'}`;
     }
   }
 

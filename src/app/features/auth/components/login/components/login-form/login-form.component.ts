@@ -37,7 +37,6 @@ export class LoginFormComponent {
   });
 
   submit() {
-    console.log("Datos enviados desde LoginFormComponent:", this.form.value);
     if (this.form.valid) {
       this.onSubmit.emit(this.form.value);
     }

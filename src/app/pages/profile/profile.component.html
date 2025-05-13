@@ -1,52 +1,54 @@
-<div class="profile-wrapper">
-  <mat-card class="profile-card profile-card-large">
-    <mat-card-content>
-      <img
-        [src]="user()?.profile_image || '/assets/images/default-avatar.jpg'"
-        alt="Profile Image"
-        class="profile-image"
-      />
-      <h1 class="profile-name">{{ user()?.nombre }}</h1>
-    </mat-card-content>
-  </mat-card>
+<div class="profile-container">
+  <div class="profile-wrapper">
+    <mat-card class="profile-card profile-card-hero">
+      <mat-card-content class="hero-content">
+        <img
+          [src]="user()?.profile_image || '/assets/images/default-avatar.jpg'"
+          alt="Profile Image"
+          class="profile-image"
+        />
+        <h1 class="profile-name">{{ user()?.nombre || 'Usuario' }}</h1>
+      </mat-card-content>
+    </mat-card>
 
-  <mat-card class="profile-card info-card">
-    <mat-card-header>
-      <mat-card-title>Información Personal</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="profile-info">
-        <mat-divider></mat-divider>
-        <div class="info-group">
-          <label>Email:</label>
-          <span>{{ user()?.email }}</span>
+    <mat-card class="profile-card info-card">
+      <mat-card-header>
+        <mat-card-title>Información Personal</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="profile-info">
+          <mat-divider></mat-divider>
+          <div class="info-group">
+            <label>Email</label>
+            <span>{{ user()?.email || 'No disponible' }}</span>
+          </div>
+          <div class="info-group">
+            <label>Rol</label>
+            <span class="role-badge">{{ getRoleName(user()?.role) }}</span>
+          </div>
+          <div class="info-group">
+            <label>Biografía</label>
+            <span>{{ user()?.biografia || 'Sin biografía' }}</span>
+          </div>
+          <div class="info-group">
+            <label>2FA</label>
+            <span
+              [ngClass]="{
+                'two-factor-enabled': user()?.two_factor_enabled,
+                'two-factor-disabled': !user()?.two_factor_enabled
+              }"
+              >{{ user()?.two_factor_enabled ? 'Activado' : 'Desactivado' }}</span
+            >
+          </div>
         </div>
-        <div class="info-group">
-          <label>Rol:</label>
-          <span
-            ><span class="role-badge">{{
-              getRoleName(user()?.role)
-            }}</span></span
-          >
-        </div>
-        <div class="info-group">
-          <label>Biografía:</label>
-          <span>{{ user()?.biografia || "Sin biografía" }}</span>
-        </div>
-        <div class="info-group">
-          <label>2FA:</label>
-          <span class="two-factor-status">{{
-            user()?.two_factor_enabled ? "Activado" : "Desactivado"
-          }}</span>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      </mat-card-content>
+    </mat-card>
 
-  <div class="logout-container">
-    <button mat-raised-button color="warn" (click)="onLogout()">
-      <i class="bx bx-log-out"></i>
-      Cerrar Sesión
-    </button>
+    <div class="actions-container">
+      <button mat-raised-button color="warn" (click)="onLogout()">
+        <i class="bx bx-log-out"></i>
+        Cerrar Sesión
+      </button>
+    </div>
   </div>
 </div>

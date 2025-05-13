@@ -1,7 +1,14 @@
 <div class="collections-page">
   <div class="header">
     <h2>Mis Colecciones</h2>
-    <button mat-flat-button color="primary" (click)="openCollectionForm()" [disabled]="!isAuthenticated()">Crear Colección</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="openCollectionForm()"
+      [disabled]="!isAuthenticated()"
+    >
+      Crear Colección
+    </button>
   </div>
   @if (loading()) {
     <div class="loading">
@@ -16,16 +23,30 @@
   } @else {
     <div class="collections-grid">
       @for (collection of collections(); track collection.id_coleccion) {
-        <div class="collection-card">
+        <div
+          class="collection-card"
+          (click)="navigateToCollection(collection.id_coleccion)"
+        >
           <div class="collection-header">
             <h3>{{ collection.titulo }}</h3>
             <button mat-icon-button [matMenuTriggerFor]="menu">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="openCollectionForm(collection)">Editar</button>
-              <button mat-menu-item (click)="deleteCollection(collection.id_coleccion)">Eliminar</button>
-              <button mat-menu-item [routerLink]="['/collections', collection.id_coleccion]">Ver Testimonios</button>
+              @if (!isProtectedCollection(collection)) {
+                <button
+                  mat-menu-item
+                  (click)="openCollectionForm(collection); $event.stopPropagation()"
+                >
+                  Editar
+                </button>
+                <button
+                  mat-menu-item
+                  (click)="deleteCollection(collection.id_coleccion); $event.stopPropagation()"
+                >
+                  Eliminar
+                </button>
+              }
             </mat-menu>
           </div>
           <p class="description">{{ collection.descripcion }}</p>
@@ -47,8 +68,10 @@
     <form [formGroup]="collectionForm">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Título</mat-label>
-        <input matInput formControlName="titulo" required>
-        <mat-error *ngIf="collectionForm.get('titulo')?.hasError('required')">Título es requerido</mat-error>
+        <input matInput formControlName="titulo" required />
+        <mat-error *ngIf="collectionForm.get('titulo')?.hasError('required')">
+          Título es requerido
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
@@ -58,7 +81,12 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button (click)="closeCollectionForm()">Cancelar</button>
-    <button mat-flat-button color="primary" [disabled]="collectionForm.invalid || saving()" (click)="saveCollection(collection)">
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="collectionForm.invalid || saving()"
+      (click)="saveCollection(collection)"
+    >
       {{ saving() ? 'Guardando...' : (collection ? 'Actualizar' : 'Crear') }}
     </button>
   </mat-dialog-actions>

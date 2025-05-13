@@ -26,14 +26,10 @@ import { VideoPlayerComponent } from "@app/features/shared/video-player";
   styleUrl: "./testimony.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestimonyComponent implements OnInit {
+export class TestimonyComponent{
   @Input({ required: true }) testimony!: Testimony;
 
   private dialog = inject(MatDialog);
-
-  ngOnInit() {
-    console.log(this.testimony);
-  }
 
   openModal() {
     this.dialog.open(TestimonyModalComponent, {

@@ -1,19 +1,56 @@
+.dialog-container {
+  max-width: 400px;
+  padding: 16px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+}
+
+.collections-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+
+  .collection-item {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+
+    mat-checkbox {
+      width: 100%;
+    }
+  }
+}
+
+.create-form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .full-width {
   width: 100%;
 }
 
-.loading, .error {
+.loading,
+.error {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
   padding: 16px;
-  color: var(--text);
 }
 
-.error mat-icon {
-  font-size: 2rem;
-  width: 2rem;
-  height: 2rem;
-  color: var(--error-text);
+mat-dialog-actions {
+  padding: 8px 0;
 }

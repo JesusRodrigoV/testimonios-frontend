@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "src/environment/environment";
 import { Collection } from "../models/collection.model";
-import { map, Observable } from "rxjs";
+import { map, Observable, switchMap } from "rxjs";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 
 @Injectable({
@@ -33,6 +33,35 @@ export class CollectionService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  getFavoritesCollectionId(): Observable<number> {
+    return this.getAll().pipe(
+      map((collections) =>
+        collections.find((c) => c.titulo === 'Favoritos')?.id_coleccion
+      ),
+      map((id) => {
+        if (!id) {
+          throw new Error('Colección Favoritos no encontrada');
+        }
+        return id;
+      })
+    );
+  }
+
+  getFavorites(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/favorites/ids`);
+  }
+
+  toggleFavorite(testimonyId: number): Observable<any> {
+    return this.getFavoritesCollectionId().pipe(
+      switchMap((collectionId) =>
+        this.http.post(`${this.apiUrl}/testimonios`, {
+          id_coleccion: collectionId,
+          id_testimonio: testimonyId,
+        })
+      )
+    );
+  }
+
   addTestimony(collectionId: number, testimonyId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/testimonios`, {
       id_coleccion: collectionId,
@@ -51,4 +80,5 @@ export class CollectionService {
       .get<{ data: Testimony[] }>(`${this.apiUrl}/${collectionId}/testimonios`)
       .pipe(map((response) => response.data));
   }
+
 }

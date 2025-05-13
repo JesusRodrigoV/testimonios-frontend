@@ -1,64 +1,101 @@
-import { HttpInterceptorFn } from "@angular/common/http";
-import { inject } from "@angular/core";
-import { AuthStore } from "@app/auth.store";
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthStore } from '@app/auth.store';
+import { AuthService } from '../features/auth/services/auth';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { patchState } from '@ngrx/signals';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authStore = inject(AuthStore);
+let isRefreshing = false;
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-  const token = authStore.accessToken();
-  console.log(
-    "authInterceptor: Request URL:",
-    req.url,
-    "Token:",
-    token ? "Present" : "Missing",
-  );
-  if (token) {
-    const authReq = req.clone({
-      headers: req.headers.set("Authorization", `Bearer ${token}`),
-    });
-    return next(authReq);
-  }
-
-  return next(req);
+type AuthStoreType = {
+  accessToken: () => string | null;
+  refreshToken: () => string | null;
+  logout: () => void;
 };
 
-/*
- *
- 
-  return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        const refreshTokenObservable = authStore.refreshTokenRequest();
-        if (!refreshTokenObservable) {
-          return throwError(() => new Error("No refresh token available"));
-        }
+export const authInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+  const authStore = inject(AuthStore) as unknown as AuthStoreType;
+  const authService = inject(AuthService);
+  const snackBar = inject(MatSnackBar);
 
-        return refreshTokenObservable.pipe(
-          switchMap((success) => {
-            if (success) {
-              const newToken = authStore.accessToken();
-              if (!newToken) {
-                authStore.logout();
-                router.navigate(["/login"]);
-                return throwError(
-                  () => new Error("No access token after refresh"),
-                );
-              }
+  const token = authStore.accessToken();
 
-              const newReq = req.clone({
-                setHeaders: {
-                  Authorization: `Bearer ${newToken}`,
-                },
-              });
-              return next(newReq);
-            }
-            authStore.logout();
-            router.navigate(["/login"]);
-            return throwError(() => new Error("Token refresh failed"));
-          }),
-        );
+  const authReq = token
+    ? req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`),
+      })
+    : req;
+
+  return next(authReq).pipe(
+    catchError((error) => {
+      if (error.status === 401 && token) {
+        return handle401Error(req, next, authStore, authService, snackBar);
       }
       return throwError(() => error);
-    }),
+    })
   );
- * */
+};
+
+function handle401Error(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+  authStore: AuthStoreType,
+  authService: AuthService,
+  snackBar: MatSnackBar
+): Observable<HttpEvent<unknown>> {
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshTokenSubject.next(null);
+
+    const refreshToken = authStore.refreshToken();
+    if (!refreshToken) {
+      isRefreshing = false;
+      authStore.logout();
+      snackBar.open('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.', 'Cerrar', {
+        duration: 5000,
+      });
+      return throwError(() => new Error('No refresh token available'));
+    }
+
+    return authService.refreshToken(refreshToken).pipe(
+      switchMap((response: { accessToken: string }) => {
+        isRefreshing = false;
+        refreshTokenSubject.next(response.accessToken);
+        // Actualizar el AuthStore con el nuevo accessToken
+        patchState(authStore as any, { accessToken: response.accessToken });
+        localStorage.setItem('accessToken', response.accessToken);
+        // Reintentar la solicitud original con el nuevo token
+        const retryReq = req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${response.accessToken}`),
+        });
+        return next(retryReq);
+      }),
+      catchError((err) => {
+        isRefreshing = false;
+        authStore.logout();
+        snackBar.open('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.', 'Cerrar', {
+          duration: 5000,
+        });
+        return throwError(() => err);
+      })
+    );
+  }
+
+  return refreshTokenSubject.pipe(
+    filter((token) => token !== null),
+    take(1),
+    switchMap((token) =>
+      next(
+        req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${token}`),
+        })
+      )
+    )
+  );
+}

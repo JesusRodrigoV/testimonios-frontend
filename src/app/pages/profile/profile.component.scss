@@ -5,7 +5,6 @@
   --text-color: #2b2d42;
   --background: #f8f9fa;
   --border-color: #dee2e6;
-  --table-row-background: #ffffff;
   --card-background: #ffffff;
   --title-color: #2c3e50;
   --description-color: #666;
@@ -18,7 +17,6 @@
     --text-color: #e0e0e0;
     --background: #1e2126;
     --border-color: #3a3f47;
-    --table-row-background: #2a2e34;
     --card-background: #2a2e34;
     --title-color: #e0e0e0;
     --description-color: #a0a0a0;
@@ -26,127 +24,237 @@
   }
 }
 
+/* Contenedor principal que ocupa el 100% */
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px); /* Ajusta según la altura de tu navbar */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Contenedor de las tarjetas */
 .profile-wrapper {
-  max-width: 800px;
-  margin: 20px auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  width: 100%;
+  max-width: 800px; /* Limita el ancho máximo para pantallas grandes */
+  margin: 0 auto;
 }
 
+/* Estilo base para las tarjetas */
 .profile-card {
   background: var(--card-background);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px var(--shadow-color);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--shadow-color);
+  }
 }
 
-.profile-card-large {
+/* Tarjeta superior (hero) */
+.profile-card-hero {
   text-align: center;
-  padding: 2rem;
-}
+  padding: 3rem 2rem;
 
-.profile-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid var(--border-color);
-  margin-bottom: 1.5rem;
-}
-
-.profile-name {
-  font-size: 2.5rem;
-  color: var(--title-color);
-  font-weight: 600;
-  margin: 0;
-}
-
-.info-card {
-  padding: 1rem;
-}
-
-.profile-info {
-  padding: 20px 0;
-
-  .info-group {
-    margin: 15px 0;
+  .hero-content {
     display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-color);
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
 
-    &:last-child {
-      border-bottom: none;
+  .profile-image {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+    transition: border-color 0.3s ease;
+  }
+
+  .profile-name {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--title-color);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Tarjeta de información */
+.info-card {
+  padding: 1.5rem;
+
+  mat-card-header {
+    padding-bottom: 1rem;
+
+    mat-card-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--title-color);
+    }
+  }
+
+  .profile-info {
+    padding: 1rem 0;
+
+    mat-divider {
+      margin-bottom: 1.5rem;
+      border-color: var(--border-color);
     }
 
-    label {
-      font-weight: 500;
-      color: var(--text-color);
-    }
+    .info-group {
+      display: grid;
+      grid-template-columns: 120px 1fr; /* Etiqueta fija, valor flexible */
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s ease;
 
-    span {
-      color: var(--description-color);
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: rgba(var(--primary-color), 0.05);
+      }
+
+      label {
+        font-weight: 600;
+        color: var(--text-color);
+        font-size: 1rem;
+      }
+
+      span {
+        color: var(--description-color);
+        font-size: 1rem;
+        word-break: break-word;
+      }
     }
   }
 }
 
+/* Estilo para el badge de rol */
 .role-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 1rem;
   border-radius: 20px;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
   background: #e3f2fd;
   color: #1976d2;
+  transition: background-color 0.3s ease;
+
+  .dark-mode & {
+    background: #1e88e5;
+    color: #ffffff;
+  }
 }
 
-.two-factor-status {
+/* Estilo para el estado de 2FA */
+.two-factor-enabled {
   color: var(--success-color);
   font-weight: 500;
 }
 
-.logout-container {
+.two-factor-disabled {
+  color: var(--danger-color);
+  font-weight: 500;
+}
+
+/* Contenedor de acciones */
+.actions-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
 
-  button {
-    min-width: 150px;
+/* Responsividad */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1.5rem;
+  }
 
-    i {
-      margin-right: 8px;
+  .profile-wrapper {
+    max-width: 100%;
+    gap: 1.5rem;
+  }
+
+  .profile-card-hero {
+    padding: 2rem 1.5rem;
+
+    .profile-image {
+      width: 120px;
+      height: 120px;
+    }
+
+    .profile-name {
+      font-size: 2.2rem;
+    }
+  }
+
+  .info-card {
+    padding: 1rem;
+
+    .info-group {
+      grid-template-columns: 100px 1fr;
     }
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
   .profile-wrapper {
-    margin: 10px auto;
     gap: 1rem;
   }
 
-  .profile-card-large {
+  .profile-card-hero {
     padding: 1.5rem;
-  }
 
-  .profile-image {
-    width: 120px;
-    height: 120px;
-  }
+    .profile-image {
+      width: 100px;
+      height: 100px;
+    }
 
-  .profile-name {
-    font-size: 1.8rem;
+    .profile-name {
+      font-size: 1.8rem;
+    }
   }
 
   .info-card {
     padding: 0.75rem;
+
+    .info-group {
+      grid-template-columns: 1fr; /* Apila etiqueta y valor */
+      gap: 0.5rem;
+
+      label {
+        font-size: 0.9rem;
+      }
+
+      span {
+        font-size: 0.9rem;
+      }
+    }
   }
 
-  .profile-info {
-    .info-group {
-      flex-direction: column;
-      gap: 0.25rem;
+  .actions-container {
+    flex-direction: column;
+    align-items: center;
+
+    button {
+      min-width: 100%;
     }
   }
 }

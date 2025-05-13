@@ -22,7 +22,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatMenuModule } from "@angular/material/menu";
-import { RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { Collection } from "../../models/collection.model";
 import { AuthStore } from "@app/auth.store";
 import { CollectionService } from "../../services";
@@ -39,7 +39,6 @@ import { DatePipe, NgIf } from "@angular/common";
     MatMenuModule,
     MatIconModule,
     MatDialogModule,
-    RouterLink,
     SpinnerComponent,
     ReactiveFormsModule,
     DatePipe,
@@ -55,6 +54,7 @@ export default class CollectionListComponent {
   private readonly fb = inject(FormBuilder);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
 
   collections = signal<Collection[]>([]);
   loading = signal(false);
@@ -64,19 +64,19 @@ export default class CollectionListComponent {
   dialogRef?: MatDialogRef<any>;
   isAuthenticated = this.authStore.isAuthenticated;
 
-  @ViewChild("formTemplate") formTemplate!: TemplateRef<any>;
+  @ViewChild('formTemplate') formTemplate!: TemplateRef<any>;
 
   constructor() {
     this.collectionForm = this.fb.group({
-      titulo: ["", Validators.required],
-      descripcion: [""],
+      titulo: ['', Validators.required],
+      descripcion: [''],
     });
     this.loadCollections();
   }
 
   loadCollections() {
     if (!this.isAuthenticated()) {
-      this.error.set("Debes iniciar sesión para ver tus colecciones");
+      this.error.set('Debes iniciar sesión para ver tus colecciones');
       return;
     }
     this.loading.set(true);
@@ -86,7 +86,7 @@ export default class CollectionListComponent {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set("Error al cargar las colecciones");
+        this.error.set('Error al cargar las colecciones');
         this.loading.set(false);
       },
     });
@@ -94,11 +94,9 @@ export default class CollectionListComponent {
 
   openCollectionForm(collection?: Collection) {
     if (!this.isAuthenticated()) {
-      this.snackBar.open(
-        "Debes iniciar sesión para crear/editar colecciones",
-        "Cerrar",
-        { duration: 3000 },
-      );
+      this.snackBar.open('Debes iniciar sesión para crear/editar colecciones', 'Cerrar', {
+        duration: 3000,
+      });
       return;
     }
     if (collection) {
@@ -112,7 +110,7 @@ export default class CollectionListComponent {
 
     this.dialogRef = this.dialog.open(this.formTemplate, {
       data: { collection },
-      width: "500px",
+      width: '500px',
     });
   }
 
@@ -127,42 +125,32 @@ export default class CollectionListComponent {
     const collectionData = {
       ...this.collectionForm.value,
       id_usuario: this.authStore.user()?.id_usuario,
-      fecha_creacion: collection
-        ? collection.fecha_creacion
-        : new Date().toISOString(),
+      fecha_creacion: collection ? collection.fecha_creacion : new Date().toISOString(),
     };
 
     if (collection) {
-      this.collectionService
-        .update(collection.id_coleccion, collectionData)
-        .subscribe({
-          next: () => {
-            this.loadCollections();
-            this.snackBar.open("Colección actualizada", "Cerrar", {
-              duration: 3000,
-            });
-            this.closeCollectionForm();
-            this.saving.set(false);
-          },
-          error: () => {
-            this.snackBar.open("Error al actualizar la colección", "Cerrar", {
-              duration: 3000,
-            });
-            this.saving.set(false);
-          },
-        });
-    } else {
-      this.collectionService.create(collectionData).subscribe({
+      this.collectionService.update(collection.id_coleccion, collectionData).subscribe({
         next: () => {
           this.loadCollections();
-          this.snackBar.open("Colección creada", "Cerrar", { duration: 3000 });
+          this.snackBar.open('Colección actualizada', 'Cerrar', { duration: 3000 });
           this.closeCollectionForm();
           this.saving.set(false);
         },
         error: () => {
-          this.snackBar.open("Error al crear la colección", "Cerrar", {
-            duration: 3000,
-          });
+          this.snackBar.open('Error al actualizar la colección', 'Cerrar', { duration: 3000 });
+          this.saving.set(false);
+        },
+      });
+    } else {
+      this.collectionService.create(collectionData).subscribe({
+        next: () => {
+          this.loadCollections();
+          this.snackBar.open('Colección creada', 'Cerrar', { duration: 3000 });
+          this.closeCollectionForm();
+          this.saving.set(false);
+        },
+        error: () => {
+          this.snackBar.open('Error al crear la colección', 'Cerrar', { duration: 3000 });
           this.saving.set(false);
         },
       });
@@ -171,27 +159,29 @@ export default class CollectionListComponent {
 
   deleteCollection(id: number) {
     if (!this.isAuthenticated()) {
-      this.snackBar.open(
-        "Debes iniciar sesión para eliminar colecciones",
-        "Cerrar",
-        { duration: 3000 },
-      );
+      this.snackBar.open('Debes iniciar sesión para eliminar colecciones', 'Cerrar', {
+        duration: 3000,
+      });
       return;
     }
-    if (confirm("¿Estás seguro de eliminar esta colección?")) {
+    if (confirm('¿Estás seguro de eliminar esta colección?')) {
       this.collectionService.delete(id).subscribe({
         next: () => {
           this.loadCollections();
-          this.snackBar.open("Colección eliminada", "Cerrar", {
-            duration: 3000,
-          });
+          this.snackBar.open('Colección eliminada', 'Cerrar', { duration: 3000 });
         },
-        error: () =>
-          this.snackBar.open("Error al eliminar la colección", "Cerrar", {
-            duration: 3000,
-          }),
+        error: () => this.snackBar.open('Error al eliminar la colección', 'Cerrar', {
+          duration: 3000,
+        }),
       });
     }
   }
-}
 
+  navigateToCollection(id: number) {
+    this.router.navigate(['/collections', id]);
+  }
+
+  isProtectedCollection(collection: Collection): boolean {
+    return collection.titulo === 'Favoritos' || collection.titulo === 'Guardados';
+  }
+}

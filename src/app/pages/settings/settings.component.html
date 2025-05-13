@@ -7,37 +7,6 @@
 
     <mat-card-content>
       <mat-tab-group>
-        <!-- Pestaña de Notificaciones -->
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <i class="bx bx-bell"></i>
-            <span>Notificaciones</span>
-          </ng-template>
-
-          <div class="settings-section">
-            <div class="setting-item">
-              <div class="setting-info">
-                <h3>Notificaciones Push</h3>
-                <p>Recibe notificaciones en tiempo real</p>
-              </div>
-              <mat-slide-toggle [(ngModel)]="notificationsEnabled">
-              </mat-slide-toggle>
-            </div>
-
-            <mat-divider></mat-divider>
-
-            <div class="setting-item">
-              <div class="setting-info">
-                <h3>Notificaciones por Email</h3>
-                <p>Recibe actualizaciones importantes por correo</p>
-              </div>
-              <mat-slide-toggle [(ngModel)]="emailNotifications">
-              </mat-slide-toggle>
-            </div>
-          </div>
-        </mat-tab>
-
-        <!-- Pestaña de Apariencia -->
         <mat-tab>
           <ng-template mat-tab-label>
             <i class="bx bx-palette"></i>
@@ -50,63 +19,12 @@
                 <h3>Modo Oscuro</h3>
                 <p>Cambia entre tema claro y oscuro</p>
               </div>
-              <mat-slide-toggle
-                [checked]="darkMode"
-                (change)="onThemeChange($event.checked)"
-              >
+              <mat-slide-toggle [checked]="darkMode" (change)="onThemeChange($event.checked)">
               </mat-slide-toggle>
-            </div>
-
-            <mat-divider></mat-divider>
-
-            <div class="setting-item">
-              <div class="setting-info">
-                <h3>Idioma</h3>
-                <p>Selecciona tu idioma preferido</p>
-              </div>
-              <select [(ngModel)]="language" class="language-select">
-                <option value="es">Español</option>
-                <option value="en">English</option>
-                <option value="pt">Português</option>
-              </select>
-            </div>
-          </div>
-        </mat-tab>
-
-        <!-- Pestaña de Privacidad -->
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <i class="bx bx-lock-alt"></i>
-            <span>Privacidad</span>
-          </ng-template>
-
-          <div class="settings-section">
-            <div class="setting-item">
-              <div class="setting-info">
-                <h3>Perfil Público</h3>
-                <p>Permite que otros usuarios vean tu perfil</p>
-              </div>
-              <mat-slide-toggle> </mat-slide-toggle>
-            </div>
-
-            <mat-divider></mat-divider>
-
-            <div class="setting-item">
-              <div class="setting-info">
-                <h3>Actividad en Testimonios</h3>
-                <p>Mostrar mi actividad a otros usuarios</p>
-              </div>
-              <mat-slide-toggle> </mat-slide-toggle>
             </div>
           </div>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>
-
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="onSaveSettings()">
-        Guardar Cambios
-      </button>
-    </mat-card-actions>
   </mat-card>
 </div>

@@ -170,7 +170,6 @@ export class AuthService {
         }),
         catchError((error) => {
           console.error("Error al refrescar token:", error);
-          // Si hay error en el refresh, limpiamos el storage
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           return throwError(
