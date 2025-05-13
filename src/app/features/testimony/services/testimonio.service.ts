@@ -171,8 +171,15 @@ export class TestimonioService {
     return this.http.post<number>(`${this.apiUrl}/${testimonyId}/rate`, { rating });
   }
 
-  downloadTestimony(testimonyId: number): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/${testimonyId}/download`, { responseType: 'blob' });
+  downloadTestimony(testimony: Testimony): Observable<Blob> {
+    if (!testimony.url) {
+      return throwError(() => new Error('No se encontró la URL del archivo'));
+    }
+    return this.http.get(testimony.url, { responseType: 'blob' }).pipe(
+      catchError((error) => {
+        return throwError(() => new Error(error.message || 'Error al descargar el archivo desde Cloudinary'));
+      }),
+    );
   }
 
   getTranscription(testimony: Testimony): Observable<string> {

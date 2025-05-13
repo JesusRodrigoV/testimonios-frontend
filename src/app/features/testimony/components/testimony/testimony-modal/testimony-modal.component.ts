@@ -187,17 +187,37 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   }
 
   downloadTestimony() {
-    this.testimonyService.downloadTestimony(this.testimony.id).subscribe({
+    this.testimonyService.downloadTestimony(this.testimony).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${this.testimony.title}.${this.testimony.format.toLowerCase()}`;
+        
+        const extension = this.getFileExtension();
+        a.download = `${this.testimony.title || 'testimonio'}.${extension}`;
         a.click();
         window.URL.revokeObjectURL(url);
       },
-      error: () => alert('Error al descargar el testimonio'),
+      error: (err) => {
+        this.snackBar.open(err.message || 'Error al descargar el testimonio', 'Cerrar', {
+          duration: 5000,
+        });
+      },
     });
+  }
+
+  private getFileExtension(): string {    
+    const format = this.testimony.format?.toLowerCase();
+    if (format && ['mp4', 'mov', 'mp3', 'wav'].includes(format)) {
+      return format;
+    }
+
+    const urlParts = this.testimony.url?.split('.');
+    const urlExtension = urlParts?.[urlParts.length - 1]?.toLowerCase();
+    if (urlExtension && ['mp4', 'mov', 'mp3', 'wav'].includes(urlExtension)) {
+      return urlExtension;
+    }
+    return this.testimony.url?.includes('video') ? 'mp4' : 'mp3';
   }
 
   suggestImprovement() {

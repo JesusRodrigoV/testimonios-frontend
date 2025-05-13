@@ -42,6 +42,7 @@
           class="action-btn share-btn"
           (click)="shareTestimony()"
           matTooltip="Compartir"
+          disabled
         >
           <mat-icon>share</mat-icon>
         </button>
@@ -59,6 +60,7 @@
           class="action-btn suggest-btn"
           (click)="suggestImprovement()"
           matTooltip="Sugerir mejora"
+          disabled
         >
           <mat-icon>edit</mat-icon>
         </button>
@@ -68,6 +70,7 @@
             class="action-btn rating-btn"
             (click)="toggleRating()"
             matTooltip="Calificar"
+            disabled
           >
             <mat-icon>{{ currentRating ? "star" : "star_border" }}</mat-icon>
           </button>
