@@ -27,7 +27,9 @@
               <img
                 height="50"
                 width="50"
-                [ngSrc]="user.profile_image || 'assets/default-avatar.jpg'"
+                [ngSrc]="
+                  user.profile_image || 'assets/images/default-avatar.jpg'
+                "
                 [alt]="user.nombre"
                 class="profile-image"
               />
