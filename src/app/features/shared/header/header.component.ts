@@ -17,6 +17,7 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { AuthStore } from "@app/auth.store";
 import { Router, RouterLink } from "@angular/router";
 import { GoldenDirective } from "@app/core/directives/golden.directive";
+import { ThemeService } from "@app/core/services/theme";
 
 export const Rol = {
   ADMIN: 1,
@@ -46,6 +47,20 @@ export const Rol = {
 export class HeaderComponent {
   protected readonly Rol = Rol;
   isScrolled = false;
+  protected readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+  private themeService = inject(ThemeService);
+  isMobileSearchActive = false;
+  notificationCount = 0;
+  userAvatar = "assets/images/default-avatar.png";
+
+  get darkMode(): boolean {
+    return this.themeService.isDarkMode();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
 
   @HostListener("window:scroll")
   onWindowScroll() {
@@ -58,21 +73,15 @@ export class HeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() search = new EventEmitter<string>();
 
-  protected readonly authStore = inject(AuthStore);
-  private readonly router = inject(Router);
-  isMobileSearchActive = false;
-  notificationCount = 0;
-  userAvatar = "assets/images/default-avatar.png";
+  
 
   toggleMobileSearch(): void {
     this.isMobileSearchActive = !this.isMobileSearchActive;
 
-    // Si está cerrando el buscador y hay una búsqueda activa, limpiamos
     if (!this.isMobileSearchActive && this.searchQuery) {
       this.searchQuery = "";
     }
 
-    // Prevenir scroll cuando el buscador está activo
     document.body.style.overflow = this.isMobileSearchActive ? "hidden" : "";
   }
 

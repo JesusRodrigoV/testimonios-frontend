@@ -1,13 +1,13 @@
 @use "@angular/material" as mat;
-@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
+
 html {
   color-scheme: light;
   @include mat.theme(
     (
       color: mat.$azure-palette,
-      density: 0,
+      density: -1,
     )
   );
 }
@@ -17,9 +17,14 @@ html.dark-mode {
   @include mat.theme(
     (
       color: mat.$cyan-palette,
-      density: 0,
+      density: -1,
     )
   );
+  
+  @include mat.theme-overrides((
+     primary: #ebdcff,
+    on-primary: #230f46,
+  ));
 }
 
 html,
@@ -30,7 +35,7 @@ body {
 }
 
 .manuscript-text {
-  font-family: "Great Vibes", cursive;
+  font-family: "Tangerine", cursive;
   font-weight: 400;
   font-style: normal;
 }
