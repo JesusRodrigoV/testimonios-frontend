@@ -161,7 +161,7 @@ export default class TestimonyUploadComponent implements OnInit {
 
     const file = input.files[0];
     this.mediaType = file.type.startsWith("video") ? "Video" : "Audio";
-    console.log("El tipo del testimonio" + this.mediaType);
+    console.log("El tipo del testimonio: " + this.mediaType);
     this.mediaPreview = URL.createObjectURL(file);
 
     const formData = new FormData();

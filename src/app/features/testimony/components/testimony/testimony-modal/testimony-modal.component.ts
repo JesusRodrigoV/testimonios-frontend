@@ -20,7 +20,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyCommentsComponent } from "../testimony-comments";
 import { MatDialogModule } from "@angular/material/dialog";
-import { TestimonioService } from "@app/features/testimony/services";
+import { TestimonioService, TranscriptionService } from "@app/features/testimony/services";
 import { SuggestionDialogComponent } from "../../suggestion-dialog";
 import { MatMenuModule } from "@angular/material/menu";
 import { VideoPlayerComponent } from "@app/features/shared/video-player";
@@ -29,6 +29,7 @@ import { AuthStore } from "@app/auth.store";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CollectionService } from "@app/features/collections/services";
 import { Subscription } from "rxjs";
+import { Transcripcion } from "@app/features/testimony/models/transcription.model";
 
 @Component({
   selector: "app-testimony-modal",
@@ -59,7 +60,9 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   ratingControl = new FormControl<number | null>(null);
   favoritosMios: number[] = [];
   isFavorite = false;
+  transcripciones: Transcripcion[] = [];
   private favoritosSubscription: Subscription | undefined;
+  private transcripcionesSubscription: Subscription | undefined;
 
   readonly dialogRef = inject(MatDialogRef<TestimonyModalComponent>);
   readonly dialog = inject(MatDialog);
@@ -69,24 +72,42 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   readonly authStore = inject(AuthStore);
   readonly snackBar = inject(MatSnackBar);
   readonly collectionService = inject(CollectionService);
+  readonly transcriptionService = inject(TranscriptionService);
 
   ngOnInit() {
     this.favoritosSubscription = this.collectionService.getFavorites().subscribe({
       next: (favs) => {
         this.favoritosMios = favs;
         this.isFavorite = this.favoritosMios.includes(this.testimony.id);
+        this.dialogRef.updatePosition();
       },
       error: (error) => {
         console.error('Error al obtener favoritos:', error);
         this.snackBar.open('Error al cargar favoritos', 'Cerrar', { duration: 3000 });
       },
     });
+    console.log('Testimonio:', this.testimony);
+
+    this.transcripcionesSubscription = this.transcriptionService
+      .obtenerTranscripcionesPorTestimonio(this.testimony.id)
+      .subscribe({
+        next: (transcripciones) => {
+          this.transcripciones = transcripciones;
+          this.dialogRef.updatePosition();
+        },
+        error: (error) => {
+          console.error('Error al obtener transcripciones:', error);
+          this.snackBar.open('Error al cargar transcripciones', 'Cerrar', { duration: 3000 });
+        },
+      });
   }
 
   ngOnDestroy() {
-    
     if (this.favoritosSubscription) {
       this.favoritosSubscription.unsubscribe();
+    }
+    if (this.transcripcionesSubscription) {
+      this.transcripcionesSubscription.unsubscribe();
     }
   }
 
@@ -103,7 +124,31 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   }
 
   toggleTranscription() {
-    
+    this.isTranscriptionExpanded = !this.isTranscriptionExpanded;
+  }
+
+  get canRequestTranscription(): boolean {
+    return (
+      this.authStore.isAuthenticated() &&
+      this.transcripciones.length === 0
+    );
+  }
+
+  requestTranscription() {
+    if (!this.canRequestTranscription) return;
+
+    this.transcriptionService.transcribirArchivo(this.testimony.id).subscribe({
+      next: (transcripcion) => {
+        this.transcripciones = [transcripcion];
+        this.isTranscriptionExpanded = true;
+        this.snackBar.open('Transcripción solicitada con éxito', 'Cerrar', { duration: 3000 });
+        this.dialogRef.updatePosition(); // Forzar actualización de UI
+      },
+      error: (error) => {
+        console.error('Error al solicitar transcripción:', error);
+        // Error ya manejado en el servicio
+      },
+    });
   }
 
   toggleRating() {
@@ -192,7 +237,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        
+
         const extension = this.getFileExtension();
         a.download = `${this.testimony.title || 'testimonio'}.${extension}`;
         a.click();
@@ -206,7 +251,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getFileExtension(): string {    
+  private getFileExtension(): string {
     const format = this.testimony.format?.toLowerCase();
     if (format && ['mp4', 'mov', 'mp3', 'wav'].includes(format)) {
       return format;

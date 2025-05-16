@@ -121,11 +121,8 @@
 
   button[type="submit"] {
     background: var(--gradient-primary);
-    padding: 14px 32px;
     font-size: 1rem;
     font-weight: 600;
-    border-radius: 8px;
-    margin-top: 1.5rem;
     transition: all 0.3s ease;
 
     &[disabled] {

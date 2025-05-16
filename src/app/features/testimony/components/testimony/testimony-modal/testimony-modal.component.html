@@ -13,11 +13,6 @@
           <app-video-player [videoUrl]="testimony.url" />
         } @else if (testimony.format === "Audio") {
           <audio [src]="testimony.url" controls></audio>
-          <!--
-          <app-audio-player
-            [testimonyData]="{title: testimony.title, url: testimony.url, author: testimony.author, duration: testimony.duration || 0}"
-          />
-          -->
         }
       </div>
       <div class="actions">
@@ -42,7 +37,6 @@
           class="action-btn share-btn"
           (click)="shareTestimony()"
           matTooltip="Compartir"
-          disabled
         >
           <mat-icon>share</mat-icon>
         </button>
@@ -60,7 +54,6 @@
           class="action-btn suggest-btn"
           (click)="suggestImprovement()"
           matTooltip="Sugerir mejora"
-          disabled
         >
           <mat-icon>edit</mat-icon>
         </button>
@@ -70,7 +63,6 @@
             class="action-btn rating-btn"
             (click)="toggleRating()"
             matTooltip="Calificar"
-            disabled
           >
             <mat-icon>{{ currentRating ? "star" : "star_border" }}</mat-icon>
           </button>
@@ -173,7 +165,33 @@
           class="transcription-content"
           [ngClass]="{ expanded: isTranscriptionExpanded }"
         >
-          Algo algo
+          @if (transcripciones.length > 0) {
+            <div class="transcription-text">
+              @for (transcripcion of transcripciones; track transcripcion.id_transcripcion) {
+                <div class="transcription-item">
+                  <p>{{ transcripcion.contenido }}</p>
+                  <p class="transcription-meta">
+                    Idioma: {{ transcripcion.idioma }} |
+                    Creado: {{ transcripcion.fecha_creacion | date: 'short' }} |
+                    Por: {{ transcripcion.usuarios?.nombre || 'Desconocido' }}
+                  </p>
+                </div>
+              }
+            </div>
+          } @else if (canRequestTranscription) {
+            <div class="transcription-empty">
+              <p>No hay transcripciones disponibles.</p>
+              <button
+                mat-raised-button
+                color="accent"
+                (click)="requestTranscription()"
+              >
+                Solicitar Transcripción
+              </button>
+            </div>
+          } @else {
+            <p>No hay transcripciones disponibles. Inicia sesión para solicitar una.</p>
+          }
         </div>
       </div>
     </div>
