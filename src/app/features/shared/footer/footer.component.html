@@ -3,9 +3,10 @@
     <div class="footer__brand">
       <div class="footer__logo">
         <img
-          height="80"
-          width="80"
+          height="100"
+          width="100"
           [ngSrc]="brand.logo"
+          priority
           [alt]="brand.title"
           class="footer__logo-img"
         />
@@ -30,7 +31,7 @@
 
   <div class="footer__bottom">
     <p class="footer__copyright">
-      &copy; {{ currentYear }} Bicentenario de Bolivia
+      &copy; {{ currentYear }} Bicentenario de Bolivia | AXL
     </p>
   </div>
 </footer>

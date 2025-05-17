@@ -6,7 +6,7 @@ import {
   inject,
   Output,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -29,7 +29,6 @@ export const Rol = {
 @Component({
   selector: "app-header",
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
@@ -39,6 +38,7 @@ export const Rol = {
     MatBadgeModule,
     RouterLink,
     GoldenDirective,
+    NgOptimizedImage
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",

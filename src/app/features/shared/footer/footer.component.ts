@@ -11,7 +11,7 @@ interface FooterLink {
 
 @Component({
   selector: "app-footer",
-  imports: [CommonModule, RouterModule, NgOptimizedImage],
+  imports: [RouterModule, NgOptimizedImage],
   templateUrl: "./footer.component.html",
   styleUrl: "./footer.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +28,7 @@ export class FooterComponent {
   readonly links: FooterLink[] = [
     {
       name: "GitHub",
-      url: "https://github.com/tu-organizacion/testimonios-frontend",
+      url: "https://github.com/JesusRodrigoV/testimonios-frontend",
       icon: "bx bxl-github",
       external: true,
     },

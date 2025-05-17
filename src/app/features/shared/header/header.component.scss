@@ -19,7 +19,7 @@
 }
 
 .header {
-  height: 64px;
+  height: 70px;
   background: var(--header-bg-color);
   border-bottom: 1px solid var(--header-border-color);
   display: flex;
@@ -33,11 +33,12 @@
   z-index: 10000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
+  box-sizing: content-box;
 }
 
-.logo {
-  height: 40px;
-  width: auto;
+.logo-container {
+  height: 70px;
+  width: 70px;
   object-fit: contain;
 }
 

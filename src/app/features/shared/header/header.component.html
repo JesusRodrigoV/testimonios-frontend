@@ -1,9 +1,13 @@
 <header class="header">
   <div class="header-left">
     <ng-content select="[sidenav-button]" />
-    <img src="assets/images/logo-Sfondo.png" alt="Logo" class="logo" />
-    <h1 class="app-title manuscript-text">
-      <a routerLink="/" class="title-text">Legado de Bolivia</a>
+    <h1 class="app-title">
+      <div class="logo-container">
+        <a routerLink="/home">
+          <img ngSrc="assets/images/logo-Sfondo.png" alt="Legado Bolivia Logo" width="70" height="70" priority
+            class="logo" />
+        </a>
+      </div>
     </h1>
   </div>
 
@@ -43,12 +47,17 @@
     </div>
   </div>
 
+
+
   <div class="header-right">
-    <button mat-button (click)="toggleTheme()">Cambiar Tema</button>
     <button mat-flat-button class="create-post-btn" routerLink="/submit-testimony" matTooltip="Crear nuevo testimonio"
       matTooltipPosition="below">
       <i class="bx bx-plus"></i>
     </button>
+
+    <div class="options-container" [mat-menu-trigger-for]="optionsMenu">
+      <button mat-icon-button><mat-icon>more_vert</mat-icon></button>
+    </div>
 
     @if (!authStore.isAuthenticated()) {
     <button mat-button routerLink="/login" class="login-btn" matTooltip="Iniciar sesión en tu cuenta"
@@ -76,6 +85,10 @@
     <div class="notifications-container">
       <h3>Notificaciones</h3>
     </div>
+  </mat-menu>
+
+  <mat-menu #optionsMenu="matMenu" class="options-menu">
+    <button mat-menu-item (click)="toggleTheme()">Cambiar Tema</button>
   </mat-menu>
 
   <mat-menu #userMenu="matMenu">
