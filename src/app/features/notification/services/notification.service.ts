@@ -8,7 +8,7 @@ import { Notificacion } from '../model/notification.model';
   providedIn: 'root'
 })
 export class NotificationService {
-private readonly apiUrl = `${environment.apiUrl}/notificaciones`;
+  private readonly apiUrl = `${environment.apiUrl}/notifications`;
 
   private http = inject(HttpClient);
 
