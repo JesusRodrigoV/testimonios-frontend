@@ -47,15 +47,13 @@
     </div>
   </div>
 
-
-
   <div class="header-right">
     <button mat-flat-button class="create-post-btn" routerLink="/submit-testimony" matTooltip="Crear nuevo testimonio"
       matTooltipPosition="below">
       <i class="bx bx-plus"></i>
     </button>
 
-    <div class="options-container" [mat-menu-trigger-for]="optionsMenu">
+    <div class="options-container" [mat-menu-trigger-for]="optionsMenu" golden>
       <button mat-icon-button><mat-icon>more_vert</mat-icon></button>
     </div>
 

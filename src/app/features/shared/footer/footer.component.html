@@ -1,64 +1,81 @@
-<div class="border"></div>
 <footer class="footer" role="contentinfo">
+  <div class="footer__border"></div>
   <div class="footer__container">
     <div class="footer__brand">
       <div class="footer__logo">
-        <img height="100" width="100" [ngSrc]="brand.logo" priority [alt]="brand.title" class="footer__logo-img"
-          aria-label="Logotipo de Legado Bolivia" />
+        <img
+          height="100"
+          width="100"
+          [ngSrc]="brand.logo"
+          priority
+          [alt]="brand.title"
+          class="footer__logo-img"
+          aria-label="Logotipo de Legado Bolivia"
+        />
         <h3 class="footer__title manuscript-text">{{ brand.title }}</h3>
       </div>
       <p class="footer__description">{{ brand.description }}</p>
-      <button mat-raised-button routerLink="/submit-testimony" aria-label="Comparte tu historia en Legado Bolivia">
+      <button
+        mat-raised-button
+        class="footer__cta"
+        [routerLink]="cta.link"
+        [attr.aria-label]="cta.ariaLabel"
+      >
         <i class="bx bx-plus"></i>
-        Comparte tu Historia
+        {{ cta.text }}
       </button>
     </div>
 
     <div class="footer__useful-links">
       <h4 class="footer__section-title">Enlaces Útiles</h4>
       <ul class="footer__links-list">
-        <li>
-          <a routerLink="/" class="footer__link" aria-label="Volver a la página principal de Legado Bolivia">Home</a>
-        </li>
-        <li>
-          <a routerLink="/testimonies" class="footer__link" aria-label="Explorar testimonios de Legado Bolivia">Explorar
-            Testimonios</a>
-        </li>
-        <li>
-          <a routerLink="/map" class="footer__link" aria-label="Ver mapa de testimonios de Legado Bolivia">Mapa</a>
-        </li>
-        <li>
-          <span class="footer__link footer__link--disabled" aria-disabled="true"
-            aria-label="Página Acerca de, en desarrollo">About (Próximamente)</span>
-        </li>
-        <li>
-          <span class="footer__link footer__link--disabled" aria-disabled="true"
-            aria-label="Política de Privacidad, en desarrollo">Política de Privacidad</span>
-        </li>
-        <li>
-          <span class="footer__link footer__link--disabled" aria-disabled="true"
-            aria-label="Términos de Uso, en desarrollo">Términos de Uso</span>
-        </li>
+        @for (link of usefulLinks; track link.url) {
+          @if (link.disabled) {
+            <li>
+              <span
+                class="footer__link footer__link--disabled"
+                aria-disabled="true"
+                [attr.aria-label]="link.ariaLabel"
+              >{{ link.name }}</span>
+            </li>
+          } @else {
+            <li>
+              <a
+                [routerLink]="link.url"
+                class="footer__link"
+                [attr.aria-label]="link.ariaLabel"
+              >{{ link.name }}</a>
+            </li>
+          }
+        }
       </ul>
     </div>
 
     <div class="footer__history">
       <h4 class="footer__section-title">Bicentenario</h4>
-     
+      
       <div class="footer__stats">
-        <p class="footer__testimony-count" aria-live="polite"
-          aria-label="Número de historias compartidas en Legado Bolivia">
+        <p
+          class="footer__testimony-count"
+          aria-live="polite"
+          aria-label="Número de historias compartidas en Legado Bolivia"
+        >
           {{ numberOfTestimonies }} Historias Compartidas
         </p>
       </div>
       <div class="footer__social">
         <h4 class="footer__section-title">Síguenos</h4>
         <div class="footer__social-links">
-          @for (link of links; track link.url) {
-          <a [href]="link.url" class="footer__social-link" [target]="link.external ? '_blank' : undefined"
-            [rel]="link.external ? 'noopener noreferrer' : undefined" [attr.aria-label]="'Síguenos en ' + link.name">
-            <i [class]="link.icon"></i>
-          </a>
+          @for (link of socialLinks; track link.url) {
+            <a
+              [href]="link.url"
+              class="footer__social-link"
+              [target]="link.external ? '_blank' : undefined"
+              [rel]="link.external ? 'noopener noreferrer' : undefined"
+              [attr.aria-label]="'Síguenos en ' + link.name"
+            >
+              <i [class]="link.icon"></i>
+            </a>
           }
         </div>
       </div>
