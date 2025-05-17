@@ -11,8 +11,8 @@
   --border-radius: 8px;
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --card-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
+  --breakpoint-sm: 480px;
 
   :root.dark-mode & {
     --primary-color: #90caf9;
@@ -23,36 +23,33 @@
   }
 }
 
-.home-container {
-  width: 80%;
-}
-
+.home-container,
 .feed-section {
-  width: 100%; /* Full width of parent */
+  width: 100%;
 }
 
 h1 {
-  text-align: center;
   color: var(--text-primary);
   font-size: 2.5rem;
   font-weight: 700;
+  text-align: center;
   animation: fadeIn 0.8s ease-out;
 }
 
 h2 {
-  text-align: center;
   color: var(--text-primary);
   font-size: 2rem;
   font-weight: 600;
+  text-align: center;
   margin-bottom: var(--spacing-md);
   animation: fadeIn 1s ease-out;
 }
 
 p {
-  text-align: center;
   color: var(--text-secondary);
   font-size: 1.1rem;
   line-height: 1.6;
+  text-align: center;
   margin-bottom: var(--spacing-md);
 }
 
@@ -61,7 +58,6 @@ p {
   flex-direction: column;
   gap: var(--spacing-md);
   padding: var(--spacing-sm);
-  width: 100%; /* Ensure full width */
   align-items: center;
 }
 
@@ -70,13 +66,11 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
   padding: var(--spacing-lg);
   color: var(--text-secondary);
   font-size: 1.2rem;
   animation: fadeIn 1s ease-out;
-  width: 100%;
-  max-width: 800px; /* Match testimony cards */
+  max-width: 800px;
   margin: 0 auto;
 
   axl-spinner {
@@ -88,26 +82,16 @@ p {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-md)) {
   .home-container {
     padding: var(--spacing-xs) 0;
   }
@@ -122,7 +106,7 @@ p {
 
   :host ::ng-deep app-testimony,
   .loading {
-    max-width: 100%; /* Full width on mobile */
+    max-width: 100%;
   }
 
   h2 {
@@ -134,7 +118,7 @@ p {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: var(--breakpoint-sm)) {
   .feed-section {
     padding: var(--spacing-xs);
   }

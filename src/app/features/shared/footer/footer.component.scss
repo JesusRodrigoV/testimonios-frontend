@@ -85,13 +85,8 @@
   }
 
   &__cta {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    background: var(--footer-accent-color);
-    color: #fff;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     transition: transform 0.3s ease;
 
     .bx {

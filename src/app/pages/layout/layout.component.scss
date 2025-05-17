@@ -1,7 +1,6 @@
 :root {
   --header-height: 64px;
   --footer-height: 80px;
-  --sidenav-width: 30%;
 }
 
 .app-container {
@@ -24,9 +23,6 @@
   width: 100%;
 }
 
-.sidenav {
-  width: var(--sidenav-width);
-}
 
 .router-content {
   width: 100%;
