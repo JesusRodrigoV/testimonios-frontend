@@ -1,8 +1,8 @@
-export interface Testimonio {
+interface Testimonio {
   titulo: string;
 }
 
-export interface Estado {
+interface Estado {
   nombre: string;
 }
 

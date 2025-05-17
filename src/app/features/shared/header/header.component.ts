@@ -1,12 +1,14 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
   inject,
+  output,
   Output,
 } from "@angular/core";
-import { CommonModule, NgIf, NgOptimizedImage } from "@angular/common";
+import { CommonModule, DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -18,6 +20,9 @@ import { AuthStore } from "@app/auth.store";
 import { Router, RouterLink } from "@angular/router";
 import { GoldenDirective } from "@app/core/directives/golden.directive";
 import { ThemeService } from "@app/core/services/theme";
+import { Notificacion } from "@app/features/notification/model/notification.model";
+import { NotificationService } from "@app/features/notification/services";
+import { SpinnerComponent } from "../ui/spinner/spinner.component";
 
 export const Rol = {
   ADMIN: 1,
@@ -39,8 +44,10 @@ export const Rol = {
     RouterLink,
     GoldenDirective,
     NgOptimizedImage,
-    NgIf
-  ],
+    NgIf,
+    SpinnerComponent,
+    DatePipe
+],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,12 +55,31 @@ export const Rol = {
 export class HeaderComponent {
   protected readonly Rol = Rol;
   isScrolled = false;
-  protected readonly authStore = inject(AuthStore);
-  private readonly router = inject(Router);
-  private themeService = inject(ThemeService);
   isMobileSearchActive = false;
   notificationCount = 0;
   userAvatar = "assets/images/default-avatar.png";
+  notifications: Notificacion[] = [];
+  isLoading = false;
+  error: string | null = null;
+
+  protected readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+  private themeService = inject(ThemeService);
+  private readonly notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
+
+  searchQuery = "";
+
+  toggleSidebar = output<void>();
+  search = output<string>();
+
+  constructor() {
+    this.loadNotifications();
+    setInterval(()=>{
+      this.loadNotifications();
+      this.cdr.detectChanges();
+    }, 5000);
+  }
 
   get darkMode(): boolean {
     return this.themeService.isDarkMode();
@@ -66,16 +92,13 @@ export class HeaderComponent {
   @HostListener("window:scroll")
   onWindowScroll() {
     this.isScrolled = window.scrollY > 0;
+    this.cdr.markForCheck();
   }
 
   get isAdmin(): boolean {
     return this.authStore.user()?.role === this.Rol.ADMIN;
   }
-  @Output() toggleSidebar = new EventEmitter<void>();
-  @Output() search = new EventEmitter<string>();
-
   
-
   toggleMobileSearch(): void {
     this.isMobileSearchActive = !this.isMobileSearchActive;
 
@@ -84,6 +107,7 @@ export class HeaderComponent {
     }
 
     document.body.style.overflow = this.isMobileSearchActive ? "hidden" : "";
+    this.cdr.markForCheck();
   }
 
   @HostListener("document:keydown.escape")
@@ -105,17 +129,8 @@ export class HeaderComponent {
 
   async onLogout() {
     await this.authStore.logout();
+    this.cdr.detectChanges();
   }
-
-  notifications = [
-    { id: 1, message: "Nuevo testimonio agregado", read: false },
-    { id: 2, message: "Comentario en tu testimonio", read: true },
-  ];
-
-  get unreadNotifications(): number {
-    return this.notifications.filter((n) => !n.read).length;
-  }
-  searchQuery = "";
 
   onSearch(): void {
     this.search.emit(this.searchQuery);
@@ -125,12 +140,48 @@ export class HeaderComponent {
     this.toggleSidebar.emit();
   }
 
-  markAsRead(notificationId: number): void {
-    const notification = this.notifications.find(
-      (n) => n.id === notificationId,
-    );
-    if (notification) {
-      notification.read = true;
+  get unreadNotifications(): number {
+    return this.notifications.filter((n) => !n.leido).length;
+  }
+
+
+  loadNotifications(): void {
+    if (!this.authStore.isAuthenticated()) {
+      this.notifications = [];
+      this.cdr.markForCheck();
+      return;
     }
+
+    this.isLoading = true;
+    this.error = null;
+    this.notificationService.getAll().subscribe({
+      next: (notifications) => {
+        this.notifications = notifications;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.error = 'No se pudieron cargar las notificaciones';
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  markAsRead(id: number): void {
+    this.notificationService.marcarComoLeido(id).subscribe({
+      next: (updatedNotification) => {
+        if (updatedNotification) {
+          this.notifications = this.notifications.map((n) =>
+            n.id_notificacion === id ? updatedNotification : n
+          );
+          this.cdr.markForCheck();
+        }
+      },
+      error: (err) => {
+        console.error('Error al marcar como leída:', err);
+        this.cdr.markForCheck();
+      },
+    });
   }
 }

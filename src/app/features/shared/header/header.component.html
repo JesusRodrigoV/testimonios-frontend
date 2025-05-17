@@ -82,6 +82,41 @@
   <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
     <div class="notifications-container">
       <h3>Notificaciones</h3>
+      @if (isLoading) {
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando notificaciones...</p>
+      </div>
+      } @else if (error) {
+      <div class="error">
+        <mat-icon>error_outline</mat-icon>
+        <p>Error al obtener las notificaciones</p>
+      </div>
+      } @else {
+      @for (notification of notifications; track notification.id_notificacion) {
+      @if(notification.leido === false){
+      <div class="notification-item" [class.read]="notification.leido"
+        (click)="markAsRead(notification.id_notificacion)">
+        <div class="notification-content">
+          <p class="message">{{ notification.mensaje }}</p>
+          <p class="details">
+            Testimonio: {{ notification.testimonios.titulo }} •
+            {{ notification.fecha_creacion | date: 'short' }}
+          </p>
+        </div>
+        <mat-icon class="status-icon">
+          {{ notification.leido ? 'check_circle' : 'circle' }}
+        </mat-icon>
+      </div>
+      }
+
+      }@empty {
+      <div class="empty">
+        <mat-icon>notifications_none</mat-icon>
+        <p>No hay notificaciones</p>
+      </div>
+      }
+      }
     </div>
   </mat-menu>
 

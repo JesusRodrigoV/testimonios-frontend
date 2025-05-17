@@ -10,6 +10,9 @@ html {
       density: -1,
     )
   );
+  @include mat.theme-overrides((
+     primary: #40964e,
+  ));
 }
 
 html.dark-mode {
@@ -20,11 +23,10 @@ html.dark-mode {
       density: -1,
     )
   );
-  
   @include mat.theme-overrides((
      primary: #59b468,
-    on-primary: #230f46,
   ));
+  
 }
 
 html,
@@ -32,6 +34,7 @@ body {
   height: 100%;
   margin: 0;
   font-family: "Source Sans 3", Arial, sans-serif;
+  
 }
 
 .manuscript-text {
