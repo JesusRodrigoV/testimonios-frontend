@@ -26,6 +26,15 @@ export class TestimonioService {
     };
   }
 
+  getTestimonyCount(): Observable<number> {
+    return this.http.get<number>(`${this.mediaUrl}/count`).pipe(
+      catchError((error) => {
+        console.error("Error al obtener el conteo de testimonios", error);
+        return of(0);
+      })
+    );
+  }
+
   createTestimony(data: TestimonyInput): Observable<Testimony> {
     return this.http.post<Testimony>(this.mediaUrl, data).pipe(
       map(this.normalizeTestimony),
