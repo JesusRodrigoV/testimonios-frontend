@@ -57,75 +57,6 @@
         >
           <mat-icon>edit</mat-icon>
         </button>
-        <div class="rating-container">
-          <button
-            mat-icon-button
-            class="action-btn rating-btn"
-            (click)="toggleRating()"
-            matTooltip="Calificar"
-          >
-            <mat-icon>{{ currentRating ? "star" : "star_border" }}</mat-icon>
-          </button>
-          <div class="rating-dropdown" [class.active]="showRating">
-            <div class="rating">
-              <input
-                type="radio"
-                id="star-5"
-                name="star-radio"
-                value="5"
-                [(ngModel)]="currentRating"
-                (change)="rateTestimony(5)"
-              />
-              <label for="star-5">
-                <mat-icon>star</mat-icon>
-              </label>
-              <input
-                type="radio"
-                id="star-4"
-                name="star-radio"
-                value="4"
-                [(ngModel)]="currentRating"
-                (change)="rateTestimony(4)"
-              />
-              <label for="star-4">
-                <mat-icon>star</mat-icon>
-              </label>
-              <input
-                type="radio"
-                id="star-3"
-                name="star-radio"
-                value="3"
-                [(ngModel)]="currentRating"
-                (change)="rateTestimony(3)"
-              />
-              <label for="star-3">
-                <mat-icon>star</mat-icon>
-              </label>
-              <input
-                type="radio"
-                id="star-2"
-                name="star-radio"
-                value="2"
-                [(ngModel)]="currentRating"
-                (change)="rateTestimony(2)"
-              />
-              <label for="star-2">
-                <mat-icon>star</mat-icon>
-              </label>
-              <input
-                type="radio"
-                id="star-1"
-                name="star-radio"
-                value="1"
-                [(ngModel)]="currentRating"
-                (change)="rateTestimony(1)"
-              />
-              <label for="star-1">
-                <mat-icon>star</mat-icon>
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="meta">
         <div class="meta-header">
@@ -193,6 +124,77 @@
             <p>No hay transcripciones disponibles. Inicia sesión para solicitar una.</p>
           }
         </div>
+      </div>
+      <div class="rating-section">
+        <p class="rating-title">Calificar este testimonio</p>
+        <p class="rating-status" *ngIf="currentRating > 0 && !isRatingLoading">
+          Tu calificación: {{ currentRating }} estrella{{ currentRating === 1 ? '' : 's' }}
+        </p>
+        <div class="rating" [ngClass]="{ 'loading': isRatingLoading }">
+          <input
+            type="radio"
+            id="star-5"
+            name="star-radio"
+            value="5"
+            [(ngModel)]="currentRating"
+            (change)="rateTestimony(5)"
+            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
+          />
+          <label for="star-5">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input
+            type="radio"
+            id="star-4"
+            name="star-radio"
+            value="4"
+            [(ngModel)]="currentRating"
+            (change)="rateTestimony(4)"
+            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
+          />
+          <label for="star-4">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input
+            type="radio"
+            id="star-3"
+            name="star-radio"
+            value="3"
+            [(ngModel)]="currentRating"
+            (change)="rateTestimony(3)"
+            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
+          />
+          <label for="star-3">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input
+            type="radio"
+            id="star-2"
+            name="star-radio"
+            value="2"
+            [(ngModel)]="currentRating"
+            (change)="rateTestimony(2)"
+            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
+          />
+          <label for="star-2">
+            <mat-icon>star</mat-icon>
+          </label>
+          <input
+            type="radio"
+            id="star-1"
+            name="star-radio"
+            value="1"
+            [(ngModel)]="currentRating"
+            (change)="rateTestimony(1)"
+            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
+          />
+          <label for="star-1">
+            <mat-icon>star</mat-icon>
+          </label>
+        </div>
+        @if (!authStore.isAuthenticated()) {
+          <p class="rating-login">Inicia sesión para calificar este testimonio.</p>
+        }
       </div>
     </div>
     <div class="comments-sidebar">

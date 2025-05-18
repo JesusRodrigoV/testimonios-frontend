@@ -1,41 +1,140 @@
+:host {
+  --text-color: #2b2d42;
+  --primary-color: #2e7d32;
+  --primary-hover: #1b5e20;
+  --error-color: #ff4757;
+  --success-color: #2ed573;
+  --shadow-color: rgba(45, 49, 66, 0.1);
+  --border-radius: 12px;
+  --media-background: #f1f3f9;
+  --input-background: #ffffff;
+  --gradient-primary: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%); 
+
+  :root.dark-mode & {
+    --text-color: #e0e0e0;
+    --primary-color: #4caf50; 
+    --primary-hover: #388e3c; 
+    --error-color: #ff6b81;
+    --success-color: #7bed9f;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --media-background: #2a2e34;
+    --input-background: #242731;
+    --gradient-primary: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%); /* Verde claro a verde lima */
+  }
+}
+
 .dialog-container {
-  max-width: 400px;
-  padding: 16px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px var(--shadow-color);
+  padding: 15px;
+  min-width: 320px;
+  max-width: 480px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 1.5rem;
+  padding: 0 8px;
 
   h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: -0.3px;
   }
-}
 
-.collections-list {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-bottom: 16px;
+  mat-icon-button {
+    color: var(--primary-color);
+    transition: background-color 0.2s ease;
 
-  .collection-item {
-    padding: 8px 0;
-    display: flex;
-    align-items: center;
-
-    mat-checkbox {
-      width: 100%;
+    &:hover {
+      background-color: rgba(var(--primary-color), 0.1);
     }
   }
 }
 
-.create-form {
-  margin-top: 16px;
+mat-dialog-content {
+  padding: 0 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.collections-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  max-height: 240px;
+  overflow-y: auto;
+
+  .collection-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(var(--primary-color), 0.05);
+    }
+
+    mat-checkbox {
+      width: 100%;
+      color: var(--text-color);
+
+      .mat-checkbox-frame {
+        border-color: rgba(var(--text-color), 0.3);
+      }
+
+      .mat-checkbox-label {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  p {
+    text-align: center;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin: 16px 0;
+    opacity: 0.8;
+  }
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 12px;
+  background: var(--input-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  margin-top: 1rem;
+
+  mat-form-field {
+    .mat-form-field-outline {
+      background: var(--input-background);
+      border-radius: 8px;
+    }
+
+    .mat-input-element {
+      color: var(--text-color);
+      padding: 8px 0;
+    }
+
+    mat-label {
+      color: rgba(var(--text-color), 0.8);
+    }
+
+    mat-error {
+      color: var(--error-color);
+      font-size: 0.8rem;
+    }
+  }
 }
 
 .full-width {
@@ -47,10 +146,66 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px;
+  justify-content: center;
+  gap: 12px;
+  padding: 1.5rem;
+  background: var(--media-background);
+  border-radius: 8px;
+  min-height: 120px;
+
+  p {
+    color: var(--text-color);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  mat-icon {
+    color: var(--error-color);
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
 }
 
 mat-dialog-actions {
-  padding: 8px 0;
+  padding: 1rem 8px 0;
+  gap: 8px;
+
+  button {
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  button[mat-flat-button] {
+    background: var(--gradient-primary);
+    color: var(--text-color);
+
+    &:not([disabled]):hover {
+      box-shadow: 0 4px 12px rgba(var(--primary-color), 0.2);
+    }
+
+    &[disabled] {
+      opacity: 0.7;
+      filter: grayscale(0.5);
+    }
+  }
+
+  button[mat-button] {
+    color: var(--text-color);
+
+    &:hover {
+      background-color: rgba(var(--primary-color), 0.1);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dialog-container {
+    padding: 1.5rem;
+    min-width: 280px;
+  }
+
+  .dialog-header h2 {
+    font-size: 1.25rem;
+  }
 }

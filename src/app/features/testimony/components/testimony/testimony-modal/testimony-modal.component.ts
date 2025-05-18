@@ -1,8 +1,8 @@
 import { DatePipe, NgClass, NgIf } from "@angular/common";
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  HostListener,
   inject,
   OnDestroy,
   OnInit,
@@ -20,7 +20,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyCommentsComponent } from "../testimony-comments";
 import { MatDialogModule } from "@angular/material/dialog";
-import { TestimonioService, TranscriptionService } from "@app/features/testimony/services";
+import { CalificationService, TestimonioService, TranscriptionService } from "@app/features/testimony/services";
 import { SuggestionDialogComponent } from "../../suggestion-dialog";
 import { MatMenuModule } from "@angular/material/menu";
 import { VideoPlayerComponent } from "@app/features/shared/video-player";
@@ -53,10 +53,11 @@ import { Transcripcion } from "@app/features/testimony/models/transcription.mode
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestimonyModalComponent implements OnInit, OnDestroy {
-  showRating = false;
   currentRating = 0;
+  currentRatingId: number | null = null;
   isMetaExpanded = false;
   isTranscriptionExpanded = false;
+  isRatingLoading = false;
   ratingControl = new FormControl<number | null>(null);
   favoritosMios: number[] = [];
   isFavorite = false;
@@ -73,33 +74,13 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   readonly snackBar = inject(MatSnackBar);
   readonly collectionService = inject(CollectionService);
   readonly transcriptionService = inject(TranscriptionService);
+  readonly calificationService = inject(CalificationService);
+  readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.favoritosSubscription = this.collectionService.getFavorites().subscribe({
-      next: (favs) => {
-        this.favoritosMios = favs;
-        this.isFavorite = this.favoritosMios.includes(this.testimony.id);
-        this.dialogRef.updatePosition();
-      },
-      error: (error) => {
-        console.error('Error al obtener favoritos:', error);
-        this.snackBar.open('Error al cargar favoritos', 'Cerrar', { duration: 3000 });
-      },
-    });
-    console.log('Testimonio:', this.testimony);
-
-    this.transcripcionesSubscription = this.transcriptionService
-      .obtenerTranscripcionesPorTestimonio(this.testimony.id)
-      .subscribe({
-        next: (transcripciones) => {
-          this.transcripciones = transcripciones;
-          this.dialogRef.updatePosition();
-        },
-        error: (error) => {
-          console.error('Error al obtener transcripciones:', error);
-          this.snackBar.open('Error al cargar transcripciones', 'Cerrar', { duration: 3000 });
-        },
-      });
+    this.loadFavorites();
+    this.loadTranscriptions();
+    this.loadUserRating();
   }
 
   ngOnDestroy() {
@@ -109,6 +90,73 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
     if (this.transcripcionesSubscription) {
       this.transcripcionesSubscription.unsubscribe();
     }
+  }
+
+  private loadFavorites() {
+    this.favoritosSubscription = this.collectionService.getFavorites().subscribe({
+      next: (favs) => {
+        this.favoritosMios = favs;
+        this.isFavorite = this.favoritosMios.includes(this.testimony.id);
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error al obtener favoritos:', error);
+        this.snackBar.open('Error al cargar favoritos', 'Cerrar', { duration: 3000 });
+      },
+    });
+  }
+
+  private loadTranscriptions() {
+    this.transcripcionesSubscription = this.transcriptionService
+      .obtenerTranscripcionesPorTestimonio(this.testimony.id)
+      .subscribe({
+        next: (transcripciones) => {
+          this.transcripciones = transcripciones;
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Error al obtener transcripciones:', error);
+          this.snackBar.open('Error al cargar transcripciones', 'Cerrar', { duration: 3000 });
+        },
+      });
+  }
+
+  private loadUserRating() {
+    if (!this.authStore.isAuthenticated()) {
+      this.currentRating = 0;
+      this.currentRatingId = null;
+      this.ratingControl.setValue(null, { emitEvent: false });
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.isRatingLoading = true;
+    this.cdr.markForCheck();
+
+    this.calificationService.getUserRatingForTestimony(this.testimony.id).subscribe({
+      next: (calificacion) => {
+        if (calificacion) {
+          this.currentRating = calificacion.puntuacion;
+          this.currentRatingId = calificacion.id_calificacion;
+          this.ratingControl.setValue(calificacion.puntuacion, { emitEvent: false });
+        } else {
+          this.currentRating = 0;
+          this.currentRatingId = null;
+          this.ratingControl.setValue(null, { emitEvent: false });
+        }
+        this.isRatingLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error al cargar la calificación:', error);
+        this.snackBar.open('Error al cargar la calificación', 'Cerrar', { duration: 3000 });
+        this.currentRating = 0;
+        this.currentRatingId = null;
+        this.ratingControl.setValue(null, { emitEvent: false });
+        this.isRatingLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   esFavorito(): boolean {
@@ -121,10 +169,12 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
 
   toggleMeta() {
     this.isMetaExpanded = !this.isMetaExpanded;
+    this.cdr.markForCheck();
   }
 
   toggleTranscription() {
     this.isTranscriptionExpanded = !this.isTranscriptionExpanded;
+    this.cdr.markForCheck();
   }
 
   get canRequestTranscription(): boolean {
@@ -142,34 +192,92 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
         this.transcripciones = [transcripcion];
         this.isTranscriptionExpanded = true;
         this.snackBar.open('Transcripción solicitada con éxito', 'Cerrar', { duration: 3000 });
-        this.dialogRef.updatePosition(); // Forzar actualización de UI
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error al solicitar transcripción:', error);
-        // Error ya manejado en el servicio
+        this.snackBar.open('Error al solicitar transcripción', 'Cerrar', { duration: 3000 });
       },
     });
   }
 
-  toggleRating() {
-    this.showRating = !this.showRating;
-  }
-
   rateTestimony(rating: number) {
-    this.currentRating = rating;
-    console.log('Calificación:', rating);
-    this.showRating = false;
+    if (!this.authStore.isAuthenticated()) {
+      this.snackBar.open('Debes iniciar sesión para calificar', 'Cerrar', { duration: 3000 });
+      return;
+    }
 
-    setTimeout(() => {
-      this.showRating = false;
-    }, 1000);
-  }
+    if (rating < 1 || rating > 5) {
+      this.snackBar.open('La puntuación debe estar entre 1 y 5', 'Cerrar', { duration: 3000 });
+      return;
+    }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.rating-container')) {
-      this.showRating = false;
+    if (this.isRatingLoading) return;
+
+    // Si intenta calificar con el mismo valor, eliminar la calificación
+    if (this.currentRating === rating && this.currentRatingId) {
+      this.isRatingLoading = true;
+      this.cdr.markForCheck();
+      this.calificationService.delete(this.currentRatingId).subscribe({
+        next: () => {
+          this.currentRating = 0;
+          this.currentRatingId = null;
+          this.ratingControl.setValue(null, { emitEvent: false });
+          this.snackBar.open('Calificación eliminada', 'Cerrar', { duration: 3000 });
+        },
+        error: (error) => {
+          this.snackBar.open(error.message || 'Error al eliminar la calificación', 'Cerrar', { duration: 3000 });
+        },
+        complete: () => {
+          this.isRatingLoading = false;
+          this.cdr.markForCheck();
+        }
+      });
+      return;
+    }
+
+    this.isRatingLoading = true;
+    this.cdr.markForCheck();
+
+    if (this.currentRatingId) {
+      // Actualizar calificación existente
+      this.calificationService.update(this.currentRatingId, { puntuacion: rating }).subscribe({
+        next: (calificacion) => {
+          this.currentRating = calificacion.puntuacion;
+          this.ratingControl.setValue(calificacion.puntuacion, { emitEvent: false });
+          this.snackBar.open('Calificación actualizada', 'Cerrar', { duration: 3000 });
+        },
+        error: (error) => {
+          this.snackBar.open(error.message || 'Error al actualizar la calificación', 'Cerrar', { duration: 3000 });
+        },
+        complete: () => {
+          this.isRatingLoading = false;
+          this.cdr.markForCheck();
+        }
+      });
+    } else {
+      // Crear nueva calificación
+      this.calificationService.create({ puntuacion: rating, id_testimonio: this.testimony.id }).subscribe({
+        next: (calificacion) => {
+          this.currentRating = calificacion.puntuacion;
+          this.currentRatingId = calificacion.id_calificacion;
+          this.ratingControl.setValue(calificacion.puntuacion, { emitEvent: false });
+          this.snackBar.open('Calificación enviada', 'Cerrar', { duration: 3000 });
+        },
+        error: (error) => {
+          if (error.message.includes('El usuario ya ha calificado este testimonio')) {
+            // Reintentar cargar la calificación existente
+            this.loadUserRating();
+            this.snackBar.open('Ya has calificado este testimonio', 'Cerrar', { duration: 3000 });
+          } else {
+            this.snackBar.open(error.message || 'Error al enviar la calificación', 'Cerrar', { duration: 3000 });
+          }
+        },
+        complete: () => {
+          this.isRatingLoading = false;
+          this.cdr.markForCheck();
+        }
+      });
     }
   }
 
@@ -223,6 +331,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
           });
         }
         this.isFavorite = !this.isFavorite;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error al togglear favorito:', error);
