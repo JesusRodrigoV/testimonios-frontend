@@ -16,10 +16,13 @@ import { SpinnerComponent } from '@app/features/shared/ui/spinner';
 import { TestimonyComponent } from '../testimony/testimony.component';
 import { TestimonioService } from '@app/features/testimony/services';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { debounceTime, Subject } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-testimony-feed',
-  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf],
+  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf, MatFormFieldModule, MatInputModule],
   templateUrl: './testimony-feed.component.html',
   styleUrl: './testimony-feed.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,13 +38,10 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
 
   @Input() set searchQuery(value: string) {
     this._searchQuery = value;
-    this.page = 1;
-    this.testimonies = [];
-    this.hasMore = true;
-    this.error = null;
-    this.loadTestimonies(false);
+    this.searchSubject.next(value);
   }
   private _searchQuery = '';
+  private searchSubject = new Subject<string>();
 
   @ViewChild('loadMoreTrigger', { static: false }) loadMoreTrigger!: ElementRef;
   private testimonioService = inject(TestimonioService);
@@ -49,7 +49,27 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
 
   ngOnInit() {
+    this.setupSearchDebounce();
     this.loadTestimonies(false);
+  }
+
+  private setupSearchDebounce() {
+    this.searchSubject.pipe(debounceTime(100)).subscribe((query) => {
+      this._searchQuery = query;
+      this.page = 1;
+      this.testimonies = [];
+      this.hasMore = true;
+      this.error = null;
+      this.loadTestimonies(false);
+    });
+  }
+
+  onSearchQueryChange(query: string) {
+    this.searchQuery = query;
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
   }
 
   loadTestimonies(append = true) {
@@ -110,6 +130,7 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
     if (this.observer) {
       this.observer.disconnect();
     }
+    this.searchSubject.complete();
   }
 
   trackById(index: number, testimony: Testimony): number {

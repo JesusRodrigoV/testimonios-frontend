@@ -1,6 +1,24 @@
 <div class="feed-container">
   <div class="feed-header">
     <h2>Testimonios del Bicentenario</h2>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar testimonios</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchQueryChange($event)"
+        placeholder="Escribe para buscar..."
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        *ngIf="searchQuery"
+        (click)="clearSearch()"
+        aria-label="Limpiar búsqueda"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
   </div>
 
   <div class="testimony-feed">
