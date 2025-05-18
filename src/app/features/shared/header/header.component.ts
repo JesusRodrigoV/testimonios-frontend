@@ -56,11 +56,12 @@ export class HeaderComponent {
   protected readonly Rol = Rol;
   isScrolled = false;
   isMobileSearchActive = false;
-  notificationCount = 0;
-  userAvatar = "assets/images/default-avatar.png";
+  userAvatar = 'assets/images/default-avatar.png';
   notifications: Notificacion[] = [];
   isLoading = false;
   error: string | null = null;
+  searchQuery = '';
+  filterType: 'recent' | 'popular' | 'category' | null = null;
 
   protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
@@ -68,14 +69,12 @@ export class HeaderComponent {
   private readonly notificationService = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
 
-  searchQuery = "";
-
   toggleSidebar = output<void>();
-  search = output<string>();
+  search = output<{ query: string; filter?: string }>();
 
   constructor() {
     this.loadNotifications();
-    setInterval(()=>{
+    setInterval(() => {
       this.loadNotifications();
       this.cdr.detectChanges();
     }, 5000);
@@ -89,7 +88,7 @@ export class HeaderComponent {
     this.themeService.toggleTheme();
   }
 
-  @HostListener("window:scroll")
+  @HostListener('window:scroll')
   onWindowScroll() {
     this.isScrolled = window.scrollY > 0;
     this.cdr.markForCheck();
@@ -98,19 +97,17 @@ export class HeaderComponent {
   get isAdmin(): boolean {
     return this.authStore.user()?.role === this.Rol.ADMIN;
   }
-  
+
   toggleMobileSearch(): void {
     this.isMobileSearchActive = !this.isMobileSearchActive;
-
     if (!this.isMobileSearchActive && this.searchQuery) {
-      this.searchQuery = "";
+      this.searchQuery = '';
     }
-
-    document.body.style.overflow = this.isMobileSearchActive ? "hidden" : "";
+    document.body.style.overflow = this.isMobileSearchActive ? 'hidden' : '';
     this.cdr.markForCheck();
   }
 
-  @HostListener("document:keydown.escape")
+  @HostListener('document:keydown.escape')
   onEscapePress() {
     if (this.isMobileSearchActive) {
       this.toggleMobileSearch();
@@ -119,11 +116,11 @@ export class HeaderComponent {
 
   onCreatePost() {
     if (!this.authStore.isAuthenticated()) {
-      this.router.navigate(["/login"], {
-        queryParams: { returnUrl: "/create-post" },
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: '/create-post' },
       });
     } else {
-      this.router.navigate(["/create-post"]);
+      this.router.navigate(['/create-post']);
     }
   }
 
@@ -133,7 +130,18 @@ export class HeaderComponent {
   }
 
   onSearch(): void {
-    this.search.emit(this.searchQuery);
+    this.search.emit({
+      query: this.searchQuery,
+      filter: this.filterType || undefined,
+    });
+    if (this.isMobileSearchActive) {
+      this.toggleMobileSearch();
+    }
+  }
+
+  setFilter(type: 'recent' | 'popular' | 'category'): void {
+    this.filterType = type;
+    this.onSearch();
   }
 
   onToggleSidebar(): void {
@@ -143,7 +151,6 @@ export class HeaderComponent {
   get unreadNotifications(): number {
     return this.notifications.filter((n) => !n.leido).length;
   }
-
 
   loadNotifications(): void {
     if (!this.authStore.isAuthenticated()) {
@@ -160,7 +167,7 @@ export class HeaderComponent {
         this.isLoading = false;
         this.cdr.markForCheck();
       },
-      error: (err) => {
+      error: () => {
         this.error = 'No se pudieron cargar las notificaciones';
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -178,8 +185,7 @@ export class HeaderComponent {
           this.cdr.markForCheck();
         }
       },
-      error: (err) => {
-        console.error('Error al marcar como leída:', err);
+      error: () => {
         this.cdr.markForCheck();
       },
     });

@@ -4,8 +4,14 @@
     <h1 class="app-title">
       <div class="logo-container">
         <a routerLink="/home">
-          <img ngSrc="assets/images/logo-Sfondo.png" alt="Legado Bolivia Logo" width="70" height="70" priority
-            class="logo" />
+          <img
+            ngSrc="assets/images/logo-Sfondo.png"
+            alt="Legado Bolivia Logo"
+            width="70"
+            height="70"
+            priority
+            class="logo"
+          />
         </a>
       </div>
     </h1>
@@ -16,9 +22,19 @@
       <div class="search-border"></div>
       <div golden class="search-input-wrapper">
         <i class="bx bx-search search-icon"></i>
-        <input type="text" class="input" placeholder="Buscar testimonios..." [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()" />
-        <button mat-icon-button matTooltip="Filtros de búsqueda" [matMenuTriggerFor]="filterMenu" golden>
+        <input
+          type="text"
+          class="input"
+          placeholder="Buscar testimonios..."
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+        />
+        <button
+          mat-icon-button
+          matTooltip="Filtros de búsqueda"
+          [matMenuTriggerFor]="filterMenu"
+          golden
+        >
           <i class="bx bx-filter"></i>
         </button>
       </div>
@@ -26,20 +42,39 @@
   </div>
 
   <div class="mobile-search-container">
-    <button mat-icon-button class="mobile-search-toggle" (click)="toggleMobileSearch()" matTooltip="Buscar" golden
-      *ngIf="!isMobileSearchActive">
+    <button
+      mat-icon-button
+      class="mobile-search-toggle"
+      (click)="toggleMobileSearch()"
+      matTooltip="Buscar"
+      golden
+      *ngIf="!isMobileSearchActive"
+    >
       <i class="bx bx-search"></i>
     </button>
 
-    <div class="search-field mobile-search" [class.active]="isMobileSearchActive">
+    <div
+      class="search-field mobile-search"
+      [class.active]="isMobileSearchActive"
+    >
       <div class="search-wrapper">
         <div class="search-border"></div>
         <div golden class="search-input-wrapper">
           <i class="bx bx-search search-icon"></i>
-          <input type="text" class="input" placeholder="Buscar testimonios..." [(ngModel)]="searchQuery"
-            (keyup.enter)="onSearch()" />
-          <button mat-icon-button class="close-search" (click)="toggleMobileSearch()" matTooltip="Cerrar búsqueda"
-            golden>
+          <input
+            type="text"
+            class="input"
+            placeholder="Buscar testimonios..."
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+          />
+          <button
+            mat-icon-button
+            class="close-search"
+            (click)="toggleMobileSearch()"
+            matTooltip="Cerrar búsqueda"
+            golden
+          >
             <i class="bx bx-x"></i>
           </button>
         </div>
@@ -48,34 +83,70 @@
   </div>
 
   <div class="header-right">
-    <button mat-flat-button class="create-post-btn" routerLink="/submit-testimony" matTooltip="Crear nuevo testimonio"
-      matTooltipPosition="below">
+    <button
+      mat-flat-button
+      class="create-post-btn"
+      routerLink="/submit-testimony"
+      matTooltip="Crear nuevo  testimonio"
+      matTooltipPosition="below"
+    >
       <i class="bx bx-plus"></i>
     </button>
 
-    <div class="options-container" [mat-menu-trigger-for]="optionsMenu" golden>
-      <button mat-icon-button><mat-icon>more_vert</mat-icon></button>
+    <div
+      class="options-container"
+      [mat-menu-trigger-for]="optionsMenu"
+      golden
+    >
+      <button mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
     </div>
 
     @if (!authStore.isAuthenticated()) {
-    <button mat-button routerLink="/login" class="login-btn" matTooltip="Iniciar sesión en tu cuenta"
-      matTooltipPosition="below" golden>
-      Iniciar Sesión
-    </button>
-    <button mat-raised-button color="primary" routerLink="/register" matTooltip="Crear una cuenta"
-      matTooltipPosition="below">
-      Registrarse
-    </button>
+      <button
+        mat-button
+        routerLink="/login"
+        class="login-btn"
+        matTooltip="Iniciar sesión en tu cuenta"
+        matTooltipPosition="below"
+        golden
+      >
+        Iniciar Sesión
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        routerLink="/register"
+        matTooltip="Crear una cuenta"
+        matTooltipPosition="below"
+      >
+        Registrarse
+      </button>
     } @else {
-    <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" [matBadge]="unreadNotifications"
-      [matBadgeHidden]="unreadNotifications === 0" matBadgeColor="warn" class="notification-btn"
-      matTooltip="Notificaciones" matTooltipPosition="below" golden>
-      <i class="bx bx-bell"></i>
-    </button>
-    <button mat-icon-button [matMenuTriggerFor]="userMenu" class="avatar-button" matTooltip="Menú de usuario"
-      matTooltipPosition="below" golden>
-      <i class="bx bxs-user-circle"></i>
-    </button>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="notificationsMenu"
+        [matBadge]="unreadNotifications"
+        [matBadgeHidden]="unreadNotifications === 0"
+        matBadgeColor="warn"
+        class="notification-btn"
+        matTooltip="Notificaciones"
+        matTooltipPosition="below"
+        golden
+      >
+        <i class="bx bx-bell"></i>
+      </button>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="userMenu"
+        class="avatar-button"
+        matTooltip="Menú de usuario"
+        matTooltipPosition="below"
+        golden
+      >
+        <i class="bx bxs-user-circle"></i>
+      </button>
     }
   </div>
 
@@ -83,39 +154,41 @@
     <div class="notifications-container">
       <h3>Notificaciones</h3>
       @if (isLoading) {
-      <div class="loading">
-        <axl-spinner />
-        <p>Cargando notificaciones...</p>
-      </div>
-      } @else if (error) {
-      <div class="error">
-        <mat-icon>error_outline</mat-icon>
-        <p>Error al obtener las notificaciones</p>
-      </div>
-      } @else {
-      @for (notification of notifications; track notification.id_notificacion) {
-      @if(notification.leido === false){
-      <div class="notification-item" [class.read]="notification.leido"
-        (click)="markAsRead(notification.id_notificacion)">
-        <div class="notification-content">
-          <p class="message">{{ notification.mensaje }}</p>
-          <p class="details">
-            Testimonio: {{ notification.testimonios.titulo }} •
-            {{ notification.fecha_creacion | date: 'short' }}
-          </p>
+        <div class="loading">
+          <axl-spinner />
+          <p>Cargando notificaciones...</p>
         </div>
-        <mat-icon class="status-icon">
-          {{ notification.leido ? 'check_circle' : 'circle' }}
-        </mat-icon>
-      </div>
-      }
-
-      }@empty {
-      <div class="empty">
-        <mat-icon>notifications_none</mat-icon>
-        <p>No hay notificaciones</p>
-      </div>
-      }
+      } @else if (error) {
+        <div class="error">
+          <mat-icon>error_outline</mat-icon>
+          <p>Error al obtener las notificaciones</p>
+        </div>
+      } @else {
+        @for (notification of notifications; track notification.id_notificacion) {
+          @if (!notification.leido) {
+            <div
+              class="notification-item"
+              [class.read]="notification.leido"
+              (click)="markAsRead(notification.id_notificacion)"
+            >
+              <div class="notification-content">
+                <p class="message">{{ notification.mensaje }}</p>
+                <p class="details">
+                  Testimonio: {{ notification.testimonios.titulo }} •
+                  {{ notification.fecha_creacion | date: 'short' }}
+                </p>
+              </div>
+              <mat-icon class="status-icon">
+                {{ notification.leido ? 'check_circle' : 'circle' }}
+              </mat-icon>
+            </div>
+          }
+        } @empty {
+          <div class="empty">
+            <mat-icon>notifications_none</mat-icon>
+            <p>No hay notificaciones</p>
+          </div>
+        }
       }
     </div>
   </mat-menu>
@@ -129,7 +202,12 @@
       <i class="bx bx-user"></i>
       Mi Perfil
     </button>
-    <button mat-menu-item routerLink="/dashboard" golden *ngIf="isAdmin">
+    <button
+      mat-menu-item
+      routerLink="/dashboard"
+      golden
+      *ngIf="isAdmin"
+    >
       <i class="bx bxs-dashboard"></i>
       Dashboard
     </button>
@@ -145,15 +223,15 @@
   </mat-menu>
 
   <mat-menu #filterMenu="matMenu">
-    <button mat-menu-item golden>
+    <button mat-menu-item (click)="setFilter('recent')" golden>
       <i class="bx bx-calendar"></i>
       Más recientes
     </button>
-    <button mat-menu-item golden>
+    <button mat-menu-item (click)="setFilter('popular')" golden>
       <i class="bx bx-trending-up"></i>
       Más populares
     </button>
-    <button mat-menu-item golden>
+    <button mat-menu-item (click)="setFilter('category')" golden>
       <i class="bx bx-category"></i>
       Por categoría
     </button>

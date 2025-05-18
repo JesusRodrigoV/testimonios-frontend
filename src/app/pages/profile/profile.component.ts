@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { NgClass, NgOptimizedImage } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { AuthStore } from "@app/auth.store";
@@ -7,7 +7,7 @@ import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: "app-profile",
-  imports: [CommonModule, MatCardModule, MatDividerModule, MatButtonModule],
+  imports: [NgOptimizedImage, NgClass,MatCardModule, MatDividerModule, MatButtonModule],
   templateUrl: "./profile.component.html",
   styleUrl: "./profile.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

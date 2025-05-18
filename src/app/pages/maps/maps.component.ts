@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter, inject, output } from '@angular/core';
 import { TestimonioService } from '@app/features/testimony/services';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { latLng, tileLayer, MapOptions, Map, marker, circle, icon } from 'leaflet';
@@ -12,6 +12,12 @@ import { latLng, tileLayer, MapOptions, Map, marker, circle, icon } from 'leafle
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class MapsComponent {
+  private testimonyService = inject(TestimonioService);
+  
+  mapReady = output<Map>();
+
+  private map: Map | null = null;
+
   options: MapOptions = {
     center: latLng(-17.0, -65.0),
     zoom: 5,
@@ -25,10 +31,9 @@ export default class MapsComponent {
     iconUrl: 'assets/images/marker.png',
     iconSize: [40, 40],
     shadowSize: [68, 95],
-});
-  private testimonyService = inject(TestimonioService);
-  @Output() mapReady = new EventEmitter<Map>();
-  private map: Map | null = null;
+  });
+  
+  
 
   testimonios$ = this.testimonyService.getTestimonyMap();
 
@@ -40,7 +45,7 @@ export default class MapsComponent {
       next: (testimonios) => {
         testimonios.forEach(testimonio => {
           const coords = testimonio.coordinates;
-          const marca = marker([coords[0], coords[1]], { 
+          const marca = marker([coords[0], coords[1]], {
             icon: this.myIcon,
             title: testimonio.title,
             riseOnHover: true,

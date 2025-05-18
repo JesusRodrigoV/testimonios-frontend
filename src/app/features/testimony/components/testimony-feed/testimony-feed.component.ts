@@ -1,10 +1,11 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -18,7 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-testimony-feed',
-  imports: [CommonModule, FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule],
+  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf],
   templateUrl: './testimony-feed.component.html',
   styleUrl: './testimony-feed.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,8 +31,17 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
   total = 0;
   loading = false;
   hasMore = true;
-  searchKeyword = '';
   error: string | null = null;
+
+  @Input() set searchQuery(value: string) {
+    this._searchQuery = value;
+    this.page = 1;
+    this.testimonies = [];
+    this.hasMore = true;
+    this.error = null;
+    this.loadTestimonies(false);
+  }
+  private _searchQuery = '';
 
   @ViewChild('loadMoreTrigger', { static: false }) loadMoreTrigger!: ElementRef;
   private testimonioService = inject(TestimonioService);
@@ -47,17 +57,16 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.error = null;
-    this.cdr.markForCheck(); // Forzar detección de cambios
+    this.cdr.markForCheck();
 
     this.testimonioService
       .searchTestimonies({
-        keyword: this.searchKeyword || undefined,
+        keyword: this._searchQuery || undefined,
         page: this.page,
         limit: this.limit,
       })
       .subscribe({
         next: (response) => {
-          console.log('Testimonies response:', response); 
           if (append) {
             this.testimonies = [...this.testimonies, ...response.data];
           } else {
@@ -67,24 +76,15 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
           this.hasMore = this.testimonies.length < this.total;
           this.page = response.page + 1;
           this.loading = false;
-          this.cdr.markForCheck(); 
+          this.cdr.markForCheck();
           this.setupIntersectionObserver();
         },
         error: (err) => {
-          console.error('Error loading testimonies:', err);
           this.error = err.message || 'Error al cargar los testimonios';
           this.loading = false;
           this.cdr.markForCheck();
         },
       });
-  }
-
-  onSearch() {
-    this.page = 1;
-    this.testimonies = [];
-    this.hasMore = true;
-    this.error = null;
-    this.loadTestimonies(false);
   }
 
   private setupIntersectionObserver() {
@@ -95,17 +95,14 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
     this.observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && this.hasMore && !this.loading) {
-          console.log('Load more triggered'); // Depuración
           this.loadTestimonies();
         }
       },
-      { threshold: 0.1 } 
+      { threshold: 0.1 }
     );
 
     if (this.loadMoreTrigger?.nativeElement) {
       this.observer.observe(this.loadMoreTrigger.nativeElement);
-    } else {
-      console.warn('loadMoreTrigger element not found');
     }
   }
 

@@ -21,10 +21,11 @@
 }
 
 .collections-page {
-  padding: 32px;
+  padding: 50px;
   color: var(--text);
   min-height: calc(100vh - 64px); 
   width: 100%;
+  box-sizing: border-box;
 }
 
 .header {
@@ -92,6 +93,7 @@
     opacity: 0.85;
     margin: 0 0 16px;
     display: -webkit-box;
+    line-clamp: 3;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
