@@ -321,7 +321,7 @@ export default class TestimonyUploadComponent implements OnInit {
     this.testimonyService.createTestimony(payload).subscribe({
       next: () => {
         this.openSnackBar(
-          "Testimonio subido exitosamente",
+          "Testimonio subido exitosamente. Esperando aprobacion de administrador",
           "Cerrar",
           "success",
         );

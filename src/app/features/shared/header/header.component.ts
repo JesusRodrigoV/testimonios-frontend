@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   inject,
   output,
   Output,
+  ViewChild,
 } from "@angular/core";
 import { CommonModule, DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
@@ -63,6 +65,9 @@ export class HeaderComponent {
   searchQuery = '';
   filterType: 'recent' | 'popular' | 'category' | null = null;
 
+  @ViewChild('desktopSearchInput') desktopSearchInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('mobileSearchInput') mobileSearchInput?: ElementRef<HTMLInputElement>;
+
   protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private themeService = inject(ThemeService);
@@ -104,6 +109,18 @@ export class HeaderComponent {
       this.searchQuery = '';
     }
     document.body.style.overflow = this.isMobileSearchActive ? 'hidden' : '';
+    if (this.isMobileSearchActive) {
+      setTimeout(() => {
+        this.mobileSearchInput?.nativeElement.focus();
+      }, 300);
+    }
+    this.cdr.markForCheck();
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.desktopSearchInput?.nativeElement.focus();
+    this.mobileSearchInput?.nativeElement.focus();
     this.cdr.markForCheck();
   }
 
@@ -130,10 +147,12 @@ export class HeaderComponent {
   }
 
   onSearch(): void {
-    this.search.emit({
-      query: this.searchQuery,
-      filter: this.filterType || undefined,
-    });
+    if (this.searchQuery.trim()) {
+      this.search.emit({
+        query: this.searchQuery.trim(),
+        filter: this.filterType || undefined,
+      });
+    }
     if (this.isMobileSearchActive) {
       this.toggleMobileSearch();
     }

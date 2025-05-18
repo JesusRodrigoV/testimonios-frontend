@@ -1,18 +1,16 @@
+<!-- testimony.component.html -->
 <div class="testimony-card" (click)="openModal()">
   <div class="header">
     <h3>{{ testimony.title }}</h3>
     <p class="description">{{ testimony.description }}</p>
   </div>
-  <div class="media">
+  <div class="media" (click)="$event.stopPropagation()">
     @defer (on viewport) {
       @if (testimony.format === "Video") {
         <app-video-player class="media-content" [videoUrl]="testimony.url" />
       } @else if (testimony.format === "Audio") {
-        <!--
-        <app-audio-player 
-        [testimonyData]="{title: testimony.title, url: testimony.url, author: testimony.author, duration:testimony.duration}" />
-      -->
         <audio
+          #audioPlayer
           [src]="testimony.url"
           controls
           loading="lazy"
@@ -56,4 +54,3 @@
     </div>
   </div>
 </div>
-

@@ -1,11 +1,11 @@
 :host {
-  --primary-gradient-start: #1e3c72;
-  --primary-gradient-end: #2a5298;
+ --primary-gradient-start: #1a5c38;
+  --primary-gradient-end: #2e8b57;
   --text-color: #f0f0f0;
   --shadow-color: rgba(0, 0, 0, 0.3);
   --particle-color: rgba(255, 255, 255, 0.3);
   --spacing-unit: 1rem;
-  --font-size-large: 4.5rem; /* Aumentado para más impacto */
+  --font-size-large: 4.5rem; 
   --font-size-medium: 2rem;
   --font-size-small: 1.1rem;
   --border-radius: 0;
@@ -14,8 +14,8 @@
   --bolivia-color: #52c41a;
 
   :root.dark-mode & {
-    --primary-gradient-start: #0f2557;
-    --primary-gradient-end: #1a3c7a;
+    --primary-gradient-start: #123c24;
+    --primary-gradient-end: #226644;
     --text-color: #e0e0e0;
     --shadow-color: rgba(0, 0, 0, 0.5);
     --legado-color: #ff7875;
@@ -31,7 +31,7 @@
 
 .hero-section {
   position: relative;
-  min-height: calc(100dvh - 64px); /* Ajustado para navbar típica */
+  min-height: calc(100dvh - 64px); 
   width: 100vw;
   margin: 0;
   padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
@@ -52,8 +52,8 @@
 }
 
 .manuscript-text {
-  font-size: var(--font-size-large);
-  font-weight: 800; /* Más impacto */
+  font-size: 7rem;
+  font-weight: 800; 
   margin-bottom: calc(var(--spacing-unit) * 1.5);
   text-shadow: 3px 3px 6px var(--shadow-color);
   z-index: 1;
@@ -61,7 +61,7 @@
   gap: 0.75rem;
   flex-wrap: wrap;
   justify-content: center;
-  animation: fadeIn 1s ease-out; /* Animación de entrada */
+  animation: fadeIn 1s ease-out;
 }
 
 .legado-text {
@@ -149,7 +149,7 @@ h2 {
 
 p {
   font-size: var(--font-size-small);
-  max-width: 40rem; /* Aumentado ligeramente para mejor legibilidad */
+  max-width: 40rem; 
   margin: 0 auto calc(var(--spacing-unit) * 2);
   line-height: 1.6;
   z-index: 1;
@@ -186,12 +186,12 @@ p {
     flex-direction: column;
     gap: calc(var(--spacing-unit) * 1);
     width: 100%;
-    max-width: 350px; /* Aumentado para mejor apariencia */
+    max-width: 350px; 
   }
 
   button[mat-raised-button] {
     width: 100%;
-    min-width: 0; /* Evitar desbordamiento */
+    min-width: 0;
   }
 }
 

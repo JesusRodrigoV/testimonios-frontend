@@ -1,12 +1,7 @@
 <div class="collections-page">
   <div class="header">
     <h2>Mis Colecciones</h2>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="openCollectionForm()"
-      [disabled]="!isAuthenticated()"
-    >
+    <button mat-flat-button color="primary" (click)="openCollectionForm()" [disabled]="!isAuthenticated()">
       Crear Colección
     </button>
   </div>
@@ -23,27 +18,18 @@
   } @else {
     <div class="collections-grid">
       @for (collection of collections(); track collection.id_coleccion) {
-        <div
-          class="collection-card"
-          (click)="navigateToCollection(collection.id_coleccion)"
-        >
+        <div class="collection-card" (click)="navigateToCollection(collection.id_coleccion)">
           <div class="collection-header">
             <h3>{{ collection.titulo }}</h3>
-            <button mat-icon-button [matMenuTriggerFor]="menu">
+            <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()" aria-label="Opciones de la colección">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
               @if (!isProtectedCollection(collection)) {
-                <button
-                  mat-menu-item
-                  (click)="openCollectionForm(collection); $event.stopPropagation()"
-                >
+                <button mat-menu-item (click)="openCollectionForm(collection); $event.stopPropagation()">
                   Editar
                 </button>
-                <button
-                  mat-menu-item
-                  (click)="deleteCollection(collection.id_coleccion); $event.stopPropagation()"
-                >
+                <button mat-menu-item (click)="deleteCollection(collection.id_coleccion); $event.stopPropagation()">
                   Eliminar
                 </button>
               }
@@ -85,7 +71,7 @@
       mat-flat-button
       color="primary"
       [disabled]="collectionForm.invalid || saving()"
-      (click)="saveCollection(collection)"
+      (click)="saveCollection()"
     >
       {{ saving() ? 'Guardando...' : (collection ? 'Actualizar' : 'Crear') }}
     </button>

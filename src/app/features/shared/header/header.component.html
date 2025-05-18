@@ -28,7 +28,17 @@
           placeholder="Buscar testimonios..."
           [(ngModel)]="searchQuery"
           (keyup.enter)="onSearch()"
+          #desktopSearchInput
         />
+        <button
+          mat-icon-button
+          *ngIf="searchQuery"
+          (click)="clearSearch()"
+          matTooltip="Limpiar búsqueda"
+          golden
+        >
+          <i class="bx bx-x"></i>
+        </button>
         <button
           mat-icon-button
           matTooltip="Filtros de búsqueda"
@@ -67,7 +77,17 @@
             placeholder="Buscar testimonios..."
             [(ngModel)]="searchQuery"
             (keyup.enter)="onSearch()"
+            #mobileSearchInput
           />
+          <button
+            mat-icon-button
+            *ngIf="searchQuery"
+            (click)="clearSearch()"
+            matTooltip="Limpiar búsqueda"
+            golden
+          >
+            <i class="bx bx-x"></i>
+          </button>
           <button
             mat-icon-button
             class="close-search"
@@ -87,7 +107,7 @@
       mat-flat-button
       class="create-post-btn"
       routerLink="/submit-testimony"
-      matTooltip="Crear nuevo  testimonio"
+      matTooltip="Crear nuevo testimonio"
       matTooltipPosition="below"
     >
       <i class="bx bx-plus"></i>
@@ -95,7 +115,7 @@
 
     <div
       class="options-container"
-      [mat-menu-trigger-for]="optionsMenu"
+      [matMenuTriggerFor]="optionsMenu"
       golden
     >
       <button mat-icon-button>

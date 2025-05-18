@@ -63,6 +63,7 @@ export default class CollectionListComponent {
   collectionForm: FormGroup;
   dialogRef?: MatDialogRef<any>;
   isAuthenticated = this.authStore.isAuthenticated;
+  editingCollection: Collection | null = null; // Track the collection being edited
 
   @ViewChild('formTemplate') formTemplate!: TemplateRef<any>;
 
@@ -99,6 +100,7 @@ export default class CollectionListComponent {
       });
       return;
     }
+    this.editingCollection = collection || null; // Set the editing collection
     if (collection) {
       this.collectionForm.patchValue({
         titulo: collection.titulo,
@@ -109,27 +111,32 @@ export default class CollectionListComponent {
     }
 
     this.dialogRef = this.dialog.open(this.formTemplate, {
-      data: { collection },
+      data: { collection }, // Still pass for template rendering
       width: '500px',
     });
   }
 
   closeCollectionForm() {
     this.dialogRef?.close();
+    this.editingCollection = null; // Clear editing state
+    this.collectionForm.reset();
   }
 
-  saveCollection(collection?: Collection) {
+  saveCollection() {
     if (this.collectionForm.invalid || !this.isAuthenticated()) return;
 
     this.saving.set(true);
     const collectionData = {
       ...this.collectionForm.value,
       id_usuario: this.authStore.user()?.id_usuario,
-      fecha_creacion: collection ? collection.fecha_creacion : new Date().toISOString(),
+      fecha_creacion: this.editingCollection
+        ? this.editingCollection.fecha_creacion
+        : new Date().toISOString(),
     };
 
-    if (collection) {
-      this.collectionService.update(collection.id_coleccion, collectionData).subscribe({
+    if (this.editingCollection) {
+      // Update existing collection
+      this.collectionService.update(this.editingCollection.id_coleccion, collectionData).subscribe({
         next: () => {
           this.loadCollections();
           this.snackBar.open('Colección actualizada', 'Cerrar', { duration: 3000 });
@@ -142,6 +149,7 @@ export default class CollectionListComponent {
         },
       });
     } else {
+      // Create new collection
       this.collectionService.create(collectionData).subscribe({
         next: () => {
           this.loadCollections();
