@@ -27,6 +27,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { Router } from "@angular/router";
+import { FileUploadComponent } from "./file-upload";
 
 @Component({
   selector: "app-testimony-upload",
@@ -47,6 +48,7 @@ import { Router } from "@angular/router";
     MatCheckboxModule,
     MatSnackBarModule,
     SpinnerComponent,
+    FileUploadComponent,
   ],
   templateUrl: "./testimony-upload.component.html",
   styleUrl: "./testimony-upload.component.scss",
@@ -57,18 +59,18 @@ export default class TestimonyUploadComponent implements OnInit {
     selectedTags: string[];
     selectedCategories: string[];
   } = {
-    title: "",
-    description: "",
-    content: "",
-    selectedTags: [],
-    selectedCategories: [],
-    eventId: undefined,
-    latitude: undefined,
-    longitude: undefined,
-    url: "",
-    duration: undefined,
-    format: "",
-  };
+      title: "",
+      description: "",
+      content: "",
+      selectedTags: [],
+      selectedCategories: [],
+      eventId: undefined,
+      latitude: undefined,
+      longitude: undefined,
+      url: "",
+      duration: undefined,
+      format: "",
+    };
   cloudinaryResult: {
     secure_url: string;
     duration?: number;
@@ -88,6 +90,7 @@ export default class TestimonyUploadComponent implements OnInit {
   tagCtrl = new FormControl<string>("");
   filteredTags: Observable<string[]>;
   separatorKeysCodes: number[] = [ENTER, COMMA];
+
   private tagsSubject = new BehaviorSubject<string[]>([]);
 
   private testimonyService = inject(TestimonioService);
@@ -155,11 +158,17 @@ export default class TestimonyUploadComponent implements OnInit {
       .filter((tag) => tag.toLowerCase().includes(filterValue));
   }
 
-  async onFileSelected(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) return;
+  async onFileSelected(file: File | null): Promise<void> {
+    if (!file) {
+      this.cloudinaryResult = null;
+      this.mediaPreview = null;
+      this.mediaType = null;
+      this.testimony.url = "";
+      this.testimony.duration = undefined;
+      this.testimony.format = "";
+      return;
+    }
 
-    const file = input.files[0];
     this.mediaType = file.type.startsWith("video") ? "Video" : "Audio";
     console.log("El tipo del testimonio: " + this.mediaType);
     this.mediaPreview = URL.createObjectURL(file);
@@ -204,6 +213,9 @@ export default class TestimonyUploadComponent implements OnInit {
       this.cloudinaryResult = null;
       this.mediaPreview = null;
       this.mediaType = null;
+      this.testimony.url = "";
+      this.testimony.duration = undefined;
+      this.testimony.format = "";
     }
   }
 

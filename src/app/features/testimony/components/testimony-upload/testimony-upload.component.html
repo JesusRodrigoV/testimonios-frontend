@@ -6,34 +6,13 @@
     (ngSubmit)="submitTestimony(uploadForm)"
   >
     <div class="form-group">
-      <div class="file-upload">
-        <input
-          type="file"
-          id="media"
-          accept=".mp4,.mov,.mp3,.wav"
-          (change)="onFileSelected($event)"
-          required
-          style="display: none"
-          #fileInput
-        />
-        <button
-          mat-raised-button
-          color="primary"
-          type="button"
-          (click)="fileInput.click()"
-        >
-          Elegir archivo (video o audio)
-        </button>
-      </div>
-      @if (mediaPreview) {
-        <div class="media-preview">
-          @if (mediaType === "Video") {
-            <video [src]="mediaPreview" controls></video>
-          } @else if (mediaType === "Audio") {
-            <audio [src]="mediaPreview" controls></audio>
-          }
-        </div>
-      }
+      <app-file-upload
+        accept=".mp4,.mov,.mp3,.wav"
+        dragMessage="Arrastra o selecciona un archivo (video o audio)"
+        (fileSelected)="onFileSelected($event)"
+        [mediaPreview]="mediaPreview"
+        [mediaType]="mediaType"
+      ></app-file-upload>
     </div>
 
     <div class="form-group">

@@ -21,6 +21,15 @@ export class NotificationService {
     );
   }
 
+  getUnread(): Observable<Notificacion[]> {
+    return this.http.get<Notificacion[]>(`${this.apiUrl}/unread`).pipe(
+      catchError((error) => {
+        console.error('Error al obtener notificaciones sin leer', error);
+        return of([]);
+      })
+    );
+  }
+
   getById(id: number): Observable<Notificacion | null> {
     return this.http.get<Notificacion>(`${this.apiUrl}/${id}`).pipe(
       catchError((error) => {

@@ -48,7 +48,12 @@ export class AuthService {
         AuthResponse | TwoFactorResponse
       >(`${this.API_URL}/login`, credentials)
       .pipe(
-        tap((response) => console.log("Raw API response:", response)),
+        tap((response) => {
+          console.log("Raw API response:", response);
+          if ('accessToken' in response) {
+          console.log("Stored refreshToken:", localStorage.getItem("refreshToken"));
+        }
+        }),
         catchError((error) => {
           // Log the complete error object for debugging
           console.error("Login error details:", {
@@ -157,27 +162,28 @@ export class AuthService {
       );
   }
 
-  refreshToken(token: string): Observable<{ accessToken: string }> {
-    return this.http
-      .post<{
-        accessToken: string;
-      }>(`${this.API_URL}/refresh`, { refreshToken: token })
-      .pipe(
-        tap((response) => {
-          if (response.accessToken) {
-            localStorage.setItem("accessToken", response.accessToken);
-          }
-        }),
-        catchError((error) => {
-          console.error("Error al refrescar token:", error);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          return throwError(
-            () => new Error(error.error?.message || "Error al refrescar token"),
-          );
-        }),
-      );
-  }
+  refreshToken(token: string): Observable<{ accessToken: string; refreshToken?: string }> {
+  return this.http
+    .post<{ accessToken: string; refreshToken?: string }>(`${this.API_URL}/refresh`, { refreshToken: token })
+    .pipe(
+      tap((response) => {
+        if (response.accessToken) {
+          localStorage.setItem("accessToken", response.accessToken);
+        }
+        if (response.refreshToken) {
+          localStorage.setItem("refreshToken", response.refreshToken);
+        }
+      }),
+      catchError((error) => {
+        console.error("Error al refrescar token:", error);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        return throwError(
+          () => new Error(error.error?.message || "Error al refrescar token"),
+        );
+      }),
+    );
+}
 
   requestPasswordReset(email: string): Observable<{ message: string }> {
     return this.http

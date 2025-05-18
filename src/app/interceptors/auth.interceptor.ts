@@ -28,8 +28,8 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const authReq = token
     ? req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`),
-      })
+      headers: req.headers.set('Authorization', `Bearer ${token}`),
+    })
     : req;
 
   return next(authReq).pipe(
@@ -64,13 +64,15 @@ function handle401Error(
     }
 
     return authService.refreshToken(refreshToken).pipe(
-      switchMap((response: { accessToken: string }) => {
+      switchMap((response: { accessToken: string; refreshToken?: string }) => {
         isRefreshing = false;
         refreshTokenSubject.next(response.accessToken);
-        // Actualizar el AuthStore con el nuevo accessToken
         patchState(authStore as any, { accessToken: response.accessToken });
         localStorage.setItem('accessToken', response.accessToken);
-        // Reintentar la solicitud original con el nuevo token
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken);
+          patchState(authStore as any, { refreshToken: response.refreshToken });
+        }
         const retryReq = req.clone({
           headers: req.headers.set('Authorization', `Bearer ${response.accessToken}`),
         });

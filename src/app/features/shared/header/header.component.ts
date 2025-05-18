@@ -154,7 +154,7 @@ export class HeaderComponent {
 
     this.isLoading = true;
     this.error = null;
-    this.notificationService.getAll().subscribe({
+    this.notificationService.getUnread().subscribe({
       next: (notifications) => {
         this.notifications = notifications;
         this.isLoading = false;

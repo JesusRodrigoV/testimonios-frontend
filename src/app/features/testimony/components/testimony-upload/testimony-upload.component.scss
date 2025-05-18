@@ -1,171 +1,131 @@
 :host {
   --background-color: #f8f9ff;
   --text-color: #2b2d42;
-  --primary-color: #4361ee;
-  --primary-hover: #3a4fcb;
+  --primary-color: #2e7d32;
+  --primary-hover: #1b5e20;
   --error-color: #ff4757;
   --success-color: #2ed573;
   --shadow-color: rgba(45, 49, 66, 0.1);
   --border-radius: 12px;
   --media-background: #f1f3f9;
   --input-background: #ffffff;
-  --gradient-primary: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+  --gradient-primary: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%); 
 
   :root.dark-mode & {
     --background-color: #1a1d28;
     --text-color: #e0e0e0;
-    --primary-color: #647dee;
-    --primary-hover: #586bcb;
+    --primary-color: #4caf50;
+    --primary-hover: #388e3c;
     --error-color: #ff6b81;
     --success-color: #7bed9f;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --media-background: #2a2e34;
     --input-background: #242731;
+    --gradient-primary: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%); 
   }
+}
 
-  .upload-container {
-    background: var(--background-color);
-    border-radius: var(--border-radius);
-    box-shadow: 0 8px 32px var(--shadow-color);
-    padding: 2.5rem;
-    max-width: 720px;
-    margin: 2rem auto;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.upload-container {
+  background: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px var(--shadow-color);
+  padding: 2.5rem;
+  max-width: 720px;
+  margin: 2rem auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    h2 {
-      color: var(--text-color);
-      font-size: 2rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 2rem;
-      letter-spacing: -0.5px;
-    }
-  }
-
-  .upload-form {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .form-group {
-    position: relative;
-
-    mat-form-field {
-      width: 100%;
-      
-      .mat-form-field-outline {
-        background: var(--input-background);
-        border-radius: 8px !important;
-      }
-
-      .mat-input-element {
-        color: var(--text-color);
-        padding: 12px 0;
-      }
-
-      mat-label {
-        color: rgba(var(--text-color), 0.8);
-      }
-    }
-  }
-
-  .file-upload {
-    text-align: center;
-    border: 2px dashed rgba(var(--primary-color), 0.3);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    transition: all 0.3s ease;
-
-    &:hover {
-      border-color: var(--primary-color);
-      background: rgba(var(--primary-color), 0.05);
-    }
-
-    button {
-      background: var(--gradient-primary);
-      padding: 12px 28px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: transform 0.2s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-      }
-    }
-  }
-
-  .media-preview {
-    margin-top: 1.5rem;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: 0 4px 12px var(--shadow-color);
-
-    video, audio {
-      width: 100%;
-      background: var(--media-background);
-      border-radius: 8px;
-    }
-  }
-
-  mat-chip-grid {
-    padding: 8px !important;
-    border-radius: 8px !important;
-    background: var(--input-background);
-
-    .mat-chip-row {
-      background: rgba(var(--primary-color), 0.1);
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-  }
-
-  button[type="submit"] {
-    background: var(--gradient-primary);
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-
-    &[disabled] {
-      opacity: 0.7;
-      filter: grayscale(0.5);
-    }
-
-    &:not([disabled]):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(var(--primary-color), 0.2);
-    }
-  }
-
-  .location mat-checkbox {
+  h2 {
     color: var(--text-color);
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -0.5px;
+  }
+}
 
-    .mat-checkbox-frame {
-      border-color: rgba(var(--text-color), 0.3);
+.upload-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
+
+  mat-form-field {
+    width: 100%;
+    
+    .mat-form-field-outline {
+      background: var(--input-background);
+      border-radius: 8px !important;
+    }
+
+    .mat-input-element {
+      color: var(--text-color);
+      padding: 12px 0;
+    }
+
+    mat-label {
+      color: rgba(var(--text-color), 0.8);
     }
   }
+}
 
-  @media (max-width: 768px) {
-    .upload-container {
-      padding: 1.5rem;
-      margin: 1rem;
-    }
+mat-chip-grid {
+  padding: 8px !important;
+  border-radius: 8px !important;
+  background: var(--input-background);
 
-    h2 {
-      font-size: 1.75rem;
-    }
+  .mat-chip-row {
+    background: rgba(var(--primary-color), 0.1);
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+}
 
-    .file-upload {
-      padding: 1.5rem;
-    }
+button[type="submit"] {
+  background: var(--gradient-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &[disabled] {
+    opacity: 0.7;
+    filter: grayscale(0.5);
   }
 
-  @media (max-width: 480px) {
-    .upload-container {
-      padding: 1rem;
-    }
+  &:not([disabled]):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(var(--primary-color), 0.2);
+  }
+}
 
-    button {
-      width: 100%;
-    }
+.location mat-checkbox {
+  color: var(--text-color);
+
+  .mat-checkbox-frame {
+    border-color: rgba(var(--text-color), 0.3);
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-container {
+    padding: 1rem;
+  }
+
+  button {
+    width: 100%;
   }
 }
