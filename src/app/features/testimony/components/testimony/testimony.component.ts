@@ -12,6 +12,7 @@ import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyModalComponent } from "./testimony-modal";
 import { MatIconModule } from "@angular/material/icon";
 import { VideoPlayerComponent } from "@app/features/shared/video-player";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-testimony",
@@ -30,6 +31,7 @@ export class TestimonyComponent{
   @Input({ required: true }) testimony!: Testimony;
 
   private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   openModal() {
     this.dialog.open(TestimonyModalComponent, {
@@ -38,6 +40,10 @@ export class TestimonyComponent{
       width: "1200px",
       panelClass: "testimony-modal",
     });
+  }
+
+  navigateToTestimony() {
+    this.router.navigate(['/testimonies', this.testimony.id]);
   }
 }
 

@@ -49,6 +49,11 @@ export const routes: Routes = [
         loadComponent: () => import("./features/collections/components/collection-detail/collection-detail.component")
       },
       {
+        path: 'testimonies/:id',
+        loadComponent: () =>
+          import('./features/testimony/components/testimony-detail/testimony-detail.component'),
+      },
+      {
         path: "",
         redirectTo: "/home",
         pathMatch: "full",
