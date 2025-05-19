@@ -17,12 +17,13 @@
       </div>
       <div class="actions">
         <button
-          mat-icon-button
+          mat-raised-button
           class="action-btn favorite-btn"
           (click)="addToFavorites()"
           matTooltip="Favorito"
         >
           <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
+          {{ testimony.favoriteCount}}
         </button>
         <button
           mat-icon-button

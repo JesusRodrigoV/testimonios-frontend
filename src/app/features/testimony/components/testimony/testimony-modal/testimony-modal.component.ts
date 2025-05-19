@@ -1,3 +1,4 @@
+
 import { DatePipe, NgClass, NgIf } from "@angular/common";
 import {
   ChangeDetectionStrategy,
@@ -90,6 +91,19 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
     if (this.transcripcionesSubscription) {
       this.transcripcionesSubscription.unsubscribe();
     }
+  }
+
+  getFavoriteCount(id: number) {
+    this.collectionService.getFavoriteCount(id).subscribe({
+      next: (count) => {
+        this.testimony.favoriteCount = count;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error al obtener el conteo de favoritos:', error);
+        this.snackBar.open('Error al cargar el conteo de favoritos', 'Cerrar', { duration: 3000 });
+      },
+    });
   }
 
   private loadFavorites() {
@@ -310,6 +324,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   }
 
   addToFavorites() {
+    const id = this.testimony.id;
     if (!this.authStore.isAuthenticated()) {
       this.snackBar.open('Debes iniciar sesión para agregar a favoritos', 'Cerrar', {
         duration: 3000,
@@ -317,7 +332,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.collectionService.toggleFavorite(this.testimony.id).subscribe({
+    this.collectionService.toggleFavorite(id).subscribe({
       next: (response) => {
         if (this.isFavorite) {
           this.favoritosMios = this.favoritosMios.filter((id) => id !== this.testimony.id);
@@ -331,6 +346,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
           });
         }
         this.isFavorite = !this.isFavorite;
+        this.getFavoriteCount(id);
         this.cdr.markForCheck();
       },
       error: (error) => {

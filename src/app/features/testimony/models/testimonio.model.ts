@@ -16,6 +16,7 @@ export interface Testimony {
   tags: string[];
   event?: string;
   transcription?: string;
+  favoriteCount?: number;
 }
 
 export interface TestimonyInput {

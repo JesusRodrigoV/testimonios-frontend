@@ -47,6 +47,12 @@ export class CollectionService {
     );
   }
 
+  getFavoriteCount(id: number): Observable<number> {
+    return this.http
+      .get<{ favoriteCount: number }>(`${this.apiUrl}/favorite-count/${id}`)
+      .pipe(map((response) => response.favoriteCount));
+  }
+
   getFavorites(): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/favorites/ids`);
   }
