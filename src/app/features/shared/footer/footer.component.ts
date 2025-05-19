@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, ChangeDetectorRef } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { TestimonioService } from '@app/features/testimony/services';
 
@@ -33,7 +33,7 @@ interface Cta {
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterModule, NgOptimizedImage, MatButtonModule],
+  imports: [RouterModule, NgOptimizedImage, MatButtonModule, RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,12 +78,12 @@ export class FooterComponent {
     },
     {
       name: 'Explorar Testimonios',
-      url: '/testimonies',
+      url: '/explore',
       ariaLabel: 'Explorar testimonios de Legado Bolivia',
     },
     {
       name: 'Mapa',
-      url: '/map',
+      url: '/maps',
       ariaLabel: 'Ver mapa de testimonios de Legado Bolivia',
     },
     {
