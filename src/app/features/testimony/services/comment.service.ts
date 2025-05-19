@@ -14,6 +14,7 @@ export class CommentService {
   getComments(): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.apiUrl}`);
   }
+  
   getCommentsByTestimonyId(testimonyId: number): Observable<Comment[]> {
     return this.getComments().pipe(
       map(comments => comments.filter(comment => comment.id_testimonio === testimonyId))
