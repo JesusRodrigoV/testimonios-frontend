@@ -101,7 +101,7 @@ export class HeaderComponent {
   onToggleMobileSearch(isActive: boolean): void {
     this.isMobileSearchActive = isActive;
     document.body.style.overflow = this.isMobileSearchActive ? 'hidden' : '';
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:keydown.escape')

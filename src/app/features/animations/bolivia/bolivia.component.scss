@@ -4,12 +4,7 @@
   --green: #00843D;
   --text: #0f0f0f;
 
-  :root.dark-mode & {
-    --red: #FF8A80;
-    --yellow: #FFF176;
-    --green: #4CAF50;
-    --text: #f1f1f1;
-  }
+
 }
 
 .map-container {
@@ -26,8 +21,8 @@
 }
 
 .circle {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
 }
 

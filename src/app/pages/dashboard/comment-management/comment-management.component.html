@@ -44,7 +44,7 @@
                 class="testimony-link"
                 *ngIf="comment.testimonios; else noTestimony"
               >
-                {{ comment.testimonios?.titulo }}
+                {{ comment.testimonios.titulo }}
               </a>
               <ng-template #noTestimony>
                 <span class="text-muted">Testimonio no encontrado</span>
@@ -74,17 +74,17 @@
               <div class="actions">
                 <button
                   mat-icon-button
-                  class="view"
+                  class="btn-icon view"
                   (click)="openTestimonyDialog(comment.id_testimonio)"
                   matTooltip="Ver testimonio"
                   [disabled]="!comment.testimonios"
                 >
-                  <mat-icon>visibility</mat-icon>
+                  <i class="bx bx-show"></i>
                 </button>
-                @if (comment.replies?.length) {
+                @if (comment.replies && comment.replies.length > 0) {
                   <button
                     mat-icon-button
-                    class="view-replies"
+                    class="btn-icon view-replies"
                     (click)="openRepliesDialog(comment)"
                     matTooltip="Ver respuestas ({{ comment.replies.length }})"
                   >
@@ -94,30 +94,30 @@
                 @if (comment.id_estado !== 2) {
                   <button
                     mat-icon-button
-                    class="approve"
+                    class="btn-icon approve"
                     (click)="approveComment(comment.id_comentario)"
                     matTooltip="Aprobar"
                   >
-                    <mat-icon>check_circle</mat-icon>
+                    <i class="bx bx-check"></i>
                   </button>
                 }
                 @if (comment.id_estado !== 3) {
                   <button
                     mat-icon-button
-                    class="reject"
+                    class="btn-icon reject"
                     (click)="rejectComment(comment.id_comentario)"
                     matTooltip="Rechazar"
                   >
-                    <mat-icon>cancel</mat-icon>
+                    <i class="bx bx-x"></i>
                   </button>
                 }
                 <button
                   mat-icon-button
-                  class="delete"
+                  class="btn-icon delete"
                   (click)="deleteComment(comment.id_comentario)"
                   matTooltip="Eliminar"
                 >
-                  <mat-icon>delete</mat-icon>
+                  <i class="bx bx-trash"></i>
                 </button>
               </div>
             </td>

@@ -1,10 +1,47 @@
 .comments-list {
-  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
   .loading {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
+    gap: 8px;
+    padding: 16px;
+    color: var(--text);
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+
+  .comment-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .replies-toggle {
+      margin-left: 32px;
+      padding: 8px 0;
+
+      .toggle-replies-btn {
+        color: var(--accent);
+        font-size: 0.9rem;
+
+        mat-icon {
+          vertical-align: middle;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  p {
+    color: var(--text);
+    font-size: 1rem;
+    padding: 16px;
+    text-align: center;
   }
 }

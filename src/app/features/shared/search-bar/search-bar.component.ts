@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, output, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, output, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,21 +27,28 @@ export class SearchBarComponent {
 
   private querySubject = new Subject<string>();
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     this.querySubject.pipe(debounceTime(300)).subscribe((query) => {
       if (query.trim()) {
         this.search.emit({ query: query.trim(), filter: this.filterType || undefined });
+        this.cdr.detectChanges();
       }
     });
   }
 
+  onInput(): void {
+    console.log('Input changed:', this.searchQuery); // Debug
+  }
+
   onQueryChange(): void {
     this.querySubject.next(this.searchQuery);
+    this.cdr.markForCheck();
   }
 
   onSearch(): void {
     if (this.searchQuery.trim()) {
       this.search.emit({ query: this.searchQuery.trim(), filter: this.filterType || undefined });
+      this.cdr.markForCheck();
     }
     if (this.isMobile && this.isActive) {
       this.toggleMobileSearch();
@@ -55,14 +62,20 @@ export class SearchBarComponent {
 
   clearSearch(): void {
     this.searchQuery = '';
-    this.searchInput?.nativeElement.focus();
     this.search.emit({ query: '', filter: this.filterType || undefined });
+    this.cdr.markForCheck();
+    if (this.searchInput) {
+      this.searchInput.nativeElement.focus();
+    }
   }
 
   toggleMobileSearch(): void {
     this.toggleMobile.emit(!this.isActive);
-    if (!this.isActive) {
-      setTimeout(() => this.searchInput?.nativeElement.focus(), 300);
+    if (!this.isActive && this.searchInput) {
+      setTimeout(() => {
+        this.searchInput?.nativeElement.focus();
+        this.cdr.markForCheck();
+      }, 300);
     }
   }
 }

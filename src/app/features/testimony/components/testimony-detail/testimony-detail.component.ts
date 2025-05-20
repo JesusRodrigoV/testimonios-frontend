@@ -52,6 +52,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   favoritosMios: number[] = [];
   isFavorite = false;
   transcripciones: Transcripcion[] = [];
+  isLoading = true; // Nueva bandera para controlar el estado de carga
   private favoritosSubscription: Subscription | undefined;
   private transcripcionesSubscription: Subscription | undefined;
   private routeSubscription: Subscription | undefined;
@@ -75,7 +76,9 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
         this.loadTestimony(+id);
       } else {
         this.snackBar.open('ID de testimonio inválido', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
         this.goBack();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -87,19 +90,24 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadTestimony(id: number) {
+    this.isLoading = true;
     this.testimonyService.getTestimony(id).subscribe({
       next: (testimony) => {
+        console.log('Testimonio cargado:', testimony); // Log para depuración
         this.testimony = { ...testimony, favoriteCount: testimony.favoriteCount ?? 0 };
         this.loadFavorites();
         this.loadTranscriptions();
         this.loadUserRating();
         this.loadFavoriteCount();
+        this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error: any) => {
         console.error('Error al cargar el testimonio:', error);
         this.snackBar.open('Error al cargar el testimonio', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
         this.goBack();
+        this.cdr.markForCheck();
       },
     });
   }

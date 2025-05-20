@@ -42,21 +42,19 @@ export class CommentService {
   private processComments(comments$: Observable<Comment[]>): Observable<Comment[]> {
     return comments$.pipe(
       map(comments =>
-        comments
-          .map(comment => {
-            if (!comment.testimonios) {
-              console.warn(`Comment ${comment.id_comentario} has no testimonios`, comment);
-            }
-            return {
-              ...comment,
-              likeCount: comment.likes?.length || 0,
-              isLiked: comment.likes?.some(
-                like => like.id_usuario === this.authStore.user()?.id_usuario
-              ) || false,
-            };
-          })
-          // Optional: Filter out comments with missing testimonios
-          // .filter(comment => !!comment.testimonios)
+        comments.map(comment => {
+          if (!comment.testimonios) {
+            console.warn(`Comment ${comment.id_comentario} has no testimonios`, comment);
+          }
+          return {
+            ...comment,
+            likeCount: comment.likes?.length || 0,
+            isLiked: comment.likes?.some(
+              like => like.id_usuario === this.authStore.user()?.id_usuario
+            ) || false,
+            replies: comment.replies || []
+          };
+        })
       )
     );
   }

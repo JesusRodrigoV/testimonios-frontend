@@ -1,36 +1,43 @@
 .comment-form,
 .reply-form {
-  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
 
   .input-container {
     position: relative;
     margin-bottom: 16px;
 
-    input[type="text"] {
+    input {
       width: 100%;
-      border: none;
-      border-bottom: 1px solid var(--border);
       padding: 10px 0;
-      background: transparent;
+      font-size: 1rem;
       color: var(--text);
-      font-size: 14px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--stroke);
       outline: none;
 
-      &:focus ~ .label,
-      &:not(:placeholder-shown) ~ .label {
-        transform: translateY(-20px) scale(0.85);
+      &:focus + .label,
+      &:not(:placeholder-shown) + .label {
+        top: -20px;
+        font-size: 0.85rem;
         color: var(--accent);
+      }
+
+      &:focus ~ .underline {
+        transform: scaleX(1);
       }
     }
 
     .label {
       position: absolute;
-      left: 0;
       top: 10px;
-      color: var(--border);
-      font-size: 14px;
-      pointer-events: none;
+      left: 0;
+      font-size: 1rem;
+      color: var(--stroke);
       transition: all 0.2s ease;
+      pointer-events: none;
     }
 
     .underline {
@@ -41,38 +48,34 @@
       height: 2px;
       background: var(--accent);
       transform: scaleX(0);
+      transform-origin: left;
       transition: transform 0.2s ease;
     }
 
-    input:focus ~ .underline {
-      transform: scaleX(1);
-    }
-
     .error-message {
-      color: #ff4b4b;
-      font-size: 12px;
+      color: var(--red);
+      font-size: 0.85rem;
       margin-top: 4px;
-      display: none;
-
-      &[ngIf="true"] {
-        display: block;
-      }
     }
   }
 
   .form-buttons {
     display: flex;
-    justify-content: flex-start;
-    gap: 12px;
-    margin-top: 8px;
+    gap: 8px;
+    justify-content: flex-end;
+
+    .btn-cancel {
+      color: var(--text);
+    }
 
     .btn-comment {
       background: var(--accent);
       color: #fff;
-    }
 
-    .btn-cancel {
-      color: var(--text);
+      &[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 }

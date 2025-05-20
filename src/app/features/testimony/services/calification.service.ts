@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthStore } from '@app/auth.store';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { environment } from 'src/environment/environment';
 import { Calificacion } from '../models/calification.model';
+import { Testimony } from '../models/testimonio.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,11 @@ export class CalificationService {
 
   getById(id: number): Observable<Calificacion> {
     return this.http.get<Calificacion>(`${this.apiUrl}/${id}`);
+  }
+
+  getTopRatedTestimonies(limit: number = 5): Observable<Testimony[]> {
+    const params = new HttpParams().set('limit', limit.toString());
+    return this.http.get<Testimony[]>(`${this.apiUrl}/top-rated`, { params });
   }
 
   getUserRatingForTestimony(testimonyId: number): Observable<Calificacion | null> {

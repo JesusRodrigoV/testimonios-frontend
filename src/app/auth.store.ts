@@ -64,7 +64,7 @@ export const AuthStore = signalStore(
       authService = inject(AuthService),
       router = inject(Router)
     ) => {
-      const destroy$ = new Subject<void>(); // Para limpiar el intervalo al cerrar sesión
+      const destroy$ = new Subject<void>();
 
       return {
         async loadUserProfile() {
@@ -133,7 +133,6 @@ export const AuthStore = signalStore(
                 loading: false,
               });
 
-              // Iniciar la renovación proactiva
               this.startTokenRefresh();
 
               router.navigate(['/home']);
@@ -179,7 +178,6 @@ export const AuthStore = signalStore(
               loading: false,
             });
 
-            // Iniciar la renovación proactiva
             this.startTokenRefresh();
 
             router.navigate(['/home']);
@@ -221,7 +219,6 @@ export const AuthStore = signalStore(
               loading: false,
             });
 
-            // Iniciar la renovación proactiva
             this.startTokenRefresh();
 
             router.navigate(['/home']);
@@ -241,7 +238,6 @@ export const AuthStore = signalStore(
               error: (error) => console.warn('Error en logout del servidor:', error),
             });
           } finally {
-            // Detener la renovación proactiva
             this.stopTokenRefresh();
 
             localStorage.removeItem('accessToken');
@@ -290,8 +286,7 @@ export const AuthStore = signalStore(
           const refreshToken = store.refreshToken();
           if (!refreshToken) return;
 
-          // Renovar cada 10 minutos (600000 ms)
-          interval(600000)
+          interval(500000)
             .pipe(
               takeUntil(destroy$),
               switchMap(() => authService.refreshToken(refreshToken))

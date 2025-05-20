@@ -1,72 +1,40 @@
-<div class="comment" [ngClass]="{ reply: comment().parent_id }">
+<div class="comment" [ngClass]="{ reply: isReply }">
   <div class="comment-header">
     <img
-      *ngIf="comment().usuarios.profile_image"
-      [src]="comment().usuarios.profile_image"
+      *ngIf="comment.usuarios.profile_image"
+      [src]="comment.usuarios.profile_image"
       alt="Avatar"
       class="avatar"
     />
     <div class="user-info">
-      <span class="username" [ngClass]="getRoleClass(comment().usuarios.rol.nombre)">
-        {{ comment().usuarios.nombre }}
+      <span class="username" [ngClass]="getRoleClass(comment.usuarios.rol.nombre)">
+        {{ comment.usuarios.nombre }}
       </span>
-      <span class="role">{{ comment().usuarios.rol.nombre }}</span>
+      <span class="role">{{ comment.usuarios.rol.nombre }}</span>
     </div>
-    <span class="comment-date">{{ comment().fecha_creacion | date: 'medium' }}</span>
+    <span class="comment-date">{{ comment.fecha_creacion | date: 'medium' }}</span>
   </div>
   
-  <p class="comment-content">{{ comment().contenido }}</p>
+  <p class="comment-content">{{ comment.contenido }}</p>
   
   <div class="comment-actions">
     <button
       mat-icon-button
-      (click)="toggleLike()"
-      [disabled]="!authStore.isAuthenticated()"
-      [matTooltip]="comment().isLiked ? 'Quitar me gusta' : 'Me gusta'"
+      (click)="toggleLike.emit(comment.id_comentario)"
+      [disabled]="!isAuthenticated"
+      [matTooltip]="isLiked ? 'Quitar me gusta' : 'Me gusta'"
     >
-      <mat-icon>{{ comment().isLiked ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
-      {{ comment().likeCount }}
+      <mat-icon>{{ isLiked ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
+      {{ likeCount }}
     </button>
     
     <button
       mat-button
-      (click)="startReply()"
-      [disabled]="!authStore.isAuthenticated()"
+      (click)="startReply.emit(comment.id_comentario)"
+      [disabled]="!isAuthenticated"
       matTooltip="Responder"
     >
       Responder
     </button>
   </div>
-  
-  @if (replyingTo === comment().id_comentario) {
-    <app-comment-form
-      [formType]="'reply'"
-      [testimonyId]="testimonyId()"
-      [parentId]="comment().id_comentario"
-      (commentSubmitted)="cancelReply(); commentUpdated.emit()"
-    ></app-comment-form>
-  }
-  
-  @if (comment().replies.length) {
-    <div class="replies-toggle">
-      <button
-        mat-button
-        (click)="toggleReplies()"
-        class="toggle-replies-btn"
-      >
-        <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
-        {{ expanded ? 'Ocultar' : 'Mostrar' }} respuestas ({{ comment().replies.length }})
-      </button>
-    </div>
-    
-    <div class="replies" [ngClass]="{ expanded }">
-      @for (reply of comment().replies; track reply.id_comentario) {
-        <app-comment-item
-          [comment]="reply"
-          [testimonyId]="testimonyId()"
-          (commentUpdated)="commentUpdated.emit()"
-        ></app-comment-item>
-      }
-    </div>
-  }
 </div>

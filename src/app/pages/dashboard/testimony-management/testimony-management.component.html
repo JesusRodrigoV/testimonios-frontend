@@ -22,70 +22,52 @@
       </thead>
       <tbody>
         @for (testimony of testimonies; track testimony.id) {
-          <tr>
-            <td class="text-muted">#{{ testimony.id }}</td>
-            <td>{{ testimony.title }}</td>
-            <td>{{ testimony.author }}</td>
-            <td>
-              <span
-                [ngClass]="
+        <tr>
+          <td class="text-muted">#{{ testimony.id }}</td>
+          <td>{{ testimony.title }}</td>
+          <td>{{ testimony.author }}</td>
+          <td>
+            <span [ngClass]="
                   'status-badge status-' + testimony.status.toLowerCase()
-                "
-              >
-                {{ testimony.status }}
-              </span>
-            </td>
-            <td>{{ testimony.categories.join(", ") || "Ninguna" }}</td>
-            <td>{{ testimony.tags.join(", ") || "Ninguna" }}</td>
-            <td>
-              <div class="actions">
-                <button
-                  class="btn-icon view"
-                  (click)="openTestimonyDialog(testimony)"
-                  matTooltip="Ver detalles"
-                >
-                  <i class="bx bx-show"></i>
-                </button>
-                @if (testimony.status === "Pendiente") {
-                  <button
-                    class="btn-icon approve"
-                    (click)="validateTestimony(testimony.id, true)"
-                    matTooltip="Aprobar"
-                  >
-                    <i class="bx bx-check"></i>
-                  </button>
-                  <button
-                    class="btn-icon reject"
-                    (click)="validateTestimony(testimony.id, false)"
-                    matTooltip="Rechazar"
-                  >
-                    <i class="bx bx-x"></i>
-                  </button>
-                }
-                <button
-                  class="btn-icon delete"
-                  (click)="deleteTestimony(testimony.id)"
-                  matTooltip="Eliminar"
-                >
-                  <i class="bx bx-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
+                ">
+              {{ testimony.status }}
+            </span>
+          </td>
+          <td>{{ testimony.categories.join(", ") || "Ninguna" }}</td>
+          <td>{{ testimony.tags.join(", ") || "Ninguna" }}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-icon view" (click)="openTestimonyDialog(testimony)" matTooltip="Ver detalles">
+                <i class="bx bx-show"></i>
+              </button>
+              @if (testimony.status === "Pendiente") {
+              <button class="btn-icon approve" (click)="validateTestimony(testimony.id, true)" matTooltip="Aprobar">
+                <i class="bx bx-check"></i>
+              </button>
+              <button class="btn-icon reject" (click)="validateTestimony(testimony.id, false)" matTooltip="Rechazar">
+                <i class="bx bx-x"></i>
+              </button>
+              }
+              <button class="btn-icon delete" (click)="deleteTestimony(testimony.id)" matTooltip="Eliminar">
+                <i class="bx bx-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
         }@empty {
-          <tr>
-            <td colspan="7" style="text-align: center">
-              No hay testimonios para mostrar.
-            </td>
-          </tr>
+        <tr>
+          <td colspan="7" style="text-align: center">
+            No hay testimonios para mostrar.
+          </td>
+        </tr>
         }
       </tbody>
     </table>
 
     @if (isLoading) {
-      <div class="loading-overlay">
-        <div class="spinner"></div>
-      </div>
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
     }
   </div>
 </div>

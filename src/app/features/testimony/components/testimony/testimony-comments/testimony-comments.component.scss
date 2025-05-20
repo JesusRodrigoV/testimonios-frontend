@@ -1,37 +1,11 @@
-:host {
-  --background: #fff;
-  --text: #0f0f0f;
-  --border: #e0e0e0;
-  --accent: #065fd4;
-  --admin-text: #C62828;
-  --curador-text: #0277BD;
-  --investigador-text: #2E7D32;
-
-  :root.dark-mode & {
-    --background: #0f0f0f;
-    --text: #f1f1f1;
-    --border: #444;
-    --accent: #3ea6ff;
-    --admin-text: #FF8A80;
-    --curador-text: #4FC3F7;
-    --investigador-text: #81C784;
-  }
-}
-
 .comments-section {
-  color: var(--text);
   padding: 16px;
-  box-sizing: border-box;
+  background: var(--background);
+  color: var(--text);
 
   h3 {
-    margin: 0 0 24px;
     font-size: 1.5rem;
-    font-weight: 500;
-  }
-}
-
-@media (max-width: 768px) {
-  .comments-section {
-    padding: 12px;
+    margin: 0 0 16px;
+    color: var(--text);
   }
 }

@@ -16,13 +16,14 @@ import { SpinnerComponent } from '@app/features/shared/ui/spinner';
 import { TestimonyComponent } from '../testimony/testimony.component';
 import { TestimonioService } from '@app/features/testimony/services';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime, Subject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
+import { CategoriesFiltersComponent } from '@app/features/shared/categories-filters';
 
 @Component({
   selector: 'app-testimony-feed',
-  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf, MatFormFieldModule, MatInputModule],
+  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf, MatFormFieldModule, MatInputModule,CategoriesFiltersComponent],
   templateUrl: './testimony-feed.component.html',
   styleUrl: './testimony-feed.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

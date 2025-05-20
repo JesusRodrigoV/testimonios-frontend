@@ -16,11 +16,23 @@ export class CommentService {
   }
 
   getByTestimonioId(testimonyId: number): Observable<Comment[]> {
-    return this.processComments(this.http.get<Comment[]>(`${this.apiUrl}/testimonio/${testimonyId}`));
+    return this.http.get<Comment[]>(`${this.apiUrl}/testimonio/${testimonyId}`).pipe(
+      map((comments) =>
+        comments.map((comment) => ({
+          ...comment,
+          replies: comment.replies ?? [],
+        }))
+      )
+    );
   }
 
   createComment(comment: { contenido: string; id_testimonio: number; parent_id?: number }): Observable<Comment> {
-    return this.http.post<Comment>(this.apiUrl, comment);
+    return this.http.post<Comment>(this.apiUrl, comment).pipe(
+      map((comment) => ({
+        ...comment,
+        replies: comment.replies ?? [],
+      }))
+    );
   }
 
   likeComment(commentId: number): Observable<void> {
