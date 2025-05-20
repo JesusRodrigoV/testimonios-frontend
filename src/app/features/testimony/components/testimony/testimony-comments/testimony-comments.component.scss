@@ -3,118 +3,35 @@
   --text: #0f0f0f;
   --border: #e0e0e0;
   --accent: #065fd4;
+  --admin-text: #C62828;
+  --curador-text: #0277BD;
+  --investigador-text: #2E7D32;
 
   :root.dark-mode & {
     --background: #0f0f0f;
     --text: #f1f1f1;
-    --border: #f1f1f1;
+    --border: #444;
     --accent: #3ea6ff;
+    --admin-text: #FF8A80;
+    --curador-text: #4FC3F7;
+    --investigador-text: #81C784;
   }
 }
 
 .comments-section {
   color: var(--text);
-  overflow-x: hidden;
+  padding: 16px;
   box-sizing: border-box;
 
   h3 {
-    margin: 0 0 16px;
-    font-size: 1.3rem;
+    margin: 0 0 24px;
+    font-size: 1.5rem;
     font-weight: 500;
   }
+}
 
-  .comment-form {
-    .input-container {
-      position: relative;
-      margin-bottom: 16px;
-
-      input[type="text"] {
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid var(--border);
-        padding: 10px 0;
-        background: transparent;
-        color: var(--text);
-        font-size: 14px;
-        outline: none;
-
-        &:focus~.label,
-        &:not(:placeholder-shown)~.label {
-          transform: translateY(-20px) scale(0.85);
-          color: var(--accent);
-        }
-      }
-
-      .label {
-        position: absolute;
-        left: 0;
-        top: 10px;
-        color: var(--border);
-        font-size: 14px;
-        pointer-events: none;
-        transition: all 0.2s ease;
-      }
-
-      .underline {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: var(--accent);
-        transform: scaleX(0);
-        transition: transform 0.2s ease;
-      }
-
-      input:focus~.underline {
-        transform: scaleX(1);
-      }
-
-      .error-message {
-        color: #ff4b4b;
-        font-size: 12px;
-        margin-top: 4px;
-        display: none;
-
-        &[ngIf="true"] {
-          display: block;
-        }
-      }
-    }
-
-    .form-buttons {
-      display: flex;
-      justify-content: flex-start;
-      gap: 12px;
-      margin-top: 8px;
-    }
-  }
-
-  .comments-list {
-    margin-top: 24px;
-
-    .comment {
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-
-      .comment-content {
-        font-size: 14px;
-        margin: 0 0 4px;
-        line-height: 1.5;
-      }
-
-      .comment-meta {
-        font-size: 12px;
-        color: var(--text);
-        opacity: 0.7;
-      }
-    }
-
-    .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+@media (max-width: 768px) {
+  .comments-section {
+    padding: 12px;
   }
 }

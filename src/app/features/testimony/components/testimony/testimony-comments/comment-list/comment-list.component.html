@@ -1,0 +1,18 @@
+<div class="comments-list">
+  @if (isLoading()) {
+    <div class="loading">
+      <axl-spinner />
+      <p>Cargando comentarios...</p>
+    </div>
+  } @else {
+    @for (comment of comments(); track comment.id_comentario) {
+      <app-comment-item
+        [comment]="comment"
+        [testimonyId]="testimonyId()"
+        (commentUpdated)="commentsUpdated.emit()"
+      ></app-comment-item>
+    } @empty {
+      <p>No hay comentarios aún.</p>
+    }
+  }
+</div>
