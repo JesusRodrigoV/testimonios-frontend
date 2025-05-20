@@ -90,32 +90,27 @@
   position: absolute;
   background: var(--particle-color);
   border-radius: 50%;
-  animation: float 10s infinite ease-in-out;
-  will-change: transform;
 }
 
-.particle:nth-child(1) {
+.particle-1{
   width: 8px;
   height: 8px;
-  top: 20%;
-  left: 15%;
-  animation-delay: 0s;
+  top: 70%;
+  left: 10%;
 }
 
-.particle:nth-child(2) {
+.particle-3 {
   width: 12px;
   height: 12px;
-  top: 65%;
-  left: 80%;
-  animation-delay: 2s;
+  top: 45%;
+  left: 90%;
 }
 
-.particle:nth-child(3) {
+.particle-2 {
   width: 6px;
   height: 6px;
-  top: 40%;
-  left: 50%;
-  animation-delay: 4s;
+  top: 20%;
+  left: 75%;
 }
 
 @keyframes float {
