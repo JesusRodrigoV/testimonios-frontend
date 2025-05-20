@@ -12,7 +12,7 @@ import { BoliviaComponent } from '@app/features/animations/bolivia';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, MatSidenavModule, MatButtonModule, MatIconModule, SidenavComponent, FooterComponent, HeaderComponent,BoliviaComponent],
+  imports: [RouterOutlet, MatSidenavModule, MatButtonModule, MatIconModule, SidenavComponent, FooterComponent, HeaderComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

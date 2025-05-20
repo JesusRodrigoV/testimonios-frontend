@@ -1,5 +1,6 @@
-import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { animate, createScope, stagger, utils } from 'animejs';
 
 interface Circle {
   visible: boolean;
@@ -12,10 +13,12 @@ interface Circle {
   styleUrl: './bolivia.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BoliviaComponent {
+export class BoliviaComponent implements AfterViewInit {
   redCircles: Circle[][] = [];
   yellowCircles: Circle[][] = [];
   greenCircles: Circle[][] = [];
+
+  @ViewChild('gridContainer', { static: false }) gridContainer?: ElementRef<HTMLElement>;
 
   ngOnInit() {
     const numRows = 3;
@@ -294,5 +297,65 @@ export class BoliviaComponent {
 
   limpiarArray(array: Circle[]) {
     return array = [];
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.gridContainer?.nativeElement) {
+      console.error('gridContainer no está definido. Verifica que #gridContainer esté en el DOM.');
+      return;
+    }
+    const scope = createScope({ root: this.gridContainer.nativeElement });
+    scope.add(() => {
+      const $circle = utils.$('.circle') as HTMLElement[];
+      console.log('Elementos .square encontrados:', $circle.length);
+      if ($circle.length === 0) {
+        console.warn('No se encontraron elementos .square dentro del gridContainer.');
+        return;
+      }
+      this.animateGrid($circle);
+    });
+  }
+
+  private animateGrid($circle: HTMLElement[]) {
+    const from = utils.random(0, 43 * 46);
+    const grid = [43, 46];
+    /*
+    animate($circle, {
+      scale: [
+        { to: [0, 1.25], duration: 10 },
+        { to: 0, duration: 10 },
+      ],
+      ease: 'outQuad',
+      boxShadow: [
+        { to: '0 0 1rem 0 currentColor' },
+        { to: '0 0 0rem 0 currentColor' }
+      ],
+      delay: stagger(50, {
+        grid: [43, 46],
+        from: utils.random(0, 43 * 46),
+      }),
+      onComplete: () => {
+        this.animateGrid($circle);
+      },
+    });
+    */
+   animate($circle, {
+    translateX: [
+      { to: stagger('-.05rem', { grid, from, axis: 'x' }) },
+      { to: 0, ease: 'inOutQuad', },
+    ],
+    translateY: [
+      { to: stagger('-.05rem', { grid, from, axis: 'y' }) },
+      { to: 0, ease: 'inOutQuad' },
+    ],
+    opacity: [
+      { to: .5 },
+      { to: 1 }
+    ],
+    delay: stagger(100, { grid, from }),
+    onComplete: () => {
+      this.animateGrid($circle);
+    }
+  });
   }
 }
