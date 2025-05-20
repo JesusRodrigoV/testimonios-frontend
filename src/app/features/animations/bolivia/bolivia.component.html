@@ -1,32 +1,29 @@
 <div class="map-container">
-  <!-- Red Circles -->
   <div >
     @for (row of redCircles; track $index) {
       <div class="small justified row">
         @for (circle of row; track $index) {
-          <div class="circle red" [ngClass]="{ hidden: !circle.visible }"></div>
+          <div #circle class="circle red" [ngClass]="{ hidden: !circle.visible }"></div>
         }
       </div>
     }
   </div>
 
-  <!-- Yellow Circles -->
   <div >
     @for (row of yellowCircles; track $index) {
       <div class="small justified row">
         @for (circle of row; track $index) {
-          <div class="circle yellow" [ngClass]="{ hidden: !circle.visible }"></div>
+          <div #circle class="circle yellow" [ngClass]="{ hidden: !circle.visible }"></div>
         }
       </div>
     }
   </div>
 
-  <!-- Green Circles -->
   <div >
     @for (row of greenCircles; track $index) {
       <div class="small justified row">
         @for (circle of row; track $index) {
-          <div class="circle green" [ngClass]="{ hidden: !circle.visible }"></div>
+          <div #circle class="circle green" [ngClass]="{ hidden: !circle.visible }"></div>
         }
       </div>
     }

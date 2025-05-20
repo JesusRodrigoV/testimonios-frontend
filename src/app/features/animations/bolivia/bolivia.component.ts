@@ -7,7 +7,7 @@ interface Circle {
 
 @Component({
   selector: 'app-bolivia',
-  imports: [NgFor, NgStyle, NgIf, NgClass],
+  imports: [NgClass],
   templateUrl: './bolivia.component.html',
   styleUrl: './bolivia.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
