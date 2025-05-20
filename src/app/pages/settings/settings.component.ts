@@ -7,7 +7,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FormsModule } from "@angular/forms";
-import { ThemeService } from "@app/core/services/theme";
+import { ThemeService } from "@app/core/services";
 
 @Component({
   selector: "app-settings",

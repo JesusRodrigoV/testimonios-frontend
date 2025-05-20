@@ -5,10 +5,10 @@
     --border: #e0e0e0;
     --accent: #007bff;
     --red: #ff0000;
-    --yellow: #ffeb3b;
+    --yellow: #afa33a;
     --green: #4caf50;
     --stroke: #666;
-    --fill: #ffc73a;
+    --fill: #c8a241;
 
     :root.dark-mode & {
         --background: #333;
@@ -25,7 +25,8 @@
 
 .testimony-page {
     color: var(--text);
-    padding: 32px;
+    padding: 30px;
+    margin: 30px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;

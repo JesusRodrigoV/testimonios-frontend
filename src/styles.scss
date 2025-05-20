@@ -4,29 +4,21 @@
 
 html {
   color-scheme: light;
-  @include mat.theme(
-    (
-      color: mat.$azure-palette,
+  @include mat.theme((color: mat.$azure-palette,
       density: -1,
-    )
-  );
-  @include mat.theme-overrides((
-     primary: #40964e,
-  ));
+    ));
+  @include mat.theme-overrides((primary: #40964e,
+    ));
 }
 
 html.dark-mode {
   color-scheme: dark;
-  @include mat.theme(
-    (
-      color: mat.$cyan-palette,
+  @include mat.theme((color: mat.$cyan-palette,
       density: -1,
-    )
-  );
-  @include mat.theme-overrides((
-     primary: #59b468,
-  ));
-  
+    ));
+  @include mat.theme-overrides((primary: #59b468,
+    ));
+
 }
 
 html,
@@ -34,7 +26,7 @@ body {
   height: 100%;
   margin: 0;
   font-family: "Source Sans 3", Arial, sans-serif;
-  
+  box-sizing: border-box;
 }
 
 .manuscript-text {

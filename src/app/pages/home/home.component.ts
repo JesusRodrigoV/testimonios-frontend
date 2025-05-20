@@ -6,7 +6,7 @@ import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyComponent } from "@app/features/testimony/components/testimony";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { TestimonioService } from "@app/features/testimony/services";
-import { CacheService } from "@app/core/services/cache";
+import { CacheService } from "@app/core/services";
 
 @Component({
   selector: "app-home",

@@ -3,14 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
   inject,
   output,
-  Output,
   ViewChild,
 } from "@angular/core";
-import { CommonModule, DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
+import { DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -21,10 +19,11 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { AuthStore } from "@app/auth.store";
 import { Router, RouterLink } from "@angular/router";
 import { GoldenDirective } from "@app/core/directives/golden.directive";
-import { ThemeService } from "@app/core/services/theme";
+import { ThemeService } from "@app/core/services";
 import { Notificacion } from "@app/features/notification/model/notification.model";
 import { NotificationService } from "@app/features/notification/services";
-import { SpinnerComponent } from "../ui/spinner/spinner.component";
+import { SpinnerComponent } from "../ui/spinner";
+import { SearchBarComponent } from "../search-bar";
 
 export const Rol = {
   ADMIN: 1,
@@ -48,8 +47,9 @@ export const Rol = {
     NgOptimizedImage,
     NgIf,
     SpinnerComponent,
-    DatePipe
-],
+    DatePipe,
+    SearchBarComponent
+  ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,11 +62,6 @@ export class HeaderComponent {
   notifications: Notificacion[] = [];
   isLoading = false;
   error: string | null = null;
-  searchQuery = '';
-  filterType: 'recent' | 'popular' | 'category' | null = null;
-
-  @ViewChild('desktopSearchInput') desktopSearchInput?: ElementRef<HTMLInputElement>;
-  @ViewChild('mobileSearchInput') mobileSearchInput?: ElementRef<HTMLInputElement>;
 
   protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
@@ -103,31 +98,16 @@ export class HeaderComponent {
     return this.authStore.user()?.role === this.Rol.ADMIN;
   }
 
-  toggleMobileSearch(): void {
-    this.isMobileSearchActive = !this.isMobileSearchActive;
-    if (!this.isMobileSearchActive && this.searchQuery) {
-      this.searchQuery = '';
-    }
+  onToggleMobileSearch(isActive: boolean): void {
+    this.isMobileSearchActive = isActive;
     document.body.style.overflow = this.isMobileSearchActive ? 'hidden' : '';
-    if (this.isMobileSearchActive) {
-      setTimeout(() => {
-        this.mobileSearchInput?.nativeElement.focus();
-      }, 300);
-    }
-    this.cdr.markForCheck();
-  }
-
-  clearSearch(): void {
-    this.searchQuery = '';
-    this.desktopSearchInput?.nativeElement.focus();
-    this.mobileSearchInput?.nativeElement.focus();
     this.cdr.markForCheck();
   }
 
   @HostListener('document:keydown.escape')
   onEscapePress() {
     if (this.isMobileSearchActive) {
-      this.toggleMobileSearch();
+      this.onToggleMobileSearch(false);
     }
   }
 
@@ -144,23 +124,6 @@ export class HeaderComponent {
   async onLogout() {
     await this.authStore.logout();
     this.cdr.detectChanges();
-  }
-
-  onSearch(): void {
-    if (this.searchQuery.trim()) {
-      this.search.emit({
-        query: this.searchQuery.trim(),
-        filter: this.filterType || undefined,
-      });
-    }
-    if (this.isMobileSearchActive) {
-      this.toggleMobileSearch();
-    }
-  }
-
-  setFilter(type: 'recent' | 'popular' | 'category'): void {
-    this.filterType = type;
-    this.onSearch();
   }
 
   onToggleSidebar(): void {
