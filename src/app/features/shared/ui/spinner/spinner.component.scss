@@ -16,11 +16,10 @@
   background: rgba(var(--background), 0.8);
   z-index: 1000;
 }
-.loader {
-  --_lineThickness: var(--line-thickness, 10%);
 
-  width: 60px;
-  height: 60px;
+.loader {
+  width: var(--width);
+  height: var(--height);
   background:
     linear-gradient(
       var(--transparent-color) calc(1 * 160% / 6),
@@ -42,9 +41,9 @@
       var(--line-color) 0 calc(4 * 22% / 6),
       var(--transparent-color) 0
     );
-  background-size: var(--_lineThickness) 400%;
+  background-size: var(--line-thickness) 400%;
   background-repeat: no-repeat;
-  background-color: none;
+  background-color: transparent;
   animation: matrix 1s infinite linear;
 }
 

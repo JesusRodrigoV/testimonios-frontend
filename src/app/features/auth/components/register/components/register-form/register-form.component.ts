@@ -1,41 +1,46 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from '@angular/material/stepper';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register-form',
   imports: [
+    RouterLink,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    MatStepperModule
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterFormComponent {
-  private fb = inject(FormBuilder);
-
-  @Input() buttonText: string = "Crear cuenta";
-  @Input() loading: boolean = false;
-  @Input() error: string | null = null;
-  @Output() onSubmit = new EventEmitter<any>();
+  buttonText = input<string>('Crear cuenta');
+  loading = input<boolean>(false);
+  error = input<string | null>(null);
+  onSubmit = output<any>();
 
   hidePassword = true;
   hideConfirmPassword = true;
 
-  form: FormGroup = this.fb.group(
+  private fb = inject(FormBuilder);
+
+  personalInfo = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    biografia: [''],
+  });
+
+  accountDetails = this.fb.group(
     {
-      email: ["", [Validators.required, Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ["", [Validators.required]],
-      nombre: ["", [Validators.required, Validators.minLength(3)]],
-      biografia: [""],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
     },
     {
       validators: this.passwordMatchValidator,
@@ -43,8 +48,18 @@ export class RegisterFormComponent {
   );
 
   private passwordMatchValidator(g: FormGroup) {
-    return g.get("password")?.value === g.get("confirmPassword")?.value
+    return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null
       : { mismatch: true };
+  }
+
+  submit() {
+    if (this.personalInfo.valid && this.accountDetails.valid) {
+      const formData = {
+        ...this.personalInfo.value,
+        ...this.accountDetails.value,
+      };
+      this.onSubmit.emit(formData);
+    }
   }
 }

@@ -1,3 +1,21 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.stepper-overrides((
+    header-selected-state-icon-background-color: var(--accent),
+    header-selected-state-icon-foreground-color: #ffffff,
+    header-done-state-icon-background-color: var(--accent-dark),
+    header-done-state-icon-foreground-color: #ffffff,
+    header-error-state-icon-foreground-color: #ef4444,
+    header-error-state-label-text-color: #ef4444,
+    header-label-text-color: var(--text),
+    header-optional-label-text-color: var(--text),
+    header-selected-state-label-text-color: var(--text),
+    container-color: transparent,
+    line-color: var(--border)
+  ));
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -128,4 +146,46 @@ mat-icon {
   background: var(--error-bg);
   color: var(--text);
   font-size: 0.85rem;
+}
+
+.stepper-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+
+  button {
+    min-width: 100px;
+  }
+}
+
+.confirmation {
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1.2rem;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin: 0.5rem 0;
+
+    strong {
+      color: var(--accent);
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .stepper-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
 }
