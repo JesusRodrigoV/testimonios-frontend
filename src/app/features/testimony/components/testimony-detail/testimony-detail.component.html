@@ -3,11 +3,9 @@
     <button mat-icon-button class="back-btn" (click)="goBack()" matTooltip="Volver">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h1>{{ testimony?.title || 'Cargando...' }}</h1>
   </div>
   <div class="page-body">
     <div class="main-content">
-      <p class="description">{{ testimony?.description }}</p>
       <div class="media">
         @if (testimony?.format === "Video") {
           <app-video-player [videoUrl]="testimony!.url" />
@@ -15,6 +13,7 @@
           <audio [src]="testimony!.url" controls></audio>
         }
       </div>
+      <h1 class="title">{{ testimony?.title || 'Cargando...' }}</h1>
       <div class="actions">
         <button
           mat-raised-button
@@ -66,23 +65,41 @@
       </div>
       <div class="meta">
         <div class="meta-header">
-          <p>{{ testimony ? getRelativeTime(testimony.createdAt) : 'Cargando...' }}</p>
+          <p class="meta-author">Subido por: {{ testimony?.author || 'Desconocido' }}</p>
+          <p class="meta-date">{{ testimony ? getRelativeTime(testimony.createdAt) : 'Cargando...' }}</p>
           <button
             mat-icon-button
             (click)="toggleMeta()"
             class="meta-toggle-btn"
+            matTooltip="{{ isMetaExpanded ? 'Mostrar menos' : 'Mostrar más' }}"
           >
-            <mat-icon>{{
-              isMetaExpanded ? "expand_less" : "expand_more"
-            }}</mat-icon>
+            <mat-icon>{{ isMetaExpanded ? "expand_less" : "expand_more" }}</mat-icon>
           </button>
         </div>
         <div class="meta-details" [ngClass]="{ expanded: isMetaExpanded }">
-          <p>Subido por: {{ testimony?.author || 'Desconocido' }}</p>
           <p>Fecha: {{ testimony?.createdAt | date: "medium" }}</p>
           <p>Categorías: {{ testimony?.categories?.join(", ") || "Ninguna" }}</p>
           <p>Etiquetas: {{ testimony?.tags?.join(", ") || "Ninguna" }}</p>
           <p *ngIf="testimony?.event">Evento: {{ testimony!.event }}</p>
+        </div>
+      </div>
+      <div class="description-section">
+        <div class="description-header">
+          <p>Descripción</p>
+          <button
+            mat-icon-button
+            (click)="toggleDescription()"
+            class="description-toggle-btn"
+            matTooltip="{{ isDescriptionExpanded ? 'Mostrar menos' : 'Mostrar más' }}"
+          >
+            <mat-icon>{{ isDescriptionExpanded ? "expand_less" : "expand_more" }}</mat-icon>
+          </button>
+        </div>
+        <div
+          class="description-content"
+          [ngClass]="{ expanded: isDescriptionExpanded }"
+        >
+          <p>{{ testimony?.description || 'Sin descripción disponible.' }}</p>
         </div>
       </div>
       <div class="transcription" *ngIf="testimony?.format !== 'Texto'">
@@ -93,9 +110,7 @@
             (click)="toggleTranscription()"
             class="transcription-toggle-btn"
           >
-            <mat-icon>{{
-              isTranscriptionExpanded ? "expand_less" : "expand_more"
-            }}</mat-icon>
+            <mat-icon>{{ isTranscriptionExpanded ? "expand_less" : "expand_more" }}</mat-icon>
           </button>
         </div>
         <div

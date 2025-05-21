@@ -23,31 +23,36 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   providers: [provideNativeDateAdapter()],
 })
 export default class HomeComponent {
-  highlightedTestimonies: Testimony[] = [];
+ highlightedTestimonies: Testimony[] = [];
   loading = false;
 
   private ref = inject(ChangeDetectorRef);
-  private calificationService = inject(CalificationService);
-  private snackBar = inject(MatSnackBar);
+  private testimonioService = inject(TestimonioService);
+  private cacheService = inject(CacheService);
+
 
   ngOnInit() {
     this.loadHighlightedTestimonies();
   }
 
   loadHighlightedTestimonies() {
+    const cached = this.cacheService.getHighlightedTestimonies();
+    if (cached) {
+      this.highlightedTestimonies = cached;
+      return;
+    }
+
     this.loading = true;
-    this.calificationService.getTopRatedTestimonies(5).subscribe({
-      next: (testimonies) => {
-        this.highlightedTestimonies = testimonies;
-        console.log("Highlighted testimonies loaded:", this.highlightedTestimonies);
+    this.testimonioService.searchTestimonies({ highlighted: true }).subscribe({
+      next: (response) => {
+        this.highlightedTestimonies = response.data;
+        this.cacheService.setHighlightedTestimonies(response.data);
         this.loading = false;
-        this.ref.markForCheck();
+        this.ref.detectChanges();
       },
       error: (err) => {
         console.error("Error loading highlighted testimonies:", err);
         this.loading = false;
-        this.snackBar.open('Error al cargar los testimonios destacados', 'Cerrar', { duration: 3000 });
-        this.ref.markForCheck();
       },
     });
   }

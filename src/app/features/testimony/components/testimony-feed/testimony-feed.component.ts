@@ -20,10 +20,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime, Subject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { CategoriesFiltersComponent } from '@app/features/shared/categories-filters';
+import { EventsFiltersComponent } from '@app/features/shared/events-filters';
+import { TagsFiltersComponent } from '@app/features/shared/tags-filters';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-testimony-feed',
-  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf, MatFormFieldModule, MatInputModule,CategoriesFiltersComponent],
+  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf, MatFormFieldModule, MatInputModule,CategoriesFiltersComponent, EventsFiltersComponent, TagsFiltersComponent, MatSelectModule],
   templateUrl: './testimony-feed.component.html',
   styleUrl: './testimony-feed.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,10 +39,15 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
   loading = false;
   hasMore = true;
   error: string | null = null;
+  selectedCategories: number[] = [];
+  selectedEvents: number[] = [];
+  selectedTags: number[] = [];
+  isSidebarOpen = false;
 
   @Input() set searchQuery(value: string) {
     this._searchQuery = value;
     this.searchSubject.next(value);
+    this.cdr.detectChanges(); // Ensure input field updates immediately
   }
   private _searchQuery = '';
   private searchSubject = new Subject<string>();
@@ -55,22 +63,49 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
   }
 
   private setupSearchDebounce() {
-    this.searchSubject.pipe(debounceTime(100)).subscribe((query) => {
+    this.searchSubject.pipe(debounceTime(300)).subscribe((query) => {
       this._searchQuery = query;
-      this.page = 1;
-      this.testimonies = [];
-      this.hasMore = true;
-      this.error = null;
-      this.loadTestimonies(false);
+      this.resetAndLoad();
+      this.cdr.markForCheck(); // Mark for check after async search update
     });
   }
 
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
+    this.cdr.detectChanges(); // Ensure input field reflects the change
   }
 
   clearSearch() {
     this.searchQuery = '';
+    this.cdr.detectChanges(); // Update input field immediately
+    this.resetAndLoad();
+  }
+
+  onFilterChange() {
+    this.resetAndLoad();
+  }
+
+  clearFilters() {
+    this.searchQuery = '';
+    this.selectedCategories = [];
+    this.selectedEvents = [];
+    this.selectedTags = [];
+    this.cdr.detectChanges();
+    this.resetAndLoad();
+  }
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    this.cdr.markForCheck(); 
+  }
+
+  private resetAndLoad() {
+    this.page = 1;
+    this.testimonies = [];
+    this.hasMore = true;
+    this.error = null;
+    this.cdr.detectChanges(); 
+    this.loadTestimonies(false);
   }
 
   loadTestimonies(append = true) {
@@ -78,34 +113,40 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.error = null;
-    this.cdr.markForCheck();
+    this.cdr.markForCheck(); // Existing, correct before async call
 
-    this.testimonioService
-      .searchTestimonies({
-        keyword: this._searchQuery || undefined,
-        page: this.page,
-        limit: this.limit,
-      })
-      .subscribe({
-        next: (response) => {
-          if (append) {
-            this.testimonies = [...this.testimonies, ...response.data];
-          } else {
-            this.testimonies = response.data;
-          }
-          this.total = response.total;
-          this.hasMore = this.testimonies.length < this.total;
-          this.page = response.page + 1;
-          this.loading = false;
-          this.cdr.markForCheck();
-          this.setupIntersectionObserver();
-        },
-        error: (err) => {
-          this.error = err.message || 'Error al cargar los testimonios';
-          this.loading = false;
-          this.cdr.markForCheck();
-        },
-      });
+    const params = {
+      keyword: this._searchQuery || undefined,
+      category: this.selectedCategories.length ? this.selectedCategories.join(',') : undefined,
+      eventId: this.selectedEvents.length ? this.selectedEvents[0] : undefined,
+      tag: this.selectedTags.length ? this.selectedTags.join(',') : undefined,
+      page: this.page,
+      limit: this.limit,
+    };
+    console.log('Search params:', params);
+
+    this.testimonioService.searchTestimonies(params).subscribe({
+      next: (response) => {
+        console.log('API response:', response);
+        if (append) {
+          this.testimonies = [...this.testimonies, ...response.data];
+        } else {
+          this.testimonies = response.data;
+        }
+        this.total = response.total;
+        this.hasMore = this.testimonies.length < this.total;
+        this.page = response.page + 1;
+        this.loading = false;
+        this.cdr.markForCheck(); // Existing, correct for async response
+        this.setupIntersectionObserver();
+      },
+      error: (err) => {
+        console.error('API error:', err);
+        this.error = err.message || 'Error al cargar los testimonios';
+        this.loading = false;
+        this.cdr.markForCheck(); // Existing, correct for async error
+      },
+    });
   }
 
   private setupIntersectionObserver() {

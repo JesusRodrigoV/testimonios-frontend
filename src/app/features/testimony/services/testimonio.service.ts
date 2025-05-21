@@ -95,6 +95,9 @@ export class TestimonioService {
     if (params.limit) httpParams = httpParams.set('limit', params.limit.toString());
     if (params.highlighted) httpParams = httpParams.set('highlighted', params.highlighted.toString());
 
+    const url = `${this.mediaUrl}?${httpParams.toString()}`;
+    console.log('API request URL:', url);
+
     return this.http
       .get<{
         data: Testimony[];

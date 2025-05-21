@@ -19,6 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { VideoPlayerComponent } from '@app/features/shared/video-player';
 import { TestimonyCommentsComponent } from '../testimony/testimony-comments';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-testimony-detail',
@@ -36,6 +37,7 @@ import { TestimonyCommentsComponent } from '../testimony/testimony-comments';
     MatMenuModule,
     FormsModule,
     VideoPlayerComponent,
+    MatTooltipModule
   ],
   templateUrl: './testimony-detail.component.html',
   styleUrl: './testimony-detail.component.scss',
@@ -52,7 +54,8 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   favoritosMios: number[] = [];
   isFavorite = false;
   transcripciones: Transcripcion[] = [];
-  isLoading = true; // Nueva bandera para controlar el estado de carga
+  isLoading = true;
+  isDescriptionExpanded = false; 
   private favoritosSubscription: Subscription | undefined;
   private transcripcionesSubscription: Subscription | undefined;
   private routeSubscription: Subscription | undefined;
@@ -206,12 +209,14 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
 
   toggleMeta() {
     this.isMetaExpanded = !this.isMetaExpanded;
-    this.cdr.markForCheck();
   }
 
   toggleTranscription() {
     this.isTranscriptionExpanded = !this.isTranscriptionExpanded;
-    this.cdr.markForCheck();
+  }
+
+  toggleDescription() {
+    this.isDescriptionExpanded = !this.isDescriptionExpanded;
   }
 
   get canRequestTranscription(): boolean {

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { MatChipsModule } from '@angular/material/chips';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestimonioService } from '@app/features/testimony/services';
 
@@ -11,19 +11,19 @@ import { TestimonioService } from '@app/features/testimony/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoriesFiltersComponent implements OnInit {
-  categorias: { id_categoria: number; nombre: string; descripcion: string }[] =
-    [];
+  categorias: { id_categoria: number; nombre: string; descripcion: string }[] = [];
+  @Input() selectedCategories: number[] = [];
+  @Output() selectedCategoriesChange = new EventEmitter<number[]>();
 
   private testimonyService = inject(TestimonioService);
   private snackBar = inject(MatSnackBar);
-  private ref = inject(ChangeDetectorRef);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.testimonyService.getAllCategories().subscribe({
       next: (data) => {
         this.categorias = data;
-        
-        this.ref.detectChanges();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.openSnackBar(
@@ -33,6 +33,17 @@ export class CategoriesFiltersComponent implements OnInit {
         );
       },
     });
+  }
+
+  toggleCategory(id: number) {
+    const updated = this.selectedCategories.includes(id)
+      ? this.selectedCategories.filter(c => c !== id)
+      : [...this.selectedCategories, id];
+    this.selectedCategoriesChange.emit(updated);
+  }
+
+  onSelectionChange(event: MatChipListboxChange) {
+    // Optional: Handle multi-select if needed
   }
 
   openSnackBar(

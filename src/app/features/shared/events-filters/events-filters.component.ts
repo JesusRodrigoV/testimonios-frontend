@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { MatChipsModule } from '@angular/material/chips';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestimonioService } from '@app/features/testimony/services';
 
@@ -11,17 +11,19 @@ import { TestimonioService } from '@app/features/testimony/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventsFiltersComponent {
-  events: { id: number; name: string; description: string; date: string }[] =
-    [];
+  events: { id: number; name: string; description: string; date: string }[] = [];
+  @Input() selectedEvents: number[] = [];
+  @Output() selectedEventsChange = new EventEmitter<number[]>();
 
   private testimonyService = inject(TestimonioService);
   private snackBar = inject(MatSnackBar);
-  private ref = inject(ChangeDetectorRef);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.testimonyService.getAllEvents().subscribe({
       next: (data) => {
         this.events = data;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.openSnackBar(
@@ -31,6 +33,15 @@ export class EventsFiltersComponent {
         );
       },
     });
+  }
+
+  toggleEvent(id: number) {
+    const updated = this.selectedEvents.includes(id) ? [] : [id]; // Single selection
+    this.selectedEventsChange.emit(updated);
+  }
+
+  onSelectionChange(event: MatChipListboxChange) {
+    // Optional: Handle multi-select if needed
   }
 
   openSnackBar(
