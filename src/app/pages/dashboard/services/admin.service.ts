@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { User } from "@app/features/auth/models/user.model";
+import { tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
@@ -24,6 +25,12 @@ export class AdminService {
   }
 
   deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/users/${id}`);
+    console.log('AdminService - deleteUser llamado con ID:', id);
+    return this.http.delete<void>(`${this.API_URL}/users/${id}`).pipe(
+      tap({
+        next: () => console.log('AdminService - deleteUser exitoso'),
+        error: (error) => console.error('AdminService - deleteUser error:', error)
+      })
+    );
   }
 }

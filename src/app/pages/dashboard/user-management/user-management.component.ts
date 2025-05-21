@@ -134,11 +134,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     if (confirm("¿Estás seguro de que querés eliminar este usuario?")) {
       this.isLoading = true;
+      console.log('Intentando eliminar usuario con ID:', id);
+      
       this.adminService
         .deleteUser(id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {
+          next: (response) => {
+            console.log('Respuesta exitosa:', response);
             this.loadUsers();
             this.snackBar.open("Usuario eliminado con éxito", "Cerrar", {
               duration: 3000,
@@ -146,10 +149,13 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this.ref.detectChanges();
           },
-          error: () => {
-            this.snackBar.open("Error al eliminar usuario", "Cerrar", {
-              duration: 3000,
-            });
+          error: (error) => {
+            console.error('Error al eliminar usuario:', error);
+            this.snackBar.open(
+              error.error?.message || "Error al eliminar usuario", 
+              "Cerrar", 
+              { duration: 3000 }
+            );
             this.isLoading = false;
             this.ref.detectChanges();
           },
