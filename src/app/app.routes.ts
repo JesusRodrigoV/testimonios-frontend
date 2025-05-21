@@ -54,10 +54,6 @@ export const routes: Routes = [
           import('./features/testimony/components/testimony-detail/testimony-detail.component'),
       },
       {
-        path: 'foro',
-        loadComponent: () => import('./pages/foro/foro.component'),
-      },
-      {
         path: "",
         redirectTo: "/home",
         pathMatch: "full",
