@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './foro.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ForoComponent {
+export default class ForoComponent {
 
 }
