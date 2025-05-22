@@ -6,15 +6,15 @@
   --background: #f8f9fa;
   --border-color: #dee2e6;
   --table-row-background: #ffffff;
-  --gradient-start: #f5f7fa; /* Gradient start for two-factor background */
-  --gradient-end: #c3cfe2; /* Gradient end for two-factor background */
-  --card-background: #ffffff; /* Card background */
-  --title-color: #2c3e50; /* Title text color */
-  --description-color: #666; /* Description text color */
-  --error-background: rgba(244, 67, 54, 0.1); /* Error background */
-  --focus-overlay: rgba(33, 150, 243, 0.05); /* Input focus overlay */
-  --shadow-color: rgba(0, 0, 0, 0.1); /* Shadow color */
-  --shadow-hover: rgba(0, 0, 0, 0.15); /* Button hover shadow */
+  --gradient-start: #f5f7fa; 
+  --gradient-end: #c3cfe2; 
+  --card-background: #ffffff; 
+  --title-color: #2c3e50; 
+  --description-color: #666; 
+  --error-background: rgba(244, 67, 54, 0.1); 
+  --focus-overlay: rgba(33, 150, 243, 0.05); 
+  --shadow-color: rgba(0, 0, 0, 0.1); 
+  --shadow-hover: rgba(0, 0, 0, 0.15);
 
   :root.dark-mode & {
     --primary-color: #647dee;
@@ -24,15 +24,15 @@
     --background: #1e2126;
     --border-color: #3a3f47;
     --table-row-background: #2a2e34;
-    --gradient-start: #2a2e34; /* Darker gradient for dark mode */
-    --gradient-end: #3a3f47; /* Darker gradient for dark mode */
-    --card-background: #2a2e34; /* Dark card background */
-    --title-color: #e0e0e0; /* Light title text for dark mode */
-    --description-color: #a0a0a0; /* Lighter gray for description */
-    --error-background: rgba(255, 102, 89, 0.2); /* Adjusted for dark mode */
-    --focus-overlay: rgba(100, 125, 238, 0.1); /* Adjusted for dark mode */
-    --shadow-color: rgba(0, 0, 0, 0.3); /* Darker shadow */
-    --shadow-hover: rgba(0, 0, 0, 0.4); /* Darker hover shadow */
+    --gradient-start: #2a2e34; 
+    --gradient-end: #3a3f47; 
+    --card-background: #2a2e34; 
+    --title-color: #e0e0e0; 
+    --description-color: #a0a0a0;
+    --error-background: rgba(255, 102, 89, 0.2);
+    --focus-overlay: rgba(100, 125, 238, 0.1); 
+    --shadow-color: rgba(0, 0, 0, 0.3); 
+    --shadow-hover: rgba(0, 0, 0, 0.4); 
   }
 }
 

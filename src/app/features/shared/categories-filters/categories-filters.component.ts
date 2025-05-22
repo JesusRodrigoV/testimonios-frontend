@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestimonioService } from '@app/features/testimony/services';
@@ -12,9 +12,9 @@ import { TestimonioService } from '@app/features/testimony/services';
 })
 export class CategoriesFiltersComponent implements OnInit {
   categorias: { id_categoria: number; nombre: string; descripcion: string }[] = [];
-  @Input() selectedCategories: number[] = [];
-  @Output() selectedCategoriesChange = new EventEmitter<number[]>();
-
+  selectedCategories = input<number[]>([]);
+  selectedCategoriesChange = output<number[]>();
+  
   private testimonyService = inject(TestimonioService);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
@@ -36,9 +36,9 @@ export class CategoriesFiltersComponent implements OnInit {
   }
 
   toggleCategory(id: number) {
-    const updated = this.selectedCategories.includes(id)
-      ? this.selectedCategories.filter(c => c !== id)
-      : [...this.selectedCategories, id];
+    const updated = this.selectedCategories().includes(id)
+      ? this.selectedCategories().filter(c => c !== id)
+      : [...this.selectedCategories(), id];
     this.selectedCategoriesChange.emit(updated);
   }
 

@@ -1,58 +1,53 @@
 <div class="setup-container">
-  <mat-card class="setup-card">
-    <mat-card-header>
-      <mat-card-title>Configurar Autenticación de dos factores</mat-card-title>
-    </mat-card-header>
+  <div class="verification-card">
+    <h1>Configurar Autenticación de dos factores</h1>
+    <p>
+      Escanea el código QR con tu aplicación de autenticación (como Google Authenticator o Authy) o ingresa manualmente este código:
+    </p>
 
-    <mat-card-content>
-      <p>
-        Escanea el código QR con tu aplicación de autenticación (como Google
-        Authenticator o Authy) o ingresa manualmente este código:
-      </p>
-
-      @if (setupData(); as data) {
-        <div class="qr-container">
-          <img [src]="data.qrCode" alt="QR Code" class="qr-code" />
-          <div class="secret-key">
-            <code>{{ data.secret }}</code>
-          </div>
+    @if (setupData(); as data) {
+      <div class="qr-container">
+        <img [src]="data.qrCode" alt="Código QR para autenticación" class="qr-code" />
+        <div class="secret-key">
+          <code>{{ data.secret }}</code>
         </div>
+      </div>
+    }
+
+    <form [formGroup]="setupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Código de verificación</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="token"
+          placeholder="Ingresa el código de 6 dígitos"
+          maxlength="6"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+        />
+        <mat-icon matPrefix>dialpad</mat-icon>
+        <mat-error *ngIf="setupForm.get('token')?.errors?.['required']">
+          El código es requerido
+        </mat-error>
+        <mat-error *ngIf="setupForm.get('token')?.errors?.['minlength']">
+          El código debe tener 6 dígitos
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        type="submit"
+        class="submit-button"
+        [disabled]="setupForm.invalid || loading()"
+      >
+        <mat-icon *ngIf="!loading()">check_circle</mat-icon>
+        {{ loading() ? 'Verificando...' : 'Verificar código' }}
+      </button>
+
+      @if (error()) {
+        <div class="error-message">{{ error() }}</div>
       }
-
-      <form [formGroup]="setupForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline">
-          <mat-label>Código de verificación</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="token"
-            placeholder="Ingresa el código de 6 dígitos"
-            maxlength="6"
-          />
-          <mat-icon matPrefix>dialpad</mat-icon>
-          <mat-error *ngIf="setupForm.get('token')?.errors?.['required']">
-            El código es requerido
-          </mat-error>
-          <mat-error *ngIf="setupForm.get('token')?.errors?.['minlength']">
-            El código debe tener 6 dígitos
-          </mat-error>
-        </mat-form-field>
-
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          class="submit-button"
-          [disabled]="setupForm.invalid || loading()"
-        >
-          <mat-icon>check_circle</mat-icon>
-          {{ loading() ? "Verificando..." : "Verificar código" }}
-        </button>
-
-        @if (error()) {
-          <mat-error class="error-message">{{ error() }}</mat-error>
-        }
-      </form>
-    </mat-card-content>
-  </mat-card>
+    </form>
+  </div>
 </div>

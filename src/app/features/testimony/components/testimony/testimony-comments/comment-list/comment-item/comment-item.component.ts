@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, input, Input, output, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Comment } from '@app/features/testimony/models/comment.model';

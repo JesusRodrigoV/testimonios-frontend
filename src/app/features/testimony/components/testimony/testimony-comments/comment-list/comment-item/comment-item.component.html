@@ -8,9 +8,12 @@
       <span class="username" [ngClass]="getRoleClass(comment().usuarios.rol.nombre)">
         {{ comment().usuarios.nombre }}
       </span>
+      @if(comment().usuarios.rol.nombre !== 'visitante'){
       <span class="role" [ngClass]="getRoleClass(comment().usuarios.rol.nombre)">
         {{ comment().usuarios.rol.nombre | titlecase }}
       </span>
+      }
+
     </div>
     <span class="comment-date">{{ comment().fecha_creacion | date: 'short' }}</span>
   </div>
@@ -18,8 +21,8 @@
   <p class="comment-content">{{ comment().contenido }}</p>
 
   <div class="comment-actions">
-    <button mat-icon-button (click)="toggleLike.emit(comment().id_comentario)" [disabled]="!isAuthenticated()"
-      [matTooltip]="isLiked() ? 'Quitar me gusta' : 'Me gusta'" class="like-button">
+    <button mat-button (click)="toggleLike.emit(comment().id_comentario)" [disabled]="!isAuthenticated()"
+      [matTooltip]="isLiked() ? 'Quitar me gusta' : 'Me gusta'">
       <mat-icon [ngClass]="{ liked: isLiked }">
         {{ isLiked() ? 'thumb_up' : 'thumb_up_off_alt' }}
       </mat-icon>
@@ -29,16 +32,12 @@
     </button>
 
     <button mat-button (click)="startReply.emit(comment().id_comentario)" [disabled]="!isAuthenticated()"
-      matTooltip="Responder" class="reply-button">
+      matTooltip="Responder">
       <mat-icon>reply</mat-icon>
       Responder
     </button>
     @if((comment().replies.length || 0) > 0){
-    <button mat-icon-button (click)="toggleReplies.emit(comment().id_comentario)"
-      matTooltip="{{ expanded() ? 'Ocultar' : 'Mostrar' }} respuestas" class="replies-toggle-button">
-      <mat-icon>{{ expanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
-      <span class="replies-count">{{ comment().replies.length }}</span>
-    </button>
+    <ng-content />
     }
 
   </div>

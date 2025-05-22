@@ -2,13 +2,13 @@
   <h3>Comentarios ({{ comments.length }})</h3>
   <app-comment-form
     [formType]="'comment'"
-    [testimonyId]="testimonyId"
+    [testimonyId]="testimonyId()"
     (commentSubmitted)="loadComments()"
   ></app-comment-form>
   <app-comment-list
     [comments]="comments"
     [isLoading]="isLoading"
-    [testimonyId]="testimonyId"
+    [testimonyId]="testimonyId()"
     (commentsUpdated)="loadComments()"
   ></app-comment-list>
 </div>

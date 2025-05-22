@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  Input,
+  input,
   OnInit,
 } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -23,7 +23,7 @@ import { CommentFormComponent } from "./comment-form";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestimonyCommentsComponent implements OnInit {
-  @Input({ required: true }) testimonyId!: number;
+  testimonyId = input.required<number>();
   comments: Comment[] = [];
   isLoading = false;
 
@@ -38,7 +38,7 @@ export class TestimonyCommentsComponent implements OnInit {
   loadComments() {
     this.isLoading = true;
     this.ref.markForCheck();
-    this.commentService.getByTestimonioId(this.testimonyId).subscribe({
+    this.commentService.getByTestimonioId(this.testimonyId()).subscribe({
       next: (comments) => {
         this.comments = comments.map((comment) => ({
           ...comment,

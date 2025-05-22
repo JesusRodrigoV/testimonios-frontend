@@ -7,7 +7,7 @@
   @for (categoria of categorias; track categoria.id_categoria) {
     <mat-chip-option
       [selectable]="true"
-      [selected]="selectedCategories.includes(categoria.id_categoria)"
+      [selected]="selectedCategories().includes(categoria.id_categoria)"
       (selectionChange)="toggleCategory(categoria.id_categoria)"
     >
       {{ categoria.nombre }}
