@@ -49,7 +49,15 @@
       @defer (when testimonies.length > 0 || !loading) {
       <div class="testimonies-wrapper">
         @for (testimony of testimonies; track testimony.id) {
-        <app-testimony [testimony]="testimony"></app-testimony>
+          @defer (on viewport) {
+            <app-testimony [testimony]="testimony"></app-testimony>
+          }@placeholder {
+            <div class="skeleton-card">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-content"></div>
+              <div class="skeleton-footer"></div>
+            </div>
+          }
         } @empty {
         <div class="empty-state">
           <mat-icon>info</mat-icon>

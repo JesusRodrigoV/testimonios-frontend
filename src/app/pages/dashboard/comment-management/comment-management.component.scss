@@ -9,6 +9,8 @@
   --curador-text: #0277BD;
   --investigador-bg: #E8F5E9;
   --investigador-text: #2E7D32;
+  --background-overlay: rgba(255, 255, 255, 0.8);
+    
 
   :root.dark-mode & {
     --background: #1a1a1a;
@@ -21,12 +23,12 @@
     --curador-text: #4FC3F7;
     --investigador-bg: #2E4B33;
     --investigador-text: #81C784;
+    --background-overlay: rgba(0, 0, 0, 0.8);
   }
 }
 
 .management-container {
   padding: 1.5rem;
-  background: var(--background);
   color: var(--text);
   min-height: 100%;
   animation: fadeIn 0.3s ease;
@@ -53,13 +55,6 @@
 
       .filter {
         min-width: 200px;
-      }
-
-      button {
-        background: var(--accent);
-        color: #fff;
-        text-transform: uppercase;
-        font-weight: 500;
       }
     }
   }
@@ -180,7 +175,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--background-overlay);
     display: flex;
     align-items: center;
     justify-content: center;

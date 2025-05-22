@@ -14,10 +14,11 @@ import { Subject, takeUntil } from "rxjs";
 import { AdminService } from "../services";
 import { UserDialogComponent } from "./user-dialog";
 import { MatButtonModule } from "@angular/material/button";
+import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 
 @Component({
   selector: "app-user-management",
-  imports: [NgOptimizedImage, NgClass, MatButtonModule],
+  imports: [NgOptimizedImage, NgClass, MatButtonModule, SpinnerComponent],
   templateUrl: "./user-management.component.html",
   styleUrl: "./user-management.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

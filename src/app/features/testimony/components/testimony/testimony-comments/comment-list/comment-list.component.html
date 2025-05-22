@@ -11,8 +11,8 @@
           <app-comment-item
             [comment]="comment"
             [isReply]="comment.parent_id !== null"
-            [isLiked]="comment.isLiked"
-            [likeCount]="comment.likeCount"
+            [isLiked]="comment.isLiked!"
+            [likeCount]="comment.likeCount!"
             [isAuthenticated]="isAuthenticated"
             (toggleLike)="toggleLike($event)"
             (startReply)="startReply($event)"
@@ -25,8 +25,7 @@
               (commentSubmitted)="cancelReply(); loadComments()"
             ></app-comment-form>
           }
-          <!--
-          @if (comment.replies.length > 0) {
+          @if ((comment.replies.length || 0) > 0) {
             <div class="replies-toggle">
               <button
                 mat-button
@@ -38,8 +37,6 @@
               </button>
             </div>
           }
-          -->
-          
         </div>
       }
     } @else {

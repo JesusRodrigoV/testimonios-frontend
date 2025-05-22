@@ -18,9 +18,9 @@ export interface Comment {
   id_testimonio: number;
   parent_id?: number;
   usuarios: User;
-  testimonios?: Testimony; // Made optional
-  replies: Comment[];
+  testimonios?: Testimony;
+  replies: Comment[]; 
   likes: { id_usuario: number }[];
-  likeCount: number;
-  isLiked: boolean;
+  likeCount?: number; 
+  isLiked?: boolean; 
 }

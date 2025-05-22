@@ -8,10 +8,11 @@ import { CommentService } from '@app/features/testimony/services';
 import { CommentFormComponent } from '../comment-form';
 import { MatIconModule } from '@angular/material/icon';
 import { NgStyle } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-comment-list',
-  imports: [SpinnerComponent, CommentItemComponent, CommentFormComponent, MatIconModule, NgStyle],
+  imports: [SpinnerComponent, CommentItemComponent, CommentFormComponent, MatIconModule, NgStyle, MatButtonModule],
   templateUrl: './comment-list.component.html',
   styleUrl: './comment-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -41,8 +42,8 @@ export class CommentListComponent {
   private flattenComments(comments: Comment[], depth: number = 0): (Comment & { depth: number })[] {
     const result: (Comment & { depth: number })[] = [];
     for (const comment of comments) {
-      result.push({ ...comment, depth });
-      if (this.expandedReplies[comment.id_comentario] && comment.replies?.length) {
+      result.push({ ...comment, depth, replies: comment.replies || [] });
+      if (this.expandedReplies[comment.id_comentario] && comment.replies?.length > 0) {
         result.push(...this.flattenComments(comment.replies, depth + 1));
       }
     }
@@ -64,7 +65,7 @@ export class CommentListComponent {
   toggleReplies(commentId: number) {
     this.expandedReplies[commentId] = !this.expandedReplies[commentId];
     this.flattenedComments = this.flattenComments(this.comments());
-    this.commentsUpdated.emit(); // Trigger change detection
+    this.commentsUpdated.emit();
   }
 
   toggleLike(commentId: number) {

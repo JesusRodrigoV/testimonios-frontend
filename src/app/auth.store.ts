@@ -286,7 +286,7 @@ export const AuthStore = signalStore(
           const refreshToken = store.refreshToken();
           if (!refreshToken) return;
 
-          interval(500000)
+          interval(5000000)
             .pipe(
               takeUntil(destroy$),
               switchMap(() => authService.refreshToken(refreshToken))

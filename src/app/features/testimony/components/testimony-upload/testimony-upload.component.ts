@@ -4,6 +4,7 @@ import {
   Component,
   inject,
   OnInit,
+  signal,
 } from "@angular/core";
 import { FormsModule, NgForm, ReactiveFormsModule } from "@angular/forms";
 import {
@@ -80,6 +81,7 @@ export default class TestimonyUploadComponent implements OnInit {
   mediaType: "Video" | "Audio" | null = null;
   shareLocation: boolean = false;
   submitting = false;
+  cargandoTestimonio = signal(false);
 
   categories: { id_categoria: number; nombre: string; descripcion: string }[] =
     [];
@@ -169,6 +171,8 @@ export default class TestimonyUploadComponent implements OnInit {
       return;
     }
 
+    this.cargandoTestimonio.set(true);
+
     this.mediaType = file.type.startsWith("video") ? "Video" : "Audio";
     console.log("El tipo del testimonio: " + this.mediaType);
     this.mediaPreview = URL.createObjectURL(file);
@@ -205,6 +209,7 @@ export default class TestimonyUploadComponent implements OnInit {
       this.testimony.format = this.mediaType;
       console.log("Formato del testimonio", this.testimony.format);
       this.openSnackBar("Archivo subido exitosamente", "Cerrar", "success");
+      this.cargandoTestimonio.set(false);
     } catch (error) {
       console.error("Upload error details:", error);
       const errorMessage =

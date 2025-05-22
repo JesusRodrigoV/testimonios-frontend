@@ -8,7 +8,7 @@ import { Comment } from '../models/comment.model';
   providedIn: 'root'
 })
 export class CommentService {
-  private apiUrl = `${environment.apiUrl}/comments`;
+private apiUrl = `${environment.apiUrl}/comments`;
   private http = inject(HttpClient);
 
   getComments(): Observable<Comment[]> {
@@ -16,13 +16,8 @@ export class CommentService {
   }
 
   getByTestimonioId(testimonyId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.apiUrl}/testimonio/${testimonyId}`).pipe(
-      map((comments) =>
-        comments.map((comment) => ({
-          ...comment,
-          replies: comment.replies ?? [],
-        }))
-      )
+    return this.processComments(
+      this.http.get<Comment[]>(`${this.apiUrl}/testimonio/${testimonyId}`)
     );
   }
 
@@ -31,6 +26,8 @@ export class CommentService {
       map((comment) => ({
         ...comment,
         replies: comment.replies ?? [],
+        likeCount: comment.likes?.length || 0,
+        isLiked: comment.likes?.some(like => like.id_usuario === comment.creado_por_id_usuario) || false
       }))
     );
   }
@@ -47,6 +44,7 @@ export class CommentService {
     return comments$.pipe(
       map(comments => comments.map(comment => ({
         ...comment,
+        replies: comment.replies ?? [],
         likeCount: comment.likes?.length || 0,
         isLiked: comment.likes?.some(like => like.id_usuario === comment.creado_por_id_usuario) || false,
       })))

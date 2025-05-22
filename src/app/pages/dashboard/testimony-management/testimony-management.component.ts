@@ -15,10 +15,11 @@ import { TestimonioService } from "../services";
 import { TestimonyDialogComponent } from "./testimony-dialog";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 
 @Component({
   selector: "app-testimony-management",
-  imports: [NgClass, MatButtonModule, MatSnackBarModule, MatFormFieldModule],
+  imports: [NgClass, MatButtonModule, MatSnackBarModule, MatFormFieldModule, SpinnerComponent],
   templateUrl: "./testimony-management.component.html",
   styleUrl: "./testimony-management.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
