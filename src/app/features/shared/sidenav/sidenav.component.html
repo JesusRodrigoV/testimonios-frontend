@@ -1,18 +1,5 @@
 <div class="sidenav-items">
-  <button mat-button routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-    <mat-icon>home</mat-icon>
-    <span class="sidenav-text">Inicio</span>
-  </button>
-  <button mat-button routerLink="/explore" routerLinkActive="active">
-    <mat-icon>explore</mat-icon>
-    <span class="sidenav-text">Explorar</span>
-  </button>
-  <button mat-button routerLink="/collections" routerLinkActive="active">
-    <mat-icon>collections</mat-icon>
-    <span class="sidenav-text">Mis colecciones</span>
-  </button>
-  <button mat-button routerLink="/maps" routerLinkActive="active">
-    <mat-icon>map</mat-icon>
-    <span class="sidenav-text">Mapas</span>
-  </button>
+  @for(item of sidenavItems; track item.text){
+  <app-sidenav-button [item]="item"></app-sidenav-button>
+  }
 </div>
