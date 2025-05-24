@@ -1,4 +1,9 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import {
+  HttpInterceptorFn,
+  HttpRequest,
+  HttpHandlerFn,
+  HttpEvent,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthStore } from '@app/auth.store';
 import { AuthService } from '../features/auth/services/auth';
@@ -12,13 +17,12 @@ const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 type AuthStoreType = {
   accessToken: () => string | null;
-  refreshToken: () => string | null;
   logout: () => void;
 };
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const authStore = inject(AuthStore) as unknown as AuthStoreType;
   const authService = inject(AuthService);
@@ -26,19 +30,21 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const token = authStore.accessToken();
 
-  const authReq = token
-    ? req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`),
-    })
-    : req;
+  // Evitar añadir Authorization en /refresh
+  const authReq =
+    token && !req.url.includes('/refresh')
+      ? req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${token}`),
+        })
+      : req;
 
   return next(authReq).pipe(
     catchError((error) => {
-      if (error.status === 401 && token) {
+      if (error.status === 401 && token && !req.url.includes('/refresh')) {
         return handle401Error(req, next, authStore, authService, snackBar);
       }
       return throwError(() => error);
-    })
+    }),
   );
 };
 
@@ -47,32 +53,19 @@ function handle401Error(
   next: HttpHandlerFn,
   authStore: AuthStoreType,
   authService: AuthService,
-  snackBar: MatSnackBar
+  snackBar: MatSnackBar,
 ): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
-    const refreshToken = authStore.refreshToken();
-    if (!refreshToken) {
-      isRefreshing = false;
-      authStore.logout();
-      snackBar.open('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.', 'Cerrar', {
-        duration: 5000,
-      });
-      return throwError(() => new Error('No refresh token available'));
-    }
-
-    return authService.refreshToken(refreshToken).pipe(
-      switchMap((response: { accessToken: string; refreshToken?: string }) => {
+    return authService.refreshToken().pipe(
+      switchMap((response: { accessToken: string }) => {
         isRefreshing = false;
         refreshTokenSubject.next(response.accessToken);
         patchState(authStore as any, { accessToken: response.accessToken });
         localStorage.setItem('accessToken', response.accessToken);
-        if (response.refreshToken) {
-          localStorage.setItem('refreshToken', response.refreshToken);
-          patchState(authStore as any, { refreshToken: response.refreshToken });
-        }
+
         const retryReq = req.clone({
           headers: req.headers.set('Authorization', `Bearer ${response.accessToken}`),
         });
@@ -81,11 +74,13 @@ function handle401Error(
       catchError((err) => {
         isRefreshing = false;
         authStore.logout();
-        snackBar.open('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.', 'Cerrar', {
-          duration: 5000,
-        });
+        snackBar.open(
+          'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.',
+          'Cerrar',
+          { duration: 5000 },
+        );
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -96,8 +91,8 @@ function handle401Error(
       next(
         req.clone({
           headers: req.headers.set('Authorization', `Bearer ${token}`),
-        })
-      )
-    )
+        }),
+      ),
+    ),
   );
 }

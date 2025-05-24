@@ -8,6 +8,7 @@ import {
   User,
 } from "@app/features/auth/models/user.model";
 import { Observable, catchError, throwError, tap, of } from "rxjs";
+import { environment } from "src/environment/environment";
 
 @Injectable({
   providedIn: "root",
@@ -15,16 +16,16 @@ import { Observable, catchError, throwError, tap, of } from "rxjs";
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly API_URL = "http://localhost:4000/auth";
+  private readonly API_URL = `${environment.apiUrl}/auth`;
 
   getUserProfile(): Observable<User> {
     return this.http.get<User>(`${this.API_URL}/profile`).pipe(
       catchError((error) => {
-        console.error("Error fetching user profile:", error);
+        console.error('Error fetching user profile:', error);
         return throwError(
           () =>
             new Error(
-              error.error?.message || "Error al obtener perfil de usuario",
+              error.error?.message || 'Error al obtener perfil de usuario',
             ),
         );
       }),
@@ -37,65 +38,74 @@ export class AuthService {
     nombre: string;
     biografia?: string;
   }): Observable<User> {
-    return this.http.post<User>(`${this.API_URL}/register`, data);
+    return this.http.post<User>(`${this.API_URL}/register`, data).pipe(
+      catchError((error) => {
+        console.error('Error registering user:', error);
+        return throwError(
+          () => new Error(error.error?.message || 'Error al registrarse'),
+        );
+      }),
+    );
   }
 
   login(
     credentials: LoginCredentials,
   ): Observable<AuthResponse | TwoFactorResponse> {
     return this.http
-      .post<
-        AuthResponse | TwoFactorResponse
-      >(`${this.API_URL}/login`, credentials)
+      .post<AuthResponse | TwoFactorResponse>(
+        `${this.API_URL}/login`,
+        credentials,
+        { withCredentials: true },
+      )
       .pipe(
         tap((response) => {
-          console.log("Raw API response:", response);
-          if ('accessToken' in response) {
-          console.log("Stored refreshToken:", localStorage.getItem("refreshToken"));
-        }
+          console.log('Raw API response:', response);
         }),
         catchError((error) => {
-          // Log the complete error object for debugging
-          console.error("Login error details:", {
+          console.error('Login error details:', {
             status: error.status,
             statusText: error.statusText,
-            message: error.error?.message || error.message,
+            message: error.message,
             error: error.error,
           });
-
-          // If it's a 401, it means invalid credentials
           if (error.status === 401) {
-            return throwError(() => new Error("Credenciales inválidas"));
+            return throwError(() => new Error('Credenciales inválidas'));
           }
-
-          // For other errors, return the server message or a generic one
+          if (error.status === 0) {
+            return throwError(
+              () =>
+                new Error(
+                  'No se pudo conectar con el servidor. Verifica tu conexión o la disponibilidad del servidor.',
+                ),
+            );
+          }
           return throwError(
-            () => new Error(error.error?.message || "Error en el servidor"),
+            () => new Error(error.error?.message || 'Error en el servidor'),
           );
         }),
       );
   }
 
   verify2FA(token: string, tempToken: string): Observable<AuthResponse> {
-    console.log("Enviando verificación 2FA con tempToken:", tempToken);
-    console.log("Body del request:", { token: token });
+    console.log('Enviando verificación 2FA con tempToken:', tempToken);
     return this.http
       .post<AuthResponse>(
         `${this.API_URL}/verify-2fa`,
-        { token: token }, // Asegurándonos que el body tiene la propiedad 'token'
+        { token },
         {
           headers: {
             Authorization: `Bearer ${tempToken}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+          withCredentials: true,
         },
       )
       .pipe(
         catchError((error) => {
-          console.error("Error en verificación 2FA:", error);
+          console.error('Error en verificación 2FA:', error);
           return throwError(
             () =>
-              new Error(error.error.message || "Error en la verificación 2FA"),
+              new Error(error.error?.message || 'Error en la verificación 2FA'),
           );
         }),
       );
@@ -106,7 +116,7 @@ export class AuthService {
     token: string,
     tempToken: string,
   ): Observable<AuthResponse> {
-    console.log("Setting up 2FA with temp token:", tempToken);
+    console.log('Configurando 2FA con tempToken:', tempToken);
     return this.http
       .post<AuthResponse>(
         `${this.API_URL}/verify-2fa`,
@@ -114,25 +124,28 @@ export class AuthService {
         {
           headers: {
             Authorization: `Bearer ${tempToken}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+          withCredentials: true,
         },
       )
       .pipe(
         catchError((error) => {
-          console.error("Error en configuración 2FA:", error);
+          console.error('Error en configuración 2FA:', error);
           return throwError(
             () =>
-              new Error(error.error.message || "Error en la configuración 2FA"),
+              new Error(error.error?.message || 'Error en la configuración 2FA'),
           );
         }),
       );
   }
 
   logout(): Observable<void> {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem('accessToken');
 
     if (!token) {
+      localStorage.removeItem('accessToken');
+      this.router.navigate(['/login']);
       return of(void 0);
     }
 
@@ -144,55 +157,54 @@ export class AuthService {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          withCredentials: true,
         },
       )
       .pipe(
         tap(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          this.router.navigate(["/login"]);
+          localStorage.removeItem('accessToken');
+          this.router.navigate(['/login']);
         }),
         catchError((error) => {
-          console.error("Error en logout:", error);
-          // Even if the server request fails, we want to clear local storage
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+          console.error('Error en logout:', error);
+          localStorage.removeItem('accessToken');
+          this.router.navigate(['/login']);
           return of(void 0);
         }),
       );
   }
 
-  refreshToken(token: string): Observable<{ accessToken: string; refreshToken?: string }> {
-  return this.http
-    .post<{ accessToken: string; refreshToken?: string }>(`${this.API_URL}/refresh`, { refreshToken: token })
-    .pipe(
-      tap((response) => {
-        if (response.accessToken) {
-          localStorage.setItem("accessToken", response.accessToken);
-        }
-        if (response.refreshToken) {
-          localStorage.setItem("refreshToken", response.refreshToken);
-        }
-      }),
-      catchError((error) => {
-        console.error("Error al refrescar token:", error);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        return throwError(
-          () => new Error(error.error?.message || "Error al refrescar token"),
-        );
-      }),
-    );
-}
+  refreshToken(): Observable<{ accessToken: string }> {
+    return this.http
+      .post<{ accessToken: string }>(
+        `${this.API_URL}/refresh`,
+        {},
+        { withCredentials: true },
+      )
+      .pipe(
+        tap((response) => {
+          if (response.accessToken) {
+            localStorage.setItem('accessToken', response.accessToken);
+          }
+        }),
+        catchError((error) => {
+          console.error('Error al refrescar token:', error);
+          localStorage.removeItem('accessToken');
+          return throwError(
+            () => new Error(error.error?.message || 'Error al refrescar token'),
+          );
+        }),
+      );
+  }
 
   requestPasswordReset(email: string): Observable<{ message: string }> {
     return this.http
       .post<{ message: string }>(`${this.API_URL}/forgot-password`, { email })
       .pipe(
         catchError((error) => {
-          console.error("Error al solicitar reset de password:", error);
+          console.error('Error al solicitar reset de password:', error);
           return throwError(
-            () => new Error(error.error.message || "Error al solicitar reset"),
+            () => new Error(error.error?.message || 'Error al solicitar reset'),
           );
         }),
       );
@@ -203,17 +215,22 @@ export class AuthService {
     newPassword: string,
   ): Observable<{ message: string }> {
     return this.http
-      .post<{
-        message: string;
-      }>(`${this.API_URL}/reset-password`, { token, newPassword })
+      .post<{ message: string }>(`${this.API_URL}/reset-password`, {
+        token,
+        newPassword,
+      })
       .pipe(
         catchError((error) => {
-          console.error("Error al resetear password:", error);
+          console.error('Error al resetear password:', error);
           return throwError(
             () =>
-              new Error(error.error.message || "Error al resetear password"),
+              new Error(error.error?.message || 'Error al resetear password'),
           );
         }),
       );
+  }
+
+  getUserInfo(id: number): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/user-info/${id}`);
   }
 }

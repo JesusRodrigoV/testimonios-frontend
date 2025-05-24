@@ -69,6 +69,12 @@ export class ForumService {
       .pipe(catchError(this.handleError));
   }
 
+   getCommentById(id: number): Observable<ForoComentario> {
+    return this.http
+      .get<ForoComentario>(`${this.commentsApiUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
   createComment(data: {
     contenido: string;
     id_forotema: number;

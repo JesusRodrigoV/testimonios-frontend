@@ -1,0 +1,192 @@
+<div class="forum-post-detail">
+  <div class="post-detail">
+    <div class="post-footer">
+      <button mat-icon-button color="accent" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+    <!-- Post Header -->
+    <div class="post-header">
+      <div class="avatar">
+        <span class="avatar-initials">{{ forumPost?.titulo | titlecase }}</span>
+      </div>
+      <div class="header-content">
+        <h2 class="post-title">{{ forumPost?.titulo }}</h2>
+        <p class="post-date">{{ forumPost?.fecha_creacion | date: 'MMM d, yyyy, h:mm a' }}</p>
+      </div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="post-content">
+      <div [innerHTML]="forumPost?.descripcion" class="post-description"></div>
+    </div>
+
+    <!-- Comment Form (Top-Level) -->
+    <div class="comment-form-wrapper">
+      <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" class="comment-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Escribe un comentario</mat-label>
+          <textarea
+            matInput
+            formControlName="contenido"
+            placeholder="¿Qué opinas sobre este tema?"
+            rows="4"
+            required
+          ></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="accent"
+            type="submit"
+            [disabled]="commentForm.invalid || isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              <axl-spinner size="small" />
+              Enviando...
+            } @else {
+              Comentar
+            }
+          </button>
+        </div>
+      </form>
+      @if (commentError()) {
+        <div class="error-message">
+          <mat-icon>error</mat-icon>
+          <p>{{ commentError() }}</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Comments Section -->
+  <div class="comments-section">
+    <h3 class="comments-title">Comentarios</h3>
+    @if (isLoadingComments()) {
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando comentarios...</p>
+      </div>
+    } @else {
+      @if (forumComments.length > 0) {
+        @for (comment of forumComments; track comment.id_forocoment) {
+          <div class="comment-wrapper">
+            <app-forum-comment
+              [comentario]="comment"
+              [isReply]="false"
+              (startReply)="startReply($event)"
+            />
+            @if (replyingTo() === comment.id_forocoment) {
+              <div class="reply-form-wrapper">
+                <form [formGroup]="replyForm" (ngSubmit)="onSubmitReply(comment.id_forocoment)" class="comment-form">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Responder</mat-label>
+                    <textarea
+                      matInput
+                      formControlName="contenido"
+                      placeholder="Escribe tu respuesta..."
+                      rows="3"
+                      required
+                    ></textarea>
+                  </mat-form-field>
+                  <div class="form-actions">
+                    <button
+                      mat-button
+                      color="warn"
+                      type="button"
+                      (click)="cancelReply()"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      mat-raised-button
+                      color="accent"
+                      type="submit"
+                      [disabled]="replyForm.invalid || isSubmitting()"
+                    >
+                      @if (isSubmitting()) {
+                        <axl-spinner size="small" />
+                        Enviando...
+                      } @else {
+                        Responder
+                      }
+                    </button>
+                  </div>
+                </form>
+                @if (replyError()) {
+                  <div class="error-message">
+                    <mat-icon>error</mat-icon>
+                    <p>{{ replyError() }}</p>
+                  </div>
+                }
+              </div>
+            }
+            @if (comment.children.length > 0) {
+              <div class="replies">
+                <p class="replies-label">Respuestas</p>
+                @for (respuesta of comment.children; track respuesta.id_forocoment) {
+                  <div class="reply-wrapper">
+                    <app-forum-comment
+                      [comentario]="respuesta"
+                      [isReply]="true"
+                      (startReply)="startReply($event)"
+                    />
+                    @if (replyingTo() === respuesta.id_forocoment) {
+                      <div class="reply-form-wrapper">
+                        <form [formGroup]="replyForm" (ngSubmit)="onSubmitReply(respuesta.id_forocoment)" class="comment-form">
+                          <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Responder</mat-label>
+                            <textarea
+                              matInput
+                              formControlName="contenido"
+                              placeholder="Escribe tu respuesta..."
+                              rows="3"
+                              required
+                            ></textarea>
+                          </mat-form-field>
+                          <div class="form-actions">
+                            <button
+                              mat-button
+                              color="warn"
+                              type="button"
+                              (click)="cancelReply()"
+                            >
+                              Cancelar
+                            </button>
+                            <button
+                              mat-raised-button
+                              color="accent"
+                              type="submit"
+                              [disabled]="replyForm.invalid || isSubmitting()"
+                            >
+                              @if (isSubmitting()) {
+                                <axl-spinner size="small" />
+                                Enviando...
+                              } @else {
+                                Responder
+                              }
+                            </button>
+                          </div>
+                        </form>
+                        @if (replyError()) {
+                          <div class="error-message">
+                            <mat-icon>error</mat-icon>
+                            <p>{{ replyError() }}</p>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      } @else {
+        <div class="no-comments">
+          <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+        </div>
+      }
+    }
+  </div>
+</div>

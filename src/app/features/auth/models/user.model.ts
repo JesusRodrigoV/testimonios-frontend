@@ -11,7 +11,6 @@ export interface User {
 
 export interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
   user: User;
 }
 
@@ -34,7 +33,6 @@ export interface TwoFactorResponse {
 export interface AuthState {
   user: User | null;
   accessToken: string | null;
-  refreshToken: string | null;
   loading: boolean;
   error: string | null;
   requires2FA: boolean;

@@ -53,16 +53,31 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/testimony/components/testimony-detail/testimony-detail.component'),
       },
-      {
-        path: "forum",
-        loadComponent: () => import("./pages/forum/forum.component"),
-      },
+
       {
         path: "",
         redirectTo: "/home",
         pathMatch: "full",
       },
     ],
+  },
+  {
+    path: "",
+    loadComponent: () => import("./pages/forum/forum-layout/forum-layout.component"),
+    children: [
+      {
+        path: "forum",
+        loadComponent: () => import("./pages/forum/forum.component"),
+      },
+      {
+        path: "forum/create",
+        loadComponent: () => import("./features/forum/components/forum-create-topic/forum-create-topic.component")
+      },
+      {
+        path: "forum/post/:id",
+        loadComponent: () => import("./features/forum/components/forum-post-detail/forum-post-detail.component"),
+      },
+    ]
   },
   {
     path: "login",

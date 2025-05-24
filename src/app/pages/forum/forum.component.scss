@@ -1,0 +1,145 @@
+@use '@angular/material' as mat;
+
+:host {
+  --accent: #4ade80;
+  --card-bg: #ffffff;
+  --text: #1a2a44;
+  --description: #666;
+  --border: #2a2a2a;
+  @include mat.divider-overrides((
+    color: #2a2a2a,
+  ));
+
+  :root.dark-mode & {
+    --card-bg: #181818;
+    --text: #e5e7eb;
+    --description: #a0a0a0;
+    --border: #3a3e44;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+}
+
+.forum-posts {
+  max-width: 800px;
+  margin: auto;
+  margin-top: 1.25rem;
+  padding: 16px 0 0 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--card-bg);
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  border: 1px solid var(--border);
+  transition: background 0.3s ease;
+}
+
+.post-placeholder {
+  height: 150px;
+  width: 100%;
+  max-width: 600px; 
+  background: linear-gradient(
+    90deg,
+    var(--card-bg) 0%,
+    rgba(0, 0, 0, 0.05) 50%,
+    var(--card-bg) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fade-in 0.5s ease-out;
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--description);
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .forum-posts {
+    margin: 16px auto;
+    padding: 0 8px;
+  }
+
+  .post-placeholder {
+    height: 120px;
+  }
+
+  .empty-state {
+    padding: 16px;
+    
+    p {
+      font-size: 0.9rem;
+    }
+
+    button {
+      font-size: 0.85rem;
+    }
+  }
+
+  .fab-button {
+    bottom: 16px;
+    right: 16px;
+  }
+}

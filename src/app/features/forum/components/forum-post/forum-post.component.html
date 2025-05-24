@@ -1,1 +1,19 @@
-<p>forum-post works!</p>
+<div class="thread-post" (click)="goToPost(topicInfo().id_forotema)">
+  <div class="post-container">
+
+    <div class="avatar">
+      <img [ngSrc]="user?.profile_image || '/assets/images/default-avatar.jpg'" [alt]="user?.nombre" width="40"
+        height="40" />
+    </div>
+
+    <div class="post-content">
+      <div class="post-header">
+        <span class="post-title">{{ topicInfo().titulo }}</span>
+        <span class="post-timestamp">{{ topicInfo().fecha_creacion | date: 'short' }}</span>
+      </div>
+      <div class="post-body">
+        <p>{{ topicInfo().descripcion }}</p>
+      </div>
+    </div>
+  </div>
+</div>

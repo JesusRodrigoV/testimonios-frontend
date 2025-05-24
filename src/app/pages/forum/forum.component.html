@@ -1,1 +1,26 @@
-<p>forum works!</p>
+<div class="title">
+  <h1>Foro</h1>
+</div>
+
+<div class="forum-posts">
+  @if(topics$ | async; as topics){
+  @for(topic of topics; track topic.id_forotema){
+  @defer (on viewport) {
+  <app-forum-post [topicInfo]="topic" />
+  <mat-divider />
+  } @placeholder {
+  <div class="post-placeholder" aria-hidden="true"></div>
+  }
+  } @empty {
+  <div class="empty-state">
+    <p>No hay Posts de foros</p>
+    <button mat-button color="accent" [routerLink]="['/forum/create']">Crear un post</button>
+  </div>
+  }
+  }
+</div>
+
+<button mat-fab color="accent" class="fab-button" [routerLink]="['/forum/create']" aria-label="Crear nuevo tema"
+  matTooltip="Crear nuevo tema" matTooltipHideDelay="600" matTooltipPosition="left">
+  <mat-icon>add</mat-icon>
+</button>

@@ -56,15 +56,15 @@ export class TestimonioService {
   }
 
   getAll(): Observable<Testimony[]> {
-    return this.http.get<Testimony[]>(this.mediaUrl).pipe(
-      map((testimonies) => testimonies.map(this.normalizeTestimony)),
+  return this.http
+    .get<{ data: Testimony[]; total: number; page: number; limit: number }>(this.mediaUrl)
+    .pipe(
+      map((response) => response.data.map(this.normalizeTestimony)),
       catchError((error) => {
         return throwError(() => new Error(error.message || 'Error al obtener testimonios'));
       }),
     );
-  }
-
-  
+}
 
   searchTestimonies(params: {
     keyword?: string;

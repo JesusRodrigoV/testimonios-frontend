@@ -1,1 +1,44 @@
-<p>forum-comment works!</p>
+<div class="comment" [ngClass]="{ reply: isReply }">
+  <div class="comment-header">
+    <div class="avatar-container">
+      <img
+        [src]="comentario().usuarios.profile_image || '/assets/images/default-avatar.jpg'"
+        alt="Avatar de {{ comentario().usuarios.nombre }}"
+        class="avatar"
+      />
+    </div>
+    <div class="user-info">
+      <span
+        class="username"
+        [ngClass]="getRoleClass(comentario().usuarios.rol.nombre)"
+      >
+        {{ comentario().usuarios.nombre }}
+      </span>
+      @if (comentario().usuarios.rol.nombre !== 'visitante') {
+        <span
+          class="role"
+          [ngClass]="getRoleClass(comentario().usuarios.rol.nombre)"
+        >
+          {{ comentario().usuarios.rol.nombre | titlecase }}
+        </span>
+      }
+    </div>
+    <span class="comment-date">{{
+      comentario().fecha_creacion | date: 'short'
+    }}</span>
+  </div>
+
+  <p class="comment-content">{{ comentario().contenido }}</p>
+
+  <div class="comment-actions">
+    <button
+      mat-button
+      (click)="startReply.emit(comentario().id_forocoment)"
+      [disabled]="!isAuthenticated"
+      matTooltip="Responder"
+    >
+      <mat-icon>reply</mat-icon>
+      Responder
+    </button>
+  </div>
+</div>
