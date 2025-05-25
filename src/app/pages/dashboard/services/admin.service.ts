@@ -16,7 +16,7 @@ export class AdminService {
   }
 
   createUser(userData: Partial<User>): Observable<User> {
-    const { id_usuario, ...userWithoutId } = userData; // Removemos el id si existe
+    const { id_usuario, ...userWithoutId } = userData;
     return this.http.post<User>(`${this.API_URL}/users`, userWithoutId);
   }
 
@@ -25,7 +25,6 @@ export class AdminService {
   }
 
   deleteUser(id: number): Observable<void> {
-    console.log('AdminService - deleteUser llamado con ID:', id);
     return this.http.delete<void>(`${this.API_URL}/users/${id}`).pipe(
       tap({
         next: () => console.log('AdminService - deleteUser exitoso'),
