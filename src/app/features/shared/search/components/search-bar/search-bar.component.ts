@@ -1,12 +1,15 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, output, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, input, Input, output, Output, viewChild, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GoldenDirective } from '@app/core/directives/golden.directive';
 import { Subject, debounceTime } from 'rxjs';
+import { SearchDialogComponent } from '../search-dialog';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -16,41 +19,31 @@ import { Subject, debounceTime } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchBarComponent {
-  @Input() isMobile = false;
-  @Input() isActive = false;
-  @Output() search = new EventEmitter<{ query: string; filter?: string }>();
-  @Output() toggleMobile = new EventEmitter<boolean>();
-  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+  isMobile = input<boolean>(false);
+  isActive = input<boolean>(false);
+  toggleMobile = output<boolean>();
 
   searchQuery = '';
   filterType: 'recent' | 'popular' | 'category' | null = null;
 
+  searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
+
   private querySubject = new Subject<string>();
+  private searchService = inject(SearchService);
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor() {
     this.querySubject.pipe(debounceTime(300)).subscribe((query) => {
-      if (query.trim()) {
-        this.search.emit({ query: query.trim(), filter: this.filterType || undefined });
-        this.cdr.detectChanges();
-      }
+      this.searchService.setSearchQuery(query);
     });
-  }
-
-  onInput(): void {
-    console.log('Input changed:', this.searchQuery); // Debug
   }
 
   onQueryChange(): void {
     this.querySubject.next(this.searchQuery);
-    this.cdr.markForCheck();
   }
 
   onSearch(): void {
-    if (this.searchQuery.trim()) {
-      this.search.emit({ query: this.searchQuery.trim(), filter: this.filterType || undefined });
-      this.cdr.markForCheck();
-    }
-    if (this.isMobile && this.isActive) {
+    this.searchService.setSearchQuery(this.searchQuery.trim());
+    if (this.isMobile() && this.isActive()) {
       this.toggleMobileSearch();
     }
   }
@@ -62,19 +55,17 @@ export class SearchBarComponent {
 
   clearSearch(): void {
     this.searchQuery = '';
-    this.search.emit({ query: '', filter: this.filterType || undefined });
-    this.cdr.markForCheck();
-    if (this.searchInput) {
-      this.searchInput.nativeElement.focus();
+    this.searchService.clearSearchQuery();
+    if (this.searchInput()) {
+      this.searchInput().nativeElement.focus();
     }
   }
 
   toggleMobileSearch(): void {
-    this.toggleMobile.emit(!this.isActive);
-    if (!this.isActive && this.searchInput) {
+    this.toggleMobile.emit(!this.isActive());
+    if (!this.isActive() && this.searchInput()) {
       setTimeout(() => {
-        this.searchInput?.nativeElement.focus();
-        this.cdr.markForCheck();
+        this.searchInput().nativeElement.focus();
       }, 300);
     }
   }

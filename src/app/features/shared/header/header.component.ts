@@ -1,12 +1,9 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ElementRef,
   HostListener,
   inject,
   output,
-  ViewChild,
 } from "@angular/core";
 import { DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
@@ -23,7 +20,9 @@ import { ThemeService } from "@app/core/services";
 import { Notificacion } from "@app/features/notification/model/notification.model";
 import { NotificationService } from "@app/features/notification/services";
 import { SpinnerComponent } from "../ui/spinner";
-import { SearchBarComponent } from "../search-bar";
+import { SearchBarComponent } from "../search/components/search-bar";
+import { MatDialog } from "@angular/material/dialog";
+import { SearchDialogComponent } from "../search/components/search-dialog";
 
 export const Rol = {
   ADMIN: 1,
@@ -67,16 +66,13 @@ export class HeaderComponent {
   private readonly router = inject(Router);
   private themeService = inject(ThemeService);
   private readonly notificationService = inject(NotificationService);
-  private cdr = inject(ChangeDetectorRef);
 
   toggleSidebar = output<void>();
-  search = output<{ query: string; filter?: string }>();
 
   constructor() {
     this.loadNotifications();
     setInterval(() => {
       this.loadNotifications();
-      this.cdr.detectChanges();
     }, 5000);
   }
 
@@ -91,7 +87,6 @@ export class HeaderComponent {
   @HostListener('window:scroll')
   onWindowScroll() {
     this.isScrolled = window.scrollY > 0;
-    this.cdr.markForCheck();
   }
 
   get isAdmin(): boolean {
@@ -101,7 +96,6 @@ export class HeaderComponent {
   onToggleMobileSearch(isActive: boolean): void {
     this.isMobileSearchActive = isActive;
     document.body.style.overflow = this.isMobileSearchActive ? 'hidden' : '';
-    this.cdr.detectChanges();
   }
 
   @HostListener('document:keydown.escape')
@@ -123,7 +117,6 @@ export class HeaderComponent {
 
   async onLogout() {
     await this.authStore.logout();
-    this.cdr.detectChanges();
   }
 
   onToggleSidebar(): void {
@@ -137,7 +130,6 @@ export class HeaderComponent {
   loadNotifications(): void {
     if (!this.authStore.isAuthenticated()) {
       this.notifications = [];
-      this.cdr.markForCheck();
       return;
     }
 
@@ -147,12 +139,10 @@ export class HeaderComponent {
       next: (notifications) => {
         this.notifications = notifications;
         this.isLoading = false;
-        this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'No se pudieron cargar las notificaciones';
         this.isLoading = false;
-        this.cdr.markForCheck();
       },
     });
   }
@@ -164,12 +154,9 @@ export class HeaderComponent {
           this.notifications = this.notifications.map((n) =>
             n.id_notificacion === id ? updatedNotification : n
           );
-          this.cdr.markForCheck();
         }
       },
-      error: () => {
-        this.cdr.markForCheck();
-      },
+      error: () => {},
     });
   }
 }

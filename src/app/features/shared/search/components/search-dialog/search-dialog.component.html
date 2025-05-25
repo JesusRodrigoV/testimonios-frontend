@@ -1,0 +1,51 @@
+<div class="search-results" *ngIf="showResults$ | async">
+  <div class="results-header">
+    <h2>Resultados de búsqueda</h2>
+    <button
+      mat-icon-button
+      class="close-btn"
+      (click)="closeResults()"
+      aria-label="Cerrar resultados"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="results-container">
+    @if (loading && testimonies.length === 0) {
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando resultados...</p>
+      </div>
+    } @else if (error) {
+      <div class="error">
+        <mat-icon>error</mat-icon>
+        <p>{{ error }}</p>
+      </div>
+    } @else if (testimonies.length === 0 && searchQuery) {
+      <div class="empty">
+        <mat-icon>info</mat-icon>
+        <p>No se encontraron resultados para "{{ searchQuery }}"</p>
+      </div>
+    } @else {
+      <mat-list>
+        @for (testimony of testimonies; track testimony.id) {
+          <mat-list-item
+            (click)="onTestimonySelect(testimony)"
+            class="testimony-item"
+          >
+            <div class="testimony-content">
+              <h3>{{ testimony.title }}</h3>
+              <p class="author">Por: {{ testimony.author || 'Desconocido' }}</p>
+              <p class="date">{{ testimony.createdAt | date: 'short' }}</p>
+              <p class="description">{{ testimony.description | slice: 0:100 }}...</p>
+            </div>
+          </mat-list-item>
+        }
+      </mat-list>
+      <div class="load-more" *ngIf="hasMore && !loading">
+        <button mat-button (click)="loadMore()">Cargar más</button>
+      </div>
+    }
+  </div>
+</div>
