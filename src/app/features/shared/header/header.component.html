@@ -17,9 +17,7 @@
     </h1>
   </div>
 
-  <app-search-bar
-    [isMobile]="false"
-  ></app-search-bar>
+  <app-search-bar [isMobile]="false"></app-search-bar>
 
   <div class="mobile-search-container">
     <button
@@ -51,11 +49,7 @@
       <i class="bx bx-plus"></i>
     </button>
 
-    <div
-      class="options-container"
-      [matMenuTriggerFor]="optionsMenu"
-      golden
-    >
+    <div class="options-container" [matMenuTriggerFor]="optionsMenu" golden>
       <button mat-icon-button>
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -122,7 +116,10 @@
           <p>Error al obtener las notificaciones</p>
         </div>
       } @else {
-        @for (notification of notifications; track notification.id_notificacion) {
+        @for (
+          notification of notifications;
+          track notification.id_notificacion
+        ) {
           @if (!notification.leido) {
             <div
               class="notification-item"
@@ -133,11 +130,11 @@
                 <p class="message">{{ notification.mensaje }}</p>
                 <p class="details">
                   Testimonio: {{ notification.testimonios.titulo }} •
-                  {{ notification.fecha_creacion | date: 'short' }}
+                  {{ notification.fecha_creacion | date: "short" }}
                 </p>
               </div>
               <mat-icon class="status-icon">
-                {{ notification.leido ? 'check_circle' : 'circle' }}
+                {{ notification.leido ? "check_circle" : "circle" }}
               </mat-icon>
             </div>
           }
@@ -160,15 +157,16 @@
       <i class="bx bx-user"></i>
       Mi Perfil
     </button>
-    <button
-      mat-menu-item
-      routerLink="/dashboard"
-      golden
-      *ngIf="isAdmin"
-    >
-      <i class="bx bxs-dashboard"></i>
-      Dashboard
+    <button mat-menu-item routerLink="/my-testimonies" golden>
+      <i class="bx bx-archive"></i>
+      Mis testimonios
     </button>
+    @if (isAdmin) {
+      <button mat-menu-item routerLink="/dashboard" golden>
+        <i class="bx bxs-dashboard"></i>
+        Dashboard
+      </button>
+    }
     <button mat-menu-item routerLink="/settings" golden>
       <i class="bx bx-cog"></i>
       Configuración
@@ -180,3 +178,4 @@
     </button>
   </mat-menu>
 </header>
+

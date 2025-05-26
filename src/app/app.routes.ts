@@ -28,12 +28,16 @@ export const routes: Routes = [
       {
         path: "explore",
         loadComponent: () =>
-          import("./features/testimony/components/testimony-feed/testimony-feed.component"),
+          import(
+            "./features/testimony/components/testimony-feed/testimony-feed.component"
+          ),
       },
       {
         path: "submit-testimony",
         loadComponent: () =>
-          import("./features/testimony/components/testimony-upload/testimony-upload.component"),
+          import(
+            "./features/testimony/components/testimony-upload/testimony-upload.component"
+          ),
         canActivate: [authGuard],
       },
       {
@@ -41,19 +45,33 @@ export const routes: Routes = [
         loadComponent: () => import("./pages/maps/maps.component"),
       },
       {
-        path: 'collections',
-        loadComponent: () => import("./features/collections/components/collection-list/collection-list.component")
-      },
-      {
-        path: 'collections/:id',
-        loadComponent: () => import("./features/collections/components/collection-detail/collection-detail.component")
-      },
-      {
-        path: 'testimonies/:id',
+        path: "collections",
         loadComponent: () =>
-          import('./features/testimony/components/testimony-detail/testimony-detail.component'),
+          import(
+            "./features/collections/components/collection-list/collection-list.component"
+          ),
       },
-
+      {
+        path: "collections/:id",
+        loadComponent: () =>
+          import(
+            "./features/collections/components/collection-detail/collection-detail.component"
+          ),
+      },
+      {
+        path: "testimonies/:id",
+        loadComponent: () =>
+          import(
+            "./features/testimony/components/testimony-detail/testimony-detail.component"
+          ),
+      },
+      {
+        path: "my-testimonies",
+        loadComponent: () =>
+          import(
+            "./features/testimony/components/my-testimonies/my-testimonies.component"
+          ),
+      },
       {
         path: "",
         redirectTo: "/home",
@@ -63,7 +81,8 @@ export const routes: Routes = [
   },
   {
     path: "",
-    loadComponent: () => import("./pages/forum/forum-layout/forum-layout.component"),
+    loadComponent: () =>
+      import("./pages/forum/forum-layout/forum-layout.component"),
     children: [
       {
         path: "forum",
@@ -71,46 +90,61 @@ export const routes: Routes = [
       },
       {
         path: "forum/create",
-        loadComponent: () => import("./features/forum/components/forum-create-topic/forum-create-topic.component")
+        loadComponent: () =>
+          import(
+            "./features/forum/components/forum-create-topic/forum-create-topic.component"
+          ),
       },
       {
         path: "forum/post/:id",
-        loadComponent: () => import("./features/forum/components/forum-post-detail/forum-post-detail.component"),
+        loadComponent: () =>
+          import(
+            "./features/forum/components/forum-post-detail/forum-post-detail.component"
+          ),
       },
-    ]
+    ],
   },
   {
     path: "login",
-    loadComponent: () => import("./features/auth/components/login/login.component"),
+    loadComponent: () =>
+      import("./features/auth/components/login/login.component"),
     canActivate: [loginGuard],
   },
   {
     path: "register",
-    loadComponent: () => import("./features/auth/components/register/register.component"),
+    loadComponent: () =>
+      import("./features/auth/components/register/register.component"),
     canActivate: [loginGuard],
   },
   {
     path: "forgot-password",
     loadComponent: () =>
-      import("./features/auth/components/forgot-password/forgot-password.component"),
+      import(
+        "./features/auth/components/forgot-password/forgot-password.component"
+      ),
     canActivate: [loginGuard],
   },
   {
     path: "reset-password",
     loadComponent: () =>
-      import("./features/auth/components/reset-password/reset-password.component"),
+      import(
+        "./features/auth/components/reset-password/reset-password.component"
+      ),
     canActivate: [loginGuard],
   },
   {
     path: "2fa-verify",
     loadComponent: () =>
-      import("./features/auth/components/two-factor-verify/two-factor-verify.component"),
+      import(
+        "./features/auth/components/two-factor-verify/two-factor-verify.component"
+      ),
     canActivate: [authGuard],
   },
   {
     path: "2fa-setup",
     loadComponent: () =>
-      import("./features/auth/components/two-factor-setup/two-factor-setup.component"),
+      import(
+        "./features/auth/components/two-factor-setup/two-factor-setup.component"
+      ),
   },
-
 ];
