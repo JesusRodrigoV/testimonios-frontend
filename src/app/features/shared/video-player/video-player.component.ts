@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, Input } from '@angular/core';
 import { VgCoreModule, VgMediaDirective, VgMediaElement } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
@@ -18,5 +18,6 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoPlayerComponent {
-  @Input({ required: true }) videoUrl: string = '';
+  videoUrl = input.required<String>();
+  transcription = input.required<String>();
 }

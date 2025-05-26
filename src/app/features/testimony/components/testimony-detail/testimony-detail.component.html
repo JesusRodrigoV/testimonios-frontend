@@ -8,7 +8,7 @@
     <div class="main-content">
       <div class="media">
         @if (testimony?.format === "Video") {
-          <app-video-player [videoUrl]="testimony!.url" />
+          <app-video-player [videoUrl]="testimony!.url" [transcription]="testimony?.transcription || ''"/>
         } @else if (testimony?.format === "Audio") {
           <audio [src]="testimony!.url" controls></audio>
         }
