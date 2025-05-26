@@ -19,5 +19,4 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 })
 export class VideoPlayerComponent {
   videoUrl = input.required<String>();
-  transcription = input.required<String>();
 }

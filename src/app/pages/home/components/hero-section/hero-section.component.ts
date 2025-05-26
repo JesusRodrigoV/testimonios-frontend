@@ -19,7 +19,6 @@ export class HeroSectionComponent {
 
   ngAfterViewInit() {
     if (!this.uno()?.nativeElement) {
-      console.error('gridContainer no está definido. Verifica que #gridContainer esté en el DOM.');
       return;
     }
     const $uno = this.uno()?.nativeElement;

@@ -71,6 +71,7 @@ export const routes: Routes = [
           import(
             "./features/testimony/components/my-testimonies/my-testimonies.component"
           ),
+        canActivate: [authGuard],
       },
       {
         path: "",

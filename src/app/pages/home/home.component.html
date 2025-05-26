@@ -1,21 +1,17 @@
 <div class="home-container">
-  <app-hero-section/>
+  <app-hero-section />
   <section class="feed-section">
     <h2>Testimonios Destacados</h2>
-    <div class="highlighted-feed">
-      @if (highlightedTestimonies.length > 0) {
-        @for (testimony of highlightedTestimonies; track testimony.id) {
-          <app-testimony [testimony]="testimony"></app-testimony>
-        }
-      } @else if (!loading) {
-        <p>No hay testimonios destacados disponibles.</p>
-      }
-      @if (loading) {
-        <div class="loading">
-          <axl-spinner></axl-spinner>
-          <p>Cargando testimonios...</p>
-        </div>
-      }
+    @if (loading()) {
+    <div class="loading">
+      <axl-spinner />
+      <p>Cargando testimonios...</p>
     </div>
+    } @else if (highlightedTestimonies().length > 0) { @for (testimony of
+    highlightedTestimonies(); track testimony.id) {
+    <app-testimony [testimony]="testimony" />
+    } } @else {
+    <p>No hay testimonios destacados disponibles.</p>
+    }
   </section>
 </div>

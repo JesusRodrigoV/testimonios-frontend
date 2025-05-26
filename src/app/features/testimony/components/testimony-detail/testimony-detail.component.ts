@@ -72,7 +72,10 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   readonly authStore = inject(AuthStore);
 
+  user = this.authStore.user;
+
   ngOnInit() {
+    console.log(this.user());
     this.routeSubscription = this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id && !isNaN(+id)) {

@@ -1,13 +1,21 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from "@angular/core";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { HeroSectionComponent } from "./components/hero-section";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 import { TestimonyComponent } from "@app/features/testimony/components/testimony";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
-import { CalificationService, TestimonioService } from "@app/features/testimony/services";
+import { CalificationService } from "@app/features/testimony/services";
 import { CacheService } from "@app/core/services";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-home",
@@ -16,44 +24,56 @@ import { MatSnackBar } from "@angular/material/snack-bar";
     HeroSectionComponent,
     SpinnerComponent,
     TestimonyComponent,
+    MatSnackBarModule
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideNativeDateAdapter()],
 })
-export default class HomeComponent {
- highlightedTestimonies: Testimony[] = [];
-  loading = false;
+export default class HomeComponent implements OnInit, OnDestroy {
+  highlightedTestimonies = signal<Testimony[]>([]);
+  loading = signal<boolean>(false);
 
-  private ref = inject(ChangeDetectorRef);
-  private testimonioService = inject(TestimonioService);
+  private subscriptions = new Subscription();
+  private calificationService = inject(CalificationService);
   private cacheService = inject(CacheService);
-
+  private snackBar = inject(MatSnackBar);
 
   ngOnInit() {
     this.loadHighlightedTestimonies();
+    console.log(
+      "Mira Mira aqui estan los elegidos: " + this.highlightedTestimonies()
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   loadHighlightedTestimonies() {
     const cached = this.cacheService.getHighlightedTestimonies();
     if (cached) {
-      this.highlightedTestimonies = cached;
+      this.highlightedTestimonies.set(cached);
       return;
     }
-
-    this.loading = true;
-    this.testimonioService.searchTestimonies({ highlighted: true }).subscribe({
-      next: (response) => {
-        this.highlightedTestimonies = response.data;
-        this.cacheService.setHighlightedTestimonies(response.data);
-        this.loading = false;
-        this.ref.detectChanges();
+    this.loading.set(true);
+    const sub = this.calificationService.getTopRatedTestimonies(5).subscribe({
+      next: (testimonies) => {
+        this.highlightedTestimonies.set([...testimonies]);
+        console.log("Estos son los testimonios"+testimonies);
+        this.cacheService.setHighlightedTestimonies(testimonies);
+        this.loading.set(false);
       },
       error: (err) => {
-        console.error("Error loading highlighted testimonies:", err);
-        this.loading = false;
+        console.error("Error loading top rated testimonies:", err);
+        this.snackBar.open("Error al cargar testimonios destacados", "Cerrar", {
+          duration: 3000,
+        });
+        this.loading.set(false);
       },
     });
+
+    this.subscriptions.add(sub);
   }
 }

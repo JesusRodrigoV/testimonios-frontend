@@ -24,9 +24,23 @@ export class CalificationService {
     return this.http.get<Calificacion>(`${this.apiUrl}/${id}`);
   }
 
+  private normalizeTestimony(testimony: Testimony): Testimony {
+    return {
+      ...testimony,
+      categories: testimony.categories ?? [],
+      tags: testimony.tags ?? [],
+    };
+  }
+
   getTopRatedTestimonies(limit: number = 5): Observable<Testimony[]> {
-    const params = new HttpParams().set('limit', limit.toString());
-    return this.http.get<Testimony[]>(`${this.apiUrl}/top-rated`, { params });
+    const params = new HttpParams().set("limit", limit.toString());
+    return this.http.get<Testimony[]>(`${this.apiUrl}/top-rated`, { params }).pipe(
+      map((testimonies) => testimonies.map(this.normalizeTestimony)),
+      catchError((error) => {
+        const errorMessage = error.error?.error || error.message || "Error al obtener testimonios destacados";
+        return throwError(() => new Error(errorMessage));
+      }),
+    );
   }
 
   getUserRatingForTestimony(testimonyId: number): Observable<Calificacion | null> {

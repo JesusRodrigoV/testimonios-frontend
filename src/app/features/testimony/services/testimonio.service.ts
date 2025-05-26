@@ -75,10 +75,8 @@ export class TestimonioService {
       );
   }
 
-  getMyTestimonies(userId: number): Observable<Testimony[]> {
-    return this.http.get<Testimony[]>(this.mediaUrl + "/my-uploads", {
-      params: { userId: userId.toString() },
-    });
+  getMyTestimonies(): Observable<Testimony[]> {
+    return this.http.get<Testimony[]>(`${this.mediaUrl}/my-uploads`);
   }
 
   searchTestimonies(params: {
@@ -178,6 +176,10 @@ export class TestimonioService {
         );
       }),
     );
+  }
+
+  updateTestimony(id: number, data: Partial<Testimony>): Observable<Testimony> {
+    return this.http.patch<Testimony>(`${this.mediaUrl}/${id}`, data);
   }
 
   deleteTestimony(id: number): Observable<{ message: string }> {
