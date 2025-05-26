@@ -34,12 +34,10 @@
             (click)="onTestimonySelect(testimony)"
             class="testimony-item"
           >
-            <div class="testimony-content">
-              <h3>{{ testimony.title }}</h3>
-              <p class="author">Por: {{ testimony.author || 'Desconocido' }}</p>
-              <p class="date">{{ testimony.createdAt | date: 'short' }}</p>
-              <p class="description">{{ testimony.description | slice: 0:100 }}...</p>
-            </div>
+              <span matListItemTitle>{{ testimony.title }}</span>
+              <span matListItemLine>Por: {{ testimony.author || 'Desconocido' }}</span>
+              <span matListItemLine>{{ testimony.createdAt | date: 'short' }}</span>
+              <span matListItemLine>{{ testimony.description | slice: 0:100 }}...</span>
           </mat-list-item>
         }
       </mat-list>
