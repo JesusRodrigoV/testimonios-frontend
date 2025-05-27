@@ -1,5 +1,5 @@
 :host {
-  --accent: #4ade80; /* Green theme */
+  --accent: #4ade80; 
   --accent-dark: #22c55e;
   --text: #000;
   --border: #e0e0e0;
@@ -7,66 +7,8 @@
   :root.dark-mode & {
     --text: #fff;
     --border: #555;
-    --accent: #4ade80; /* Keep green for consistency */
+    --accent: #4ade80; 
     --accent-dark: #22c55e;
   }
 }
 
-button {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 90%;
-  padding: 8px 16px;
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 16px;
-  text-align: left;
-  transition: background 0.2s ease, color 0.2s ease;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  :root.dark-mode & {
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-  }
-
-  &.active {
-    color: var(--accent);
-    font-weight: bold;
-    background: rgba(74, 222, 128, 0.1); /* --accent RGB */
-  }
-
-  :root.dark-mode &.active {
-    background: rgba(74, 222, 128, 0.2); /* Slightly stronger in dark mode */
-  }
-}
-
-mat-icon {
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-  margin-right: 16px;
-}
-
-.sidenav-text {
-  flex: 1;
-}
-
-@media (max-width: 768px) {
-  button {
-    justify-content: center;
-    padding: 8px;
-  }
-
-  .sidenav-text {
-    display: none;
-  }
-
-  mat-icon {
-    margin-right: 0;
-  }
-}

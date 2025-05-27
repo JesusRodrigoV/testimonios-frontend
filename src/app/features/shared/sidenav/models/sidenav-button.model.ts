@@ -3,4 +3,5 @@ export interface SidenavItem {
   icon: string;
   text: string;
   exact?: boolean;
+  tooltip: string;
 }

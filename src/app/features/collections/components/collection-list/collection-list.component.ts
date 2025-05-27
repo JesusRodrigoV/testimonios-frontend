@@ -63,7 +63,7 @@ export default class CollectionListComponent {
   collectionForm: FormGroup;
   dialogRef?: MatDialogRef<any>;
   isAuthenticated = this.authStore.isAuthenticated;
-  editingCollection: Collection | null = null; // Track the collection being edited
+  editingCollection: Collection | null = null;
 
   @ViewChild('formTemplate') formTemplate!: TemplateRef<any>;
 

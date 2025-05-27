@@ -21,9 +21,11 @@
         <div class="collection-card" (click)="navigateToCollection(collection.id_coleccion)">
           <div class="collection-header">
             <h3>{{ collection.titulo }}</h3>
+            @if(collection.titulo !== "Favoritos" && collection.titulo !== "Guardados"){
             <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()" aria-label="Opciones de la colección">
               <mat-icon>more_vert</mat-icon>
             </button>
+          }
             <mat-menu #menu="matMenu">
               @if (!isProtectedCollection(collection)) {
                 <button mat-menu-item (click)="openCollectionForm(collection); $event.stopPropagation()">

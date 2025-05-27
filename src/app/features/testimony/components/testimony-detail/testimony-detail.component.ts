@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,6 +20,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { VideoPlayerComponent } from '@app/features/shared/video-player';
 import { TestimonyCommentsComponent } from '../testimony/testimony-comments';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DateUtilsService } from '@app/core/services';
+import { SpinnerComponent } from '@app/features/shared/ui/spinner';
 
 @Component({
   selector: 'app-testimony-detail',
@@ -37,39 +39,41 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatMenuModule,
     FormsModule,
     VideoPlayerComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    SpinnerComponent
   ],
   templateUrl: './testimony-detail.component.html',
   styleUrl: './testimony-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class TestimonyDetailComponent implements OnInit, OnDestroy {
-  testimony: Testimony | null = null;
+  testimony = signal<Testimony | null>(null);
+  transcripciones = signal<Transcripcion[]>([]);
   currentRating = 0;
   currentRatingId: number | null = null;
   isMetaExpanded = false;
-  isTranscriptionExpanded = false;
+  isTranscriptionExpanded = signal(false);
   isRatingLoading = false;
   ratingControl = new FormControl<number | null>(null);
   favoritosMios: number[] = [];
   isFavorite = false;
-  transcripciones: Transcripcion[] = [];
-  isLoading = true;
+  isLoading = signal(true);
+  isTranscribing = signal(false); 
   isDescriptionExpanded = false; 
   private favoritosSubscription: Subscription | undefined;
   private transcripcionesSubscription: Subscription | undefined;
   private routeSubscription: Subscription | undefined;
 
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly location = inject(Location);
-  private readonly dialog = inject(MatDialog);
-  private readonly testimonyService = inject(TestimonioService);
-  private readonly snackBar = inject(MatSnackBar);
-  private readonly collectionService = inject(CollectionService);
-  private readonly transcriptionService = inject(TranscriptionService);
-  private readonly calificationService = inject(CalificationService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private route = inject(ActivatedRoute);
+  private dateUtilsService = inject(DateUtilsService);
+  private location = inject(Location);
+  private dialog = inject(MatDialog);
+  private testimonyService = inject(TestimonioService);
+  private snackBar = inject(MatSnackBar);
+  private collectionService = inject(CollectionService);
+  private transcriptionService = inject(TranscriptionService);
+  private calificationService = inject(CalificationService);
+  private cdr = inject(ChangeDetectorRef);
   readonly authStore = inject(AuthStore);
 
   user = this.authStore.user;
@@ -82,7 +86,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
         this.loadTestimony(+id);
       } else {
         this.snackBar.open('ID de testimonio inválido', 'Cerrar', { duration: 3000 });
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.goBack();
         this.cdr.markForCheck();
       }
@@ -96,34 +100,31 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadTestimony(id: number) {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.testimonyService.getTestimony(id).subscribe({
       next: (testimony) => {
-        console.log('Testimonio cargado:', testimony); // Log para depuración
-        this.testimony = { ...testimony, favoriteCount: testimony.favoriteCount ?? 0 };
+        this.testimony.set({ ...testimony, favoriteCount: testimony.favoriteCount ?? 0 });
         this.loadFavorites();
         this.loadTranscriptions();
         this.loadUserRating();
         this.loadFavoriteCount();
-        this.isLoading = false;
-        this.cdr.markForCheck();
+        this.isLoading.set(false);
       },
       error: (error: any) => {
         console.error('Error al cargar el testimonio:', error);
         this.snackBar.open('Error al cargar el testimonio', 'Cerrar', { duration: 3000 });
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.goBack();
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
   private loadFavoriteCount() {
     if (!this.testimony) return;
-    this.collectionService.getFavoriteCount(this.testimony.id).subscribe({
+    this.collectionService.getFavoriteCount(this.testimony()!.id).subscribe({
       next: (count) => {
-        if (this.testimony) {
-          this.testimony.favoriteCount = count;
+        if (this.testimony()) {
+          this.testimony()!.favoriteCount = count;
           this.cdr.markForCheck();
         }
       },
@@ -138,7 +139,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
     this.favoritosSubscription = this.collectionService.getFavorites().subscribe({
       next: (favs) => {
         this.favoritosMios = favs;
-        this.isFavorite = this.testimony ? this.favoritosMios.includes(this.testimony.id) : false;
+        this.isFavorite = this.testimony ? this.favoritosMios.includes(this.testimony()!.id) : false;
         this.cdr.markForCheck();
       },
       error: (error) => {
@@ -151,11 +152,10 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   private loadTranscriptions() {
     if (!this.testimony) return;
     this.transcripcionesSubscription = this.transcriptionService
-      .obtenerTranscripcionesPorTestimonio(this.testimony.id)
+      .obtenerTranscripcionesPorTestimonio(this.testimony()!.id)
       .subscribe({
         next: (transcripciones) => {
-          this.transcripciones = transcripciones;
-          this.cdr.markForCheck();
+          this.transcripciones.set(transcripciones);
         },
         error: (error) => {
           console.error('Error al obtener transcripciones:', error);
@@ -176,7 +176,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
     this.isRatingLoading = true;
     this.cdr.markForCheck();
 
-    this.calificationService.getUserRatingForTestimony(this.testimony.id).subscribe({
+    this.calificationService.getUserRatingForTestimony(this.testimony()!.id).subscribe({
       next: (calificacion) => {
         if (calificacion) {
           this.currentRating = calificacion.puntuacion;
@@ -203,7 +203,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   }
 
   esFavorito(): boolean {
-    return this.testimony ? this.favoritosMios.includes(this.testimony.id) : false;
+    return this.testimony ? this.favoritosMios.includes(this.testimony()!.id) : false;
   }
 
   goBack() {
@@ -215,7 +215,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   }
 
   toggleTranscription() {
-    this.isTranscriptionExpanded = !this.isTranscriptionExpanded;
+    this.isTranscriptionExpanded.set(!this.isTranscriptionExpanded());
   }
 
   toggleDescription() {
@@ -227,19 +227,21 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   }
 
   requestTranscription() {
-    if (!this.canRequestTranscription || !this.testimony) return;
+    if (!this.canRequestTranscription || !this.testimony()) return;
 
-    this.transcriptionService.transcribirArchivo(this.testimony.id).subscribe({
+    this.isTranscribing.set(true);
+    this.transcriptionService.transcribirArchivo(this.testimony()!.id).subscribe({
       next: (transcripcion) => {
-        this.transcripciones = [transcripcion];
-        this.isTranscriptionExpanded = true;
+        this.transcripciones.set([transcripcion]);
+        this.isTranscriptionExpanded.set(true);
         this.snackBar.open('Transcripción solicitada con éxito', 'Cerrar', { duration: 3000 });
-        this.cdr.markForCheck();
+        this.isTranscribing.set(false); 
       },
       error: (error) => {
         console.error('Error al solicitar transcripción:', error);
         this.snackBar.open('Error al solicitar transcripción', 'Cerrar', { duration: 3000 });
-      },
+        this.isTranscribing.set(false);
+      }
     });
   }
 
@@ -297,7 +299,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
       });
     } else {
       this.calificationService
-        .create({ puntuacion: rating, id_testimonio: this.testimony.id })
+        .create({ puntuacion: rating, id_testimonio: this.testimony()!.id })
         .subscribe({
           next: (calificacion) => {
             this.currentRating = calificacion.puntuacion;
@@ -323,12 +325,12 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
 
   shareTestimony() {
     if (!this.testimony) return;
-    const url = `${window.location.origin}/testimonies/${this.testimony.id}`;
+    const url = `${window.location.origin}/testimonies/${this.testimony()!.id}`;
     if (navigator.share) {
       navigator
         .share({
-          title: this.testimony.title,
-          text: this.testimony.description,
+          title: this.testimony()!.title,
+          text: this.testimony()!.description,
           url,
         })
         .catch(() => this.copyLink(url));
@@ -346,14 +348,14 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
     }
     if (!this.testimony) return;
     this.dialog.open(AddToCollectionComponent, {
-      data: { testimonyId: this.testimony.id },
+      data: { testimonyId: this.testimony()!.id },
       width: '500px',
     });
   }
 
   addToFavorites() {
     if (!this.testimony) return;
-    const id = this.testimony.id;
+    const id = this.testimony()!.id;
     if (!this.authStore.isAuthenticated()) {
       this.snackBar.open('Debes iniciar sesión para agregar a favoritos', 'Cerrar', {
         duration: 3000,
@@ -387,13 +389,13 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
 
   downloadTestimony() {
     if (!this.testimony) return;
-    this.testimonyService.downloadTestimony(this.testimony).subscribe({
+    this.testimonyService.downloadTestimony(this.testimony()!).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         const extension = this.getFileExtension();
-        a.download = `${this.testimony!.title || 'testimonio'}.${extension}`;
+        a.download = `${this.testimony()!.title || 'testimonio'}.${extension}`;
         a.click();
         window.URL.revokeObjectURL(url);
       },
@@ -407,28 +409,28 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
 
   private getFileExtension(): string {
     if (!this.testimony) return 'mp4';
-    const format = this.testimony.format?.toLowerCase();
+    const format = this.testimony()!.format?.toLowerCase();
     if (format && ['mp4', 'mov', 'mp3', 'wav'].includes(format)) {
       return format;
     }
-    const urlParts = this.testimony.url?.split('.');
+    const urlParts = this.testimony()!.url?.split('.');
     const urlExtension = urlParts?.[urlParts.length - 1]?.toLowerCase();
     if (urlExtension && ['mp4', 'mov', 'mp3', 'wav'].includes(urlExtension)) {
       return urlExtension;
     }
-    return this.testimony.url?.includes('video') ? 'mp4' : 'mp3';
+    return this.testimony()!.url?.includes('video') ? 'mp4' : 'mp3';
   }
 
   suggestImprovement() {
     if (!this.testimony) return;
     const dialogRef = this.dialog.open(SuggestionDialogComponent, {
-      data: { testimonyId: this.testimony.id },
+      data: { testimonyId: this.testimony()!.id },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.testimonyService
-          .suggestImprovement(this.testimony!.id, result.field, result.value)
+          .suggestImprovement(this.testimony()!.id, result.field, result.value)
           .subscribe({
             next: () => alert('Sugerencia enviada con éxito'),
             error: () => alert('Error al enviar la sugerencia'),
@@ -444,23 +446,7 @@ export default class TestimonyDetailComponent implements OnInit, OnDestroy {
   }
 
   getRelativeTime(createdAt: string | Date): string {
-    if (!createdAt) return 'Desconocido';
-    const now = new Date();
-    const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
-    if (isNaN(date.getTime())) return 'Fecha inválida';
-    const diffMs = now.getTime() - date.getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
-    const diffHr = Math.floor(diffMin / 60);
-    const diffDay = Math.floor(diffHr / 24);
-    const diffMonth = Math.floor(diffDay / 30);
-    const diffYear = Math.floor(diffMonth / 12);
-    if (diffSec < 60) return 'hace un instante';
-    else if (diffMin < 60) return `hace ${diffMin} minuto${diffMin === 1 ? '' : 's'}`;
-    else if (diffHr < 24) return `hace ${diffHr} hora${diffHr === 1 ? '' : 's'}`;
-    else if (diffDay < 30) return `hace ${diffDay} día${diffDay === 1 ? '' : 's'}`;
-    else if (diffMonth < 12) return `hace ${diffMonth} mes${diffMonth === 1 ? '' : 'es'}`;
-    else return `hace ${diffYear} año${diffYear === 1 ? '' : 's'}`;
+    return this.dateUtilsService.getRelativeTime(createdAt);
   }
 
   get canDownload() {

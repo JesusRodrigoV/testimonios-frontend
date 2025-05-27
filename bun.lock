@@ -26,6 +26,7 @@
         "angular-datatables": "^19.0.0",
         "animejs": "^4.0.2",
         "boxicons": "^2.1.4",
+        "date-fns": "^4.1.0",
         "leaflet": "^1.9.4",
         "ng-select": "^1.0.2",
         "ngx-audio-player": "^12.0.2",
@@ -866,6 +867,8 @@
     "datatables.net": ["datatables.net@2.2.2", "", { "dependencies": { "jquery": ">=1.7" } }, "sha512-gfODIKE3gpgbVeZy2QGj2Dq9roO6hy00S+k1knklrqlMyAMrh1wt0Q6ryBUM7gU96U77ysbq8dYhxFdmcC/oPQ=="],
 
     "datatables.net-dt": ["datatables.net-dt@2.2.2", "", { "dependencies": { "datatables.net": "2.2.2", "jquery": ">=1.7" } }, "sha512-Qfe9g/E3yAPTHoDASc1J0r5Yx++3Y3VdcEOFCupvfGJ8LhRrreebUC70UYEzO8vPOKnkutoRanW/VBMRIbXKXA=="],
+
+    "date-fns": ["date-fns@4.1.0", "", {}, "sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg=="],
 
     "date-format": ["date-format@4.0.14", "", {}, "sha512-39BOQLs9ZjKh0/patS9nrT8wc3ioX3/eA/zgbKNopnF2wCqJEoxywwwElATYvRsXdnOxA/OQeQoFZ3rFjVajhg=="],
 
