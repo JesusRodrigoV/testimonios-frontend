@@ -1,15 +1,10 @@
 <div class="testimonies-container">
   @for (testimony of testimonies(); track testimony.id) {
-    <div class="testimony-card">
-      <h3>{{ testimony.title }}</h3>
-      <p>{{ testimony.content }}</p>
-      <p><strong>Subido:</strong> {{ testimony.createdAt | date: 'short' }}</p>
-      <p><strong>Estado:</strong> {{ testimony.status }}</p>
-      <div class="actions">
-        <button mat-button (click)="editTestimony(testimony)">Editar</button>
-        <button mat-button (click)="deleteTestimony(testimony)">Eliminar</button>
-      </div>
-    </div>
+    <app-testimony-card
+      [testimony]="testimony"
+      (edit)="editTestimony($event)"
+      (delete)="deleteTestimony($event)"
+    ></app-testimony-card>
   } @empty {
     <p>No se encontraron testimonios.</p>
   }

@@ -56,49 +56,49 @@
     </div>
 
     @if (!authStore.isAuthenticated()) {
-      <button
-        mat-flat-button
-        routerLink="/login"
-        class="login-btn"
-        matTooltip="Iniciar sesión en tu cuenta"
-        matTooltipPosition="below"
-        golden
-      >
-        Iniciar Sesión
-      </button>
-      <button
-        mat-raised-button
-        color="primary"
-        routerLink="/register"
-        matTooltip="Crear una cuenta"
-        matTooltipPosition="below"
-      >
-        Registrarse
-      </button>
+    <button
+      mat-flat-button
+      routerLink="/login"
+      class="login-btn"
+      matTooltip="Iniciar sesión en tu cuenta"
+      matTooltipPosition="below"
+      golden
+    >
+      Iniciar Sesión
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      routerLink="/register"
+      matTooltip="Crear una cuenta"
+      matTooltipPosition="below"
+    >
+      Registrarse
+    </button>
     } @else {
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="notificationsMenu"
-        [matBadge]="unreadNotifications"
-        [matBadgeHidden]="unreadNotifications === 0"
-        matBadgeColor="warn"
-        class="notification-btn"
-        matTooltip="Notificaciones"
-        matTooltipPosition="below"
-        golden
-      >
-        <i class="bx bx-bell"></i>
-      </button>
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="userMenu"
-        class="avatar-button"
-        matTooltip="Menú de usuario"
-        matTooltipPosition="below"
-        golden
-      >
-        <i class="bx bxs-user-circle"></i>
-      </button>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="notificationsMenu"
+      [matBadge]="unreadNotifications"
+      [matBadgeHidden]="unreadNotifications === 0"
+      matBadgeColor="warn"
+      class="notification-btn"
+      matTooltip="Notificaciones"
+      matTooltipPosition="below"
+      golden
+    >
+      <i class="bx bx-bell"></i>
+    </button>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="userMenu"
+      class="avatar-button"
+      matTooltip="Menú de usuario"
+      matTooltipPosition="below"
+      golden
+    >
+      <i class="bx bxs-user-circle"></i>
+    </button>
     }
   </div>
 
@@ -106,45 +106,39 @@
     <div class="notifications-container">
       <h3>Notificaciones</h3>
       @if (isLoading) {
-        <div class="loading">
-          <axl-spinner />
-          <p>Cargando notificaciones...</p>
-        </div>
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando notificaciones...</p>
+      </div>
       } @else if (error) {
-        <div class="error">
-          <mat-icon>error_outline</mat-icon>
-          <p>Error al obtener las notificaciones</p>
+      <div class="error">
+        <mat-icon>error_outline</mat-icon>
+        <p>Error al obtener las notificaciones</p>
+      </div>
+      } @else { @for ( notification of notifications(); track
+      notification.id_notificacion ) { @if (!notification.leido) {
+      <div
+        class="notification-item"
+        [class.read]="notification.leido"
+        (click)="markAsRead(notification.id_notificacion)"
+      >
+        <div class="notification-content">
+          <p class="message">{{ notification.mensaje }}</p>
+          <p class="details">
+            Testimonio: {{ notification.testimonios.titulo }} •
+            {{ notification.fecha_creacion | date : "short" }}
+          </p>
         </div>
-      } @else {
-        @for (
-          notification of notifications;
-          track notification.id_notificacion
-        ) {
-          @if (!notification.leido) {
-            <div
-              class="notification-item"
-              [class.read]="notification.leido"
-              (click)="markAsRead(notification.id_notificacion)"
-            >
-              <div class="notification-content">
-                <p class="message">{{ notification.mensaje }}</p>
-                <p class="details">
-                  Testimonio: {{ notification.testimonios.titulo }} •
-                  {{ notification.fecha_creacion | date: "short" }}
-                </p>
-              </div>
-              <mat-icon class="status-icon">
-                {{ notification.leido ? "check_circle" : "circle" }}
-              </mat-icon>
-            </div>
-          }
-        } @empty {
-          <div class="empty">
-            <mat-icon>notifications_none</mat-icon>
-            <p>No hay notificaciones</p>
-          </div>
-        }
-      }
+        <mat-icon class="status-icon">
+          {{ notification.leido ? "check_circle" : "circle" }}
+        </mat-icon>
+      </div>
+      } } @empty {
+      <div class="empty">
+        <mat-icon>notifications_none</mat-icon>
+        <p>No hay notificaciones</p>
+      </div>
+      } }
     </div>
   </mat-menu>
 
@@ -162,10 +156,10 @@
       Mis testimonios
     </button>
     @if (isAdmin) {
-      <button mat-menu-item routerLink="/dashboard" golden>
-        <i class="bx bxs-dashboard"></i>
-        Dashboard
-      </button>
+    <button mat-menu-item routerLink="/dashboard" golden>
+      <i class="bx bxs-dashboard"></i>
+      Dashboard
+    </button>
     }
     <button mat-menu-item routerLink="/settings" golden>
       <i class="bx bx-cog"></i>
@@ -178,4 +172,3 @@
     </button>
   </mat-menu>
 </header>
-

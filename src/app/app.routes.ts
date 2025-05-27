@@ -66,6 +66,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: "testimony/:id/edit",
+        loadComponent: () =>
+          import(
+            "./features/testimony/components/my-testimonies/components/testimony-edit/testimony-edit.component"
+          ),
+      },
+      {
         path: "my-testimonies",
         loadComponent: () =>
           import(

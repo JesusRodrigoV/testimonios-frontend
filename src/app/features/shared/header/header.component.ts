@@ -4,6 +4,7 @@ import {
   HostListener,
   inject,
   output,
+  signal,
 } from "@angular/core";
 import { DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
@@ -47,7 +48,7 @@ export const Rol = {
     NgIf,
     SpinnerComponent,
     DatePipe,
-    SearchBarComponent
+    SearchBarComponent,
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
@@ -57,8 +58,8 @@ export class HeaderComponent {
   protected readonly Rol = Rol;
   isScrolled = false;
   isMobileSearchActive = false;
-  userAvatar = 'assets/images/default-avatar.png';
-  notifications: Notificacion[] = [];
+  userAvatar = "assets/images/default-avatar.png";
+  notifications = signal<Notificacion[]>([]);
   isLoading = false;
   error: string | null = null;
 
@@ -84,7 +85,7 @@ export class HeaderComponent {
     this.themeService.toggleTheme();
   }
 
-  @HostListener('window:scroll')
+  @HostListener("window:scroll")
   onWindowScroll() {
     this.isScrolled = window.scrollY > 0;
   }
@@ -95,10 +96,10 @@ export class HeaderComponent {
 
   onToggleMobileSearch(isActive: boolean): void {
     this.isMobileSearchActive = isActive;
-    document.body.style.overflow = this.isMobileSearchActive ? 'hidden' : '';
+    document.body.style.overflow = this.isMobileSearchActive ? "hidden" : "";
   }
 
-  @HostListener('document:keydown.escape')
+  @HostListener("document:keydown.escape")
   onEscapePress() {
     if (this.isMobileSearchActive) {
       this.onToggleMobileSearch(false);
@@ -107,11 +108,11 @@ export class HeaderComponent {
 
   onCreatePost() {
     if (!this.authStore.isAuthenticated()) {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: '/create-post' },
+      this.router.navigate(["/login"], {
+        queryParams: { returnUrl: "/create-post" },
       });
     } else {
-      this.router.navigate(['/create-post']);
+      this.router.navigate(["/create-post"]);
     }
   }
 
@@ -124,12 +125,12 @@ export class HeaderComponent {
   }
 
   get unreadNotifications(): number {
-    return this.notifications.filter((n) => !n.leido).length;
+    return this.notifications().filter((n) => !n.leido).length;
   }
 
   loadNotifications(): void {
     if (!this.authStore.isAuthenticated()) {
-      this.notifications = [];
+      this.notifications.set([]);
       return;
     }
 
@@ -137,11 +138,11 @@ export class HeaderComponent {
     this.error = null;
     this.notificationService.getUnread().subscribe({
       next: (notifications) => {
-        this.notifications = notifications;
+        this.notifications.set(notifications);
         this.isLoading = false;
       },
       error: () => {
-        this.error = 'No se pudieron cargar las notificaciones';
+        this.error = "No se pudieron cargar las notificaciones";
         this.isLoading = false;
       },
     });
@@ -151,8 +152,10 @@ export class HeaderComponent {
     this.notificationService.marcarComoLeido(id).subscribe({
       next: (updatedNotification) => {
         if (updatedNotification) {
-          this.notifications = this.notifications.map((n) =>
-            n.id_notificacion === id ? updatedNotification : n
+          this.notifications.update((notifs) =>
+            notifs.map((n) =>
+              n.id_notificacion === id ? { ...n, leido: true } : n
+            )
           );
         }
       },
