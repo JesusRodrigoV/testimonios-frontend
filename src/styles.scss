@@ -1,24 +1,35 @@
 @use "@angular/material" as mat;
-@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
 
 html {
   color-scheme: light;
-  @include mat.theme((color: mat.$azure-palette,
+  @include mat.theme(
+    (
+      color: mat.$azure-palette,
       density: -1,
-    ));
-  @include mat.theme-overrides((primary: #40964e,
-    ));
+    )
+  );
+  @include mat.theme-overrides(
+    (
+      primary: #40964e,
+    )
+  );
 }
 
 html.dark-mode {
   color-scheme: dark;
-  @include mat.theme((color: mat.$cyan-palette,
+  @include mat.theme(
+    (
+      color: mat.$cyan-palette,
       density: -1,
-    ));
-  @include mat.theme-overrides((primary: #59b468,
-    ));
-
+    )
+  );
+  @include mat.theme-overrides(
+    (
+      primary: #59b468,
+    )
+  );
 }
 
 html,

@@ -1,4 +1,4 @@
-<div class="testimony-page">
+<div class="testimony-page" scrollTop>
   <div class="page-header">
     <button
       mat-icon-button
@@ -123,7 +123,6 @@
           <p>{{ testimony()?.description || "Sin descripción disponible." }}</p>
         </div>
       </div>
-
       <div class="transcription" *ngIf="testimony()?.format !== 'Texto'">
         <div class="transcription-header">
           <p>Transcripción</p>
@@ -148,8 +147,7 @@
           </div>
           } @else if (transcripciones().length > 0) {
           <div class="transcription-text">
-            @for (transcripcion of transcripciones(); track
-            transcripcion.id_transcripcion) {
+            @for (transcripcion of transcripciones(); track transcripcion.id_transcripcion) {
             <div class="transcription-item">
               <p>{{ transcripcion.contenido }}</p>
               <p class="transcription-meta">
@@ -176,102 +174,41 @@
           </div>
           } @else {
           <p>
-            No hay transcripciones disponibles. Inicia sesión para solicitar
-            una.
+            No hay transcripciones disponibles. Inicia sesión para solicitar una.
           </p>
           }
         </div>
       </div>
-      <div class="rating-section">
-        <p class="rating-title">Calificar este testimonio</p>
-        <p class="rating-status" *ngIf="currentRating > 0 && !isRatingLoading">
-          Tu calificación: {{ currentRating }} estrella{{
-            currentRating === 1 ? "" : "s"
-          }}
-        </p>
+      <section class="rating-container">
+        <h3 class="rating-title">Calificar este testimonio</h3>
         <div class="rating" [ngClass]="{ loading: isRatingLoading }">
-          <input
-            type="radio"
-            id="star-5"
-            name="star-radio"
-            value="5"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(5)"
-            [disabled]="
-              !authStore.isAuthenticated() || isRatingLoading || !testimony()
-            "
-          />
-          <label for="star-5">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-4"
-            name="star-radio"
-            value="4"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(4)"
-            [disabled]="
-              !authStore.isAuthenticated() || isRatingLoading || !testimony()
-            "
-          />
-          <label for="star-4">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-3"
-            name="star-radio"
-            value="3"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(3)"
-            [disabled]="
-              !authStore.isAuthenticated() || isRatingLoading || !testimony()
-            "
-          />
-          <label for="star-3">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-2"
-            name="star-radio"
-            value="2"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(2)"
-            [disabled]="
-              !authStore.isAuthenticated() || isRatingLoading || !testimony()
-            "
-          />
-          <label for="star-2">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-1"
-            name="star-radio"
-            value="1"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(1)"
-            [disabled]="
-              !authStore.isAuthenticated() || isRatingLoading || !testimony()
-            "
-          />
-          <label for="star-1">
-            <mat-icon>star</mat-icon>
-          </label>
+          @for (star of [5, 4, 3, 2, 1]; track star) {
+          <ng-container>
+            <input
+              type="radio"
+              [id]="'star-' + star"
+              name="star-radio"
+              [value]="star"
+              [(ngModel)]="currentRating().toFixed"
+              (change)="rateTestimony(star)"
+              [disabled]="!authStore.isAuthenticated() || isRatingLoading || !testimony()"
+            />
+            <label [for]="'star-' + star">
+              <i
+                class="bx"
+                [ngClass]="star <= currentRating() ? 'bxs-star' : 'bx-star'"
+              ></i>
+            </label>
+          </ng-container>
+          }
         </div>
-        @if (!authStore.isAuthenticated()) {
-        <p class="rating-login">
+        <p class="rating-login" *ngIf="!authStore.isAuthenticated()">
           Inicia sesión para calificar este testimonio.
         </p>
-        }
-      </div>
+      </section>
     </div>
     <div class="comments-sidebar">
-      <app-testimony-comments
-        [testimonyId]="testimony()!.id"
-      ></app-testimony-comments>
+      <app-testimony-comments [testimonyId]="testimony()!.id"></app-testimony-comments>
     </div>
   </div>
 </div>

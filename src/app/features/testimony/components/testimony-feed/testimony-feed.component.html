@@ -2,21 +2,19 @@
   <div class="feed-header">
     <h2>Testimonios del Bicentenario</h2>
   </div>
-
   <div class="content-container">
-    <aside class="sidebar" [class.sidebar-open]="isSidebarOpen">
+    <aside class="sidebar" [class.sidebar-open]="isSidebarOpen()">
       <div class="sidebar-header">
         <h3>Filtros</h3>
         <button mat-icon-button class="sidebar-toggle" (click)="toggleSidebar()" aria-label="Alternar barra de filtros">
-          <mat-icon>{{ isSidebarOpen ? 'close' : 'menu' }}</mat-icon>
+          <mat-icon>{{ isSidebarOpen() ? 'close' : 'menu' }}</mat-icon>
         </button>
       </div>
       <div class="sidebar-filters">
         <div class="filter-group search-group">
           <mat-form-field appearance="outline" class="search-field">
             <mat-label>Buscar testimonios</mat-label>
-            <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchQueryChange($event)"
-              placeholder="Escribe para buscar..." aria-label="Buscar testimonios" />
+            <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchQueryChange($event)" placeholder="Escribe para buscar..." aria-label="Buscar testimonios" />
             <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="clearSearch()" aria-label="Limpiar búsqueda">
               <mat-icon>clear</mat-icon>
             </button>
@@ -24,34 +22,29 @@
         </div>
         <div class="filter-group">
           <mat-label class="filter-label">Eventos</mat-label>
-          <app-events-filters [(selectedEvents)]="selectedEvents"
-            (selectedEventsChange)="onFilterChange()"></app-events-filters>
+          <app-events-filters [(selectedEvents)]="selectedEvents" (selectedEventsChange)="onFilterChange()"></app-events-filters>
         </div>
         <div class="filter-group">
           <mat-label class="filter-label">Categorías</mat-label>
-          <app-categories-filters [(selectedCategories)]="selectedCategories"
-            (selectedCategoriesChange)="onFilterChange()"></app-categories-filters>
+          <app-categories-filters [(selectedCategories)]="selectedCategories" (selectedCategoriesChange)="onFilterChange()"></app-categories-filters>
         </div>
-
         <div class="filter-group">
           <mat-label class="filter-label">Etiquetas</mat-label>
           <app-tags-filters [(selectedTags)]="selectedTags" (selectedTagsChange)="onFilterChange()"></app-tags-filters>
         </div>
-        <button mat-raised-button color="accent" class="clear-filters" (click)="clearFilters()"
-          *ngIf="searchQuery || selectedCategories.length || selectedEvents.length || selectedTags.length"
-          aria-label="Limpiar todos los filtros">
+        <button mat-raised-button color="accent" class="clear-filters" (click)="clearFilters()" *ngIf="searchQuery || selectedCategories().length || selectedEvents().length || selectedTags().length" aria-label="Limpiar todos los filtros">
           <mat-icon>filter_alt_off</mat-icon>
           Limpiar filtros
         </button>
       </div>
     </aside>
     <div class="testimony-feed">
-      @defer (when testimonies.length > 0 || !loading) {
+      @defer (when testimonies().length > 0 || !loading()) {
       <div class="testimonies-wrapper">
-        @for (testimony of testimonies; track testimony.id) {
+        @for (testimony of testimonies(); track testimony.id) {
           @defer (on viewport) {
             <app-testimony [testimony]="testimony"></app-testimony>
-          }@placeholder {
+          } @placeholder {
             <div class="skeleton-card">
               <div class="skeleton-header"></div>
               <div class="skeleton-content"></div>
@@ -79,11 +72,10 @@
       } @error {
       <div class="error">
         <mat-icon>error</mat-icon>
-        <p>{{ error || 'Error al cargar los testimonios. Por favor, intenta de nuevo.' }}</p>
+        <p>{{ error() || 'Error al cargar los testimonios. Por favor, intenta de nuevo.' }}</p>
       </div>
       }
-
-      <div id="loadMoreTrigger" *ngIf="hasMore && !loading && !error"></div>
+      <div id="loadMoreTrigger" *ngIf="hasMore() && !loading() && !error()"></div>
     </div>
   </div>
 </div>
