@@ -38,6 +38,7 @@
     "ngx-audio-player": "^12.0.2",
     "ngx-videogular": "^13.2.4",
     "rxjs": "~7.8.2",
+    "swiper": "^11.2.8",
     "tslib": "^2.8.1",
     "video.js": "^8.22.0",
     "zone.js": "~0.15.0"

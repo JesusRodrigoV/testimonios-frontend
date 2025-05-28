@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   inject,
   OnDestroy,
   OnInit,
@@ -16,6 +17,10 @@ import { CalificationService } from "@app/features/testimony/services";
 import { CacheService } from "@app/core/services";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
+import { register } from 'swiper/element/bundle';
+import { Swiper } from 'swiper/types';
+
+register();
 
 @Component({
   selector: "app-home",
@@ -24,12 +29,13 @@ import { Subscription } from "rxjs";
     HeroSectionComponent,
     SpinnerComponent,
     TestimonyComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideNativeDateAdapter()],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export default class HomeComponent implements OnInit, OnDestroy {
   highlightedTestimonies = signal<Testimony[]>([]);

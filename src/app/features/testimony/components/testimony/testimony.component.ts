@@ -5,6 +5,7 @@ import {
   inject,
   Input,
   OnInit,
+  signal,
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
@@ -13,6 +14,7 @@ import { TestimonyModalComponent } from "./testimony-modal";
 import { MatIconModule } from "@angular/material/icon";
 import { VideoPlayerComponent } from "@app/features/shared/video-player";
 import { Router } from "@angular/router";
+import { DateUtilsService } from "@app/core/services";
 
 @Component({
   selector: "app-testimony",
@@ -30,8 +32,12 @@ import { Router } from "@angular/router";
 export class TestimonyComponent{
   @Input({ required: true }) testimony!: Testimony;
 
+
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private dateUtil = inject(DateUtilsService);
+
+  date = signal<string>(this.dateUtil.getRelativeTime(this.testimony?.createdAt));
 
   openModal() {
     this.dialog.open(TestimonyModalComponent, {

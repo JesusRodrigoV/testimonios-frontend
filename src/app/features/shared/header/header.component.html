@@ -17,7 +17,7 @@
     </h1>
   </div>
 
-  <app-search-bar [isMobile]="false"></app-search-bar>
+  <app-search-bar [isMobile]="false" class="desktop-search"></app-search-bar>
 
   <div class="mobile-search-container">
     <button
@@ -26,15 +26,16 @@
       (click)="onToggleMobileSearch(true)"
       matTooltip="Buscar"
       golden
-      *ngIf="!isMobileSearchActive"
+      *ngIf="!isMobileSearchActive()"
     >
       <i class="bx bx-search"></i>
     </button>
 
     <app-search-bar
       [isMobile]="true"
-      [isActive]="isMobileSearchActive"
+      [isActive]="isMobileSearchActive()"
       (toggleMobile)="onToggleMobileSearch($event)"
+      class="mobile-search"
     ></app-search-bar>
   </div>
 
@@ -60,7 +61,7 @@
       mat-flat-button
       routerLink="/login"
       class="login-btn"
-      matTooltip="Iniciar sesión en tu cuenta"
+      matTooltip="Iniciar sesión"
       matTooltipPosition="below"
       golden
     >
@@ -70,7 +71,7 @@
       mat-raised-button
       color="primary"
       routerLink="/register"
-      matTooltip="Crear una cuenta"
+      matTooltip="Registrarse"
       matTooltipPosition="below"
     >
       Registrarse
@@ -79,8 +80,8 @@
     <button
       mat-icon-button
       [matMenuTriggerFor]="notificationsMenu"
-      [matBadge]="unreadNotifications"
-      [matBadgeHidden]="unreadNotifications === 0"
+      [matBadge]="unreadNotifications()"
+      [matBadgeHidden]="unreadNotifications() === 0"
       matBadgeColor="warn"
       class="notification-btn"
       matTooltip="Notificaciones"
@@ -105,12 +106,12 @@
   <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
     <div class="notifications-container">
       <h3>Notificaciones</h3>
-      @if (isLoading) {
+      @if (isLoading()) {
       <div class="loading">
         <axl-spinner />
         <p>Cargando notificaciones...</p>
       </div>
-      } @else if (error) {
+      } @else if (error()) {
       <div class="error">
         <mat-icon>error_outline</mat-icon>
         <p>Error al obtener las notificaciones</p>
@@ -155,7 +156,7 @@
       <i class="bx bx-archive"></i>
       Mis testimonios
     </button>
-    @if (isAdmin) {
+    @if (isAdmin()) {
     <button mat-menu-item routerLink="/dashboard" golden>
       <i class="bx bxs-dashboard"></i>
       Dashboard

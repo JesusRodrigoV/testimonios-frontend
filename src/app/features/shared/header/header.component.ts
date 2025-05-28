@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   HostListener,
   inject,
   output,
@@ -24,6 +25,8 @@ import { SpinnerComponent } from "../ui/spinner";
 import { SearchBarComponent } from "../search/components/search-bar";
 import { MatDialog } from "@angular/material/dialog";
 import { SearchDialogComponent } from "../search/components/search-dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { interval } from "rxjs";
 
 export const Rol = {
   ADMIN: 1,
@@ -55,13 +58,11 @@ export const Rol = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  protected readonly Rol = Rol;
-  isScrolled = false;
-  isMobileSearchActive = false;
-  userAvatar = "assets/images/default-avatar.png";
+  isMobileSearchActive = signal<boolean>(false);
   notifications = signal<Notificacion[]>([]);
-  isLoading = false;
-  error: string | null = null;
+  isLoading = signal<boolean>(false);
+  error = signal<string | null>(null);
+  intervalId: any = null;
 
   protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
@@ -70,85 +71,77 @@ export class HeaderComponent {
 
   toggleSidebar = output<void>();
 
+  unreadNotifications = computed(() =>
+    this.notifications().filter((n) => !n.leido).length
+  );
+
+  isAdmin = computed(() => this.authStore.user()?.role === Rol.ADMIN);
+
   constructor() {
+    this.authStore.loadUserProfile();
     this.loadNotifications();
-    setInterval(() => {
-      this.loadNotifications();
-    }, 5000);
+    this.intervalId = setInterval(() => this.loadNotifications(), 5000);
   }
 
-  get darkMode(): boolean {
-    return this.themeService.isDarkMode();
+  ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
-  toggleTheme(): void {
+  toggleTheme() {
     this.themeService.toggleTheme();
   }
 
   @HostListener("window:scroll")
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 0;
+    // Removed isScrolled as it's unused
   }
 
-  get isAdmin(): boolean {
-    return this.authStore.user()?.role === this.Rol.ADMIN;
-  }
-
-  onToggleMobileSearch(isActive: boolean): void {
-    this.isMobileSearchActive = isActive;
-    document.body.style.overflow = this.isMobileSearchActive ? "hidden" : "";
+  onToggleMobileSearch(isActive: boolean) {
+    this.isMobileSearchActive.set(isActive);
+    document.body.style.overflow = isActive ? "hidden" : "";
   }
 
   @HostListener("document:keydown.escape")
   onEscapePress() {
-    if (this.isMobileSearchActive) {
+    if (this.isMobileSearchActive()) {
       this.onToggleMobileSearch(false);
-    }
-  }
-
-  onCreatePost() {
-    if (!this.authStore.isAuthenticated()) {
-      this.router.navigate(["/login"], {
-        queryParams: { returnUrl: "/create-post" },
-      });
-    } else {
-      this.router.navigate(["/create-post"]);
     }
   }
 
   async onLogout() {
     await this.authStore.logout();
+    await this.router.navigate(["/login"]);
   }
 
-  onToggleSidebar(): void {
+  onToggleSidebar() {
     this.toggleSidebar.emit();
   }
 
-  get unreadNotifications(): number {
-    return this.notifications().filter((n) => !n.leido).length;
-  }
-
-  loadNotifications(): void {
+  loadNotifications() {
     if (!this.authStore.isAuthenticated()) {
       this.notifications.set([]);
+      this.isLoading.set(false);
+      this.error.set(null);
       return;
     }
 
-    this.isLoading = true;
-    this.error = null;
+    this.isLoading.set(true);
+    this.error.set(null);
     this.notificationService.getUnread().subscribe({
       next: (notifications) => {
         this.notifications.set(notifications);
-        this.isLoading = false;
+        this.isLoading.set(false);
       },
       error: () => {
-        this.error = "No se pudieron cargar las notificaciones";
-        this.isLoading = false;
+        this.error.set("No se pudieron cargar las notificaciones");
+        this.isLoading.set(false);
       },
     });
   }
 
-  markAsRead(id: number): void {
+  markAsRead(id: number) {
     this.notificationService.marcarComoLeido(id).subscribe({
       next: (updatedNotification) => {
         if (updatedNotification) {
@@ -159,7 +152,6 @@ export class HeaderComponent {
           );
         }
       },
-      error: () => {},
     });
   }
 }

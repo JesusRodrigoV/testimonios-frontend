@@ -8,10 +8,27 @@
         <axl-spinner />
         <p>Cargando testimonios...</p>
       </div>
-      } @else if (highlightedTestimonies().length > 0) { @for (testimony of
-      highlightedTestimonies(); track testimony.id) {
-      <app-testimony [testimony]="testimony" />
-      } } @else {
+      } @else if (highlightedTestimonies().length > 0) {
+      <h4>Testimonios mejor calificados</h4>
+      <swiper-container
+        class="carousel"
+        navigation="true"
+        pagination="true"
+        slides-per-view="1"
+        space-between="16"
+        touch-events-target="container"
+        grab-cursor="true"
+        loop="true"
+        autoplay='{"delay": 5000, "disableOnInteraction": false}'
+        breakpoints='{"768": {"slidesPerView": 2}, "1024": {"slidesPerView": 3}}'
+      >
+        @for (testimony of highlightedTestimonies(); track testimony.id) {
+        <swiper-slide>
+          <app-testimony [testimony]="testimony" />
+        </swiper-slide>
+        }
+      </swiper-container>
+      } @else {
       <p>No hay testimonios destacados disponibles.</p>
       }
     </div>
