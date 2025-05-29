@@ -11,6 +11,7 @@ import {
   AsyncPipe,
   DatePipe,
   Location,
+  NgOptimizedImage,
   NgStyle,
   SlicePipe,
   TitleCasePipe,
@@ -41,7 +42,8 @@ import { MatInputModule } from "@angular/material/input";
     MatButtonModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    NgOptimizedImage
   ],
   templateUrl: "./forum-post-detail.component.html",
   styleUrl: "./forum-post-detail.component.scss",

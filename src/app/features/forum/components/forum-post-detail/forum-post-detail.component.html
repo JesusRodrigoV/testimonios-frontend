@@ -8,8 +8,10 @@
     <!-- Post Header -->
     <div class="post-header">
       <div class="avatar">
-        <span class="avatar-initials">{{ forumPost?.titulo | titlecase }}</span>
+        <img [ngSrc]="forumPost?.usuarios!.profile_image || '/assets/images/default-avatar.jpg'" [alt]="forumPost?.usuarios!.nombre || 'Usuario'" width="40"
+        height="40" />
       </div>
+      <h1>{{forumPost?.titulo}}</h1>
       <div class="header-content">
         <h2 class="post-title">{{ forumPost?.titulo }}</h2>
         <p class="post-date">
