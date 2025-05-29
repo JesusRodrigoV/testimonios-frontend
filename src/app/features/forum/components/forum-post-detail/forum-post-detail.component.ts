@@ -35,6 +35,8 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-forum-post-detail",
   imports: [
     DatePipe,
+    TitleCasePipe,
+    NgOptimizedImage,
     ForumCommentComponent,
     SpinnerComponent,
     MatIconModule,
