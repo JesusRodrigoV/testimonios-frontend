@@ -2,14 +2,30 @@
   <div class="profile-wrapper">
     <mat-card class="profile-card profile-card-hero">
       <mat-card-content class="hero-content">
-        <img
-          [ngSrc]="user()?.profile_image || '/assets/images/default-avatar.jpg'"
-          alt="Profile Image"
-          class="profile-image"
-          width="100"
-          height="100"
-          priority
-        />
+        <div class="profile-image-container">
+          <img
+            [src]="imagePreview() || user()?.profile_image || '/assets/images/default-avatar.jpg'"
+            alt="Profile Image"
+            class="profile-image"
+          />
+          <button
+            *ngIf="isEditing()"
+            mat-icon-button
+            class="edit-image-btn"
+            (click)="fileInput.click()"
+            matTooltip="Cambiar imagen"
+            [disabled]="isLoading()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <input
+            #fileInput
+            type="file"
+            accept="image/jpeg,image/png"
+            (change)="onFileSelected($event)"
+            style="display: none"
+          />
+        </div>
         <h1 class="profile-name">{{ user()?.nombre || 'Usuario' }}</h1>
       </mat-card-content>
     </mat-card>
@@ -19,37 +35,109 @@
         <mat-card-title>Información Personal</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="profile-info">
-          <mat-divider></mat-divider>
-          <div class="info-group">
-            <label>Email</label>
-            <span>{{ user()?.email || 'No disponible' }}</span>
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="profile-info">
+            <mat-divider></mat-divider>
+            <div class="info-group">
+              <label>Nombre</label>
+              <ng-container *ngIf="isEditing(); else nombreView">
+                <div class="custom-input">
+                  <input
+                    formControlName="nombre"
+                    placeholder="Tu nombre"
+                    [ngClass]="{
+                      'input-error': profileForm.get('nombre')?.invalid && profileForm.get('nombre')?.touched
+                    }"
+                  />
+                  <div class="error-message" *ngIf="profileForm.get('nombre')?.invalid && profileForm.get('nombre')?.touched">
+                    <span *ngIf="profileForm.get('nombre')?.hasError('required')">
+                      El nombre es requerido
+                    </span>
+                    <span *ngIf="profileForm.get('nombre')?.hasError('minlength')">
+                      Mínimo 3 caracteres
+                    </span>
+                    <span *ngIf="profileForm.get('nombre')?.hasError('maxlength')">
+                      Máximo 20 caracteres
+                    </span>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #nombreView>
+                <span>{{ user()?.nombre || 'No disponible' }}</span>
+              </ng-template>
+            </div>
+            <div class="info-group">
+              <label>Email</label>
+              <span>{{ user()?.email || 'No disponible' }}</span>
+            </div>
+            <div class="info-group">
+              <label>Rol</label>
+              <span class="role-badge">{{ getRoleName(user()?.role) }}</span>
+            </div>
+            <div class="info-group">
+              <label>Biografía</label>
+              <ng-container *ngIf="isEditing(); else biografiaView">
+                <div class="custom-input">
+                  <textarea
+                    formControlName="biografia"
+                    placeholder="Cuéntanos sobre ti"
+                    rows="4"
+                  ></textarea>
+                </div>
+              </ng-container>
+              <ng-template #biografiaView>
+                <span>{{ user()?.biografia || 'Sin biografía' }}</span>
+              </ng-template>
+            </div>
+            <div class="info-group">
+              <label>2FA</label>
+              <span
+                [ngClass]="{
+                  'two-factor-enabled': user()?.two_factor_enabled,
+                  'two-factor-disabled': !user()?.two_factor_enabled
+                }"
+              >
+                {{ user()?.two_factor_enabled ? 'Activado' : 'Desactivado' }}
+              </span>
+            </div>
           </div>
-          <div class="info-group">
-            <label>Rol</label>
-            <span class="role-badge">{{ getRoleName(user()?.role) }}</span>
-          </div>
-          <div class="info-group">
-            <label>Biografía</label>
-            <span>{{ user()?.biografia || 'Sin biografía' }}</span>
-          </div>
-          <div class="info-group">
-            <label>2FA</label>
-            <span
-              [ngClass]="{
-                'two-factor-enabled': user()?.two_factor_enabled,
-                'two-factor-disabled': !user()?.two_factor_enabled
-              }"
-              >{{ user()?.two_factor_enabled ? 'Activado' : 'Desactivado' }}</span
+          <div class="form-actions" *ngIf="isEditing()">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!profileForm.valid || isLoading()"
             >
+              <mat-icon>save</mat-icon>
+              Guardar Cambios
+            </button>
+            <button
+              mat-button
+              type="button"
+              (click)="cancelEdit()"
+              [disabled]="isLoading()"
+            >
+              Cancelar
+            </button>
           </div>
+        </form>
+        <div class="form-actions" *ngIf="!isEditing()">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="startEdit()"
+            [disabled]="isLoading()"
+          >
+            <mat-icon>edit</mat-icon>
+            Editar Perfil
+          </button>
         </div>
       </mat-card-content>
     </mat-card>
 
     <div class="actions-container">
-      <button mat-raised-button color="warn" (click)="onLogout()">
-        <i class="bx bx-log-out"></i>
+      <button mat-raised-button color="warn" (click)="onLogout()" [disabled]="isLoading()">
+        <mat-icon>logout</mat-icon>
         Cerrar Sesión
       </button>
     </div>

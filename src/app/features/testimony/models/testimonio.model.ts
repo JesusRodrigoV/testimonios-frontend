@@ -1,3 +1,8 @@
+interface Rating{
+  average: number;
+  total: number;
+}
+
 export interface Testimony {
   id: number;
   title: string;
@@ -17,6 +22,7 @@ export interface Testimony {
   event?: string;
   transcription?: string;
   favoriteCount?: number;
+  rating?: Rating;
 }
 
 export interface TestimonyInput {

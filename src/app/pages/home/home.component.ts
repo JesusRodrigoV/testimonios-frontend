@@ -48,9 +48,6 @@ export default class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadHighlightedTestimonies();
-    console.log(
-      "Mira Mira aqui estan los elegidos: " + this.highlightedTestimonies()
-    );
   }
 
   ngOnDestroy(): void {

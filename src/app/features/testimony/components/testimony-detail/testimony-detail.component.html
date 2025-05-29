@@ -181,6 +181,16 @@
       </div>
       <section class="rating-container">
         <h3 class="rating-title">Calificar este testimonio</h3>
+        <div class="rating-stats">
+          <div class="rating-average">
+            <i class="bx bxs-star"></i>
+            <span>Promedio: {{ testimony()?.rating?.average?.toFixed(1) || '0.0' }} / 5</span>
+          </div>
+          <div class="rating-total">
+            <i class="bx bx-user"></i>
+            <span>Opiniones: {{ testimony()?.rating?.total || 0 }}</span>
+          </div>
+        </div>
         <div class="rating" [ngClass]="{ loading: isRatingLoading }">
           @for (star of [5, 4, 3, 2, 1]; track star) {
           <ng-container>

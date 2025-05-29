@@ -304,19 +304,52 @@ audio {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+:root.dark-mode .rating-container {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .rating-title {
   font-size: 18px;
   font-weight: 500;
-  color: var(--text-color);
-  margin: 0 0 8px;
+  color: var(--green);
+  margin: 0 0 12px;
 }
 
-.rating-status {
+.rating-stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.rating-average,
+.rating-total {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
   font-size: 14px;
-  color: var(--secondary-text-color);
-  margin: 0 0 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rating-average {
+  background: var(--yellow);
+  color: var(--text-color);
+}
+
+.rating-total {
+  background: var(--green);
+  color: var(--accent-text-color);
+}
+
+.rating-average i,
+.rating-total i {
+  font-size: 16px;
 }
 
 .rating {
