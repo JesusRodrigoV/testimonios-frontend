@@ -1,14 +1,21 @@
-<mat-card class="testimony-card">
+<mat-card class="testimony-card" >
+  <div class="card-decor">
+    <i class="bx bxs-star"></i>
+  </div>
   <mat-card-header>
     <mat-card-title>{{ testimony().title }}</mat-card-title>
+    <mat-card-subtitle>{{ getRelativeTime(testimony().createdAt) }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <p>{{ testimony().content }}</p>
-    <p><strong>Subido:</strong> {{ getRelativeTime(testimony().createdAt) }}</p>
-    <p><strong>Estado:</strong> {{ testimony().status }}</p>
+    <p class="content">{{ testimony().content }}</p>
+    <p class="meta"><strong>Estado:</strong> {{ testimony().status }}</p>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button color="primary" (click)="onEdit()">Editar</button>
-    <button mat-button color="warn" disabled (click)="onDelete()">Eliminar</button>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon> Editar
+    </button>
+    <button mat-raised-button color="warn" disabled (click)="onDelete()">
+      <mat-icon>delete</mat-icon> Eliminar
+    </button>
   </mat-card-actions>
 </mat-card>

@@ -1,26 +1,53 @@
-
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { ForumService } from '../../services';
-import { ActivatedRoute } from '@angular/router';
-import { AsyncPipe, DatePipe, Location, NgStyle, TitleCasePipe } from '@angular/common';
-import { ForumCommentComponent } from '../forum-comment';
-import { ForoComentario, ForoTema } from '../../models';
-import { SpinnerComponent } from '@app/features/shared/ui/spinner';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+} from "@angular/core";
+import { ForumService } from "../../services";
+import { ActivatedRoute } from "@angular/router";
+import {
+  AsyncPipe,
+  DatePipe,
+  Location,
+  NgStyle,
+  SlicePipe,
+  TitleCasePipe,
+} from "@angular/common";
+import { ForumCommentComponent } from "../forum-comment";
+import { ForoComentario, ForoTema } from "../../models";
+import { SpinnerComponent } from "@app/features/shared/ui/spinner";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
 @Component({
-  selector: 'app-forum-post-detail',
-  imports: [DatePipe, TitleCasePipe, ForumCommentComponent, SpinnerComponent, MatIconModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule],
-  templateUrl: './forum-post-detail.component.html',
-  styleUrl: './forum-post-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "app-forum-post-detail",
+  imports: [
+    DatePipe,
+    TitleCasePipe,
+    ForumCommentComponent,
+    SpinnerComponent,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule
+  ],
+  templateUrl: "./forum-post-detail.component.html",
+  styleUrl: "./forum-post-detail.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class ForumPostDetailComponent{
+export default class ForumPostDetailComponent {
   private location = inject(Location);
   private forumService = inject(ForumService);
   private activatedRoute = inject(ActivatedRoute);
@@ -52,7 +79,6 @@ export default class ForumPostDetailComponent{
     this.forumService.getTopicById(Number(this.id)).subscribe({
       next: (data) => {
         this.forumPost = data;
-        console.log('Aqui esto del post', data);
       },
       error: (err) => {
         console.error('Failed to load post', err);
@@ -64,7 +90,6 @@ export default class ForumPostDetailComponent{
       next: (data) => {
         this.forumComments = data;
         this.isLoadingComments.set(false);
-        console.log('Aqui esto del comment', data);
       },
       error: (err) => {
         console.error('Failed to load comments', err);
@@ -147,6 +172,14 @@ export default class ForumPostDetailComponent{
         this.snackBar.open(this.replyError() || 'Error desconocido', 'Cerrar', { duration: 5000 });
       },
     });
+  }
+
+  onReplySubmitted({ parentId, newReply }: { parentId: number; newReply: ForoComentario }): void {
+    this.forumComments = this.addReplyToComments(this.forumComments, parentId, {
+      ...newReply,
+      children: [],
+    });
+    this.snackBar.open('Respuesta añadida', 'Cerrar', { duration: 3000 });
   }
 
   private addReplyToComments(

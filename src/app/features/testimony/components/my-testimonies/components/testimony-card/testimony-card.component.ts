@@ -7,12 +7,13 @@ import {
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
 import { DateUtilsService } from "@app/core/services";
 import { Testimony } from "@app/features/testimony/models/testimonio.model";
 
 @Component({
   selector: "app-testimony-card",
-  imports: [MatCardModule, MatButtonModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule],
   templateUrl: "./testimony-card.component.html",
   styleUrl: "./testimony-card.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -34,11 +34,76 @@
     <button
       mat-button
       (click)="startReply.emit(comentario().id_forocoment)"
-      [disabled]="!isAuthenticated"
+      [disabled]="!isAuthenticated()"
       matTooltip="Responder"
     >
       <mat-icon>reply</mat-icon>
       Responder
     </button>
   </div>
+
+  <!-- Reply Form -->
+  @if (replyingTo() === comentario().id_forocoment) {
+    <div class="reply-form-wrapper">
+      <form [formGroup]="replyForm" (ngSubmit)="onSubmitReply()" class="comment-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Responder</mat-label>
+          <textarea
+            matInput
+            formControlName="contenido"
+            placeholder="Escribe tu respuesta..."
+            rows="3"
+            required
+          ></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button
+            mat-button
+            color="warn"
+            type="button"
+            (click)="cancelReply()"
+          >
+            Cancelar
+          </button>
+          <button
+            mat-raised-button
+            color="accent"
+            type="submit"
+            [disabled]="replyForm.invalid || isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              <axl-spinner size="small" />
+              Enviando...
+            } @else {
+              Responder
+            }
+          </button>
+        </div>
+      </form>
+      @if (replyError()) {
+        <div class="error-message">
+          <mat-icon>error</mat-icon>
+          <p>{{ replyError() }}</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Recursive Children -->
+  @if (comentario().children.length > 0) {
+    <div class="replies">
+      <p class="replies-label">Respuestas</p>
+      @for (child of comentario().children; track child.id_forocoment) {
+        <div class="reply-wrapper">
+          <app-forum-comment
+            [comentario]="child"
+            [isReply]="true"
+            [topicId]="topicId()"
+            (startReply)="startReply.emit($event)"
+            (replySubmitted)="replySubmitted.emit($event)"
+          />
+        </div>
+      }
+    </div>
+  }
 </div>
