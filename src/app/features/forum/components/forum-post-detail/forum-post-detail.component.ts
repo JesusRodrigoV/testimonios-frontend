@@ -36,7 +36,6 @@ import { MatInputModule } from "@angular/material/input";
   imports: [
     DatePipe,
     TitleCasePipe,
-    NgOptimizedImage,
     ForumCommentComponent,
     SpinnerComponent,
     MatIconModule,
@@ -44,7 +43,6 @@ import { MatInputModule } from "@angular/material/input";
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    NgOptimizedImage
   ],
   templateUrl: "./forum-post-detail.component.html",
   styleUrl: "./forum-post-detail.component.scss",
