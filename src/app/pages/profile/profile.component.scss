@@ -69,6 +69,7 @@
 
   .profile-image-container {
     position: relative;
+    object-fit: "contain";
     width: 140px;
     height: 140px;
   }

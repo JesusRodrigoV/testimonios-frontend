@@ -3,13 +3,24 @@
     <mat-card class="profile-card profile-card-hero">
       <mat-card-content class="hero-content">
         <div class="profile-image-container">
+          @if(user()?.profile_image !== null || user()?.profile_image !== ""){
           <img
-            [src]="imagePreview() || user()?.profile_image || '/assets/images/default-avatar.jpg'"
+            [ngSrc]="user()?.profile_image ?? imagePreview() ?? '/assets/images/default-avatar.jpg'"
             alt="Profile Image"
             class="profile-image"
+            fill
+            priority
           />
+          } @else {
+          <img
+            [ngSrc]="imagePreview() || '/assets/images/default-avatar.jpg'"
+            alt="Profile Image"
+            class="profile-image"
+            fill
+            priority
+          />
+          } @if(isEditing()){
           <button
-            *ngIf="isEditing()"
             mat-icon-button
             class="edit-image-btn"
             (click)="fileInput.click()"
@@ -18,6 +29,7 @@
           >
             <mat-icon>edit</mat-icon>
           </button>
+          }
           <input
             #fileInput
             type="file"
@@ -26,7 +38,7 @@
             style="display: none"
           />
         </div>
-        <h1 class="profile-name">{{ user()?.nombre || 'Usuario' }}</h1>
+        <h1 class="profile-name">{{ user()?.nombre || "Usuario" }}</h1>
       </mat-card-content>
     </mat-card>
 
@@ -40,35 +52,38 @@
             <mat-divider></mat-divider>
             <div class="info-group">
               <label>Nombre</label>
-              <ng-container *ngIf="isEditing(); else nombreView">
-                <div class="custom-input">
-                  <input
-                    formControlName="nombre"
-                    placeholder="Tu nombre"
-                    [ngClass]="{
-                      'input-error': profileForm.get('nombre')?.invalid && profileForm.get('nombre')?.touched
-                    }"
-                  />
-                  <div class="error-message" *ngIf="profileForm.get('nombre')?.invalid && profileForm.get('nombre')?.touched">
-                    <span *ngIf="profileForm.get('nombre')?.hasError('required')">
-                      El nombre es requerido
-                    </span>
-                    <span *ngIf="profileForm.get('nombre')?.hasError('minlength')">
-                      Mínimo 3 caracteres
-                    </span>
-                    <span *ngIf="profileForm.get('nombre')?.hasError('maxlength')">
-                      Máximo 20 caracteres
-                    </span>
-                  </div>
+              @if(isEditing()){
+              <div class="custom-input">
+                <input
+                  formControlName="nombre"
+                  placeholder="Tu nombre"
+                  [ngClass]="{
+                    'input-error':
+                      profileForm.get('nombre')?.invalid &&
+                      profileForm.get('nombre')?.touched
+                  }"
+                />
+                @if(profileForm.get('nombre')?.invalid &&
+                profileForm.get('nombre')?.touched){
+                <div class="error-message">
+                  @if(profileForm.get('nombre')?.hasError('required')){
+                  <span>El nombre es requerido</span>
+                  } @if(profileForm.get('nombre')?.hasError('minlength')){
+                  <span>Mínimo 3 caracteres</span>
+                  } @if(profileForm.get('nombre')?.hasError('maxlength')){
+                  <span>Máximo 20 caracteres </span>
+                  }
                 </div>
-              </ng-container>
-              <ng-template #nombreView>
-                <span>{{ user()?.nombre || 'No disponible' }}</span>
-              </ng-template>
+                }
+              </div>
+
+              }@else{
+              <span>{{ user()?.nombre || "No disponible" }}</span>
+              }
             </div>
             <div class="info-group">
               <label>Email</label>
-              <span>{{ user()?.email || 'No disponible' }}</span>
+              <span>{{ user()?.email || "No disponible" }}</span>
             </div>
             <div class="info-group">
               <label>Rol</label>
@@ -76,18 +91,18 @@
             </div>
             <div class="info-group">
               <label>Biografía</label>
-              <ng-container *ngIf="isEditing(); else biografiaView">
-                <div class="custom-input">
-                  <textarea
-                    formControlName="biografia"
-                    placeholder="Cuéntanos sobre ti"
-                    rows="4"
-                  ></textarea>
-                </div>
-              </ng-container>
-              <ng-template #biografiaView>
-                <span>{{ user()?.biografia || 'Sin biografía' }}</span>
-              </ng-template>
+
+              @if(isEditing()){
+              <div class="custom-input">
+                <textarea
+                  formControlName="biografia"
+                  placeholder="Cuéntanos sobre ti"
+                  rows="4"
+                ></textarea>
+              </div>
+              } @else {
+              <span>{{ user()?.biografia || "Sin biografía" }}</span>
+              }
             </div>
             <div class="info-group">
               <label>2FA</label>
@@ -97,11 +112,12 @@
                   'two-factor-disabled': !user()?.two_factor_enabled
                 }"
               >
-                {{ user()?.two_factor_enabled ? 'Activado' : 'Desactivado' }}
+                {{ user()?.two_factor_enabled ? "Activado" : "Desactivado" }}
               </span>
             </div>
           </div>
-          <div class="form-actions" *ngIf="isEditing()">
+          @if(isEditing()){
+          <div class="form-actions">
             <button
               mat-raised-button
               color="primary"
@@ -120,8 +136,10 @@
               Cancelar
             </button>
           </div>
+          }
         </form>
-        <div class="form-actions" *ngIf="!isEditing()">
+        @if(!isEditing()){
+        <div class="form-actions">
           <button
             mat-raised-button
             color="primary"
@@ -132,11 +150,17 @@
             Editar Perfil
           </button>
         </div>
+        }
       </mat-card-content>
     </mat-card>
 
     <div class="actions-container">
-      <button mat-raised-button color="warn" (click)="onLogout()" [disabled]="isLoading()">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onLogout()"
+        [disabled]="isLoading()"
+      >
         <mat-icon>logout</mat-icon>
         Cerrar Sesión
       </button>
