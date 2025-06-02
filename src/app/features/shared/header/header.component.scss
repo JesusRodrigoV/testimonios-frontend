@@ -1,5 +1,5 @@
 :host {
-  --primary-color: #4CAF50;
+  --primary-color: #4caf50;
   --header-bg-color: #fff;
   --header-text-color: #2c3e50;
   --header-border-color: #dee2e6;
@@ -12,7 +12,7 @@
   --bolivia-green: rgba(0, 121, 52, 0.6);
 
   :root.dark-mode & {
-    --primary-color: #66BB6A;
+    --primary-color: #66bb6a;
     --header-bg-color: #1a1a1a;
     --header-text-color: #e9ecef;
     --header-border-color: #2c3e50;
@@ -40,6 +40,8 @@
 .logo-container {
   height: 70px;
   width: 70px;
+  object-fit: contain;
+  position: relative;
 }
 
 .header-left {

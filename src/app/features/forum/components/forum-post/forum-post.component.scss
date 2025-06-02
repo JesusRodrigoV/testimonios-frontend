@@ -17,6 +17,8 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    object-fit: contain;
+    position: relative;
 
     img {
       border-radius: 50%;

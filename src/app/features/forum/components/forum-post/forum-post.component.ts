@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ForoTema } from '../../models';
 import { AsyncPipe, DatePipe, NgOptimizedImage, TitleCasePipe } from '@angular/common';
@@ -18,12 +18,12 @@ export class ForumPostComponent {
   private authService = inject(AuthService);
 
   topicInfo = input.required<ForoTema>();
-  user: User | null = null;
+  user = signal<User | null>(null);
 
   ngOnInit() {
     this.authService.getUserInfo(this.topicInfo().creado_por_id_usuario).subscribe({
       next: ((user) => {
-        this.user = user;
+        this.user.set(user);
       })
     });
   }
