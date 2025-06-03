@@ -5,30 +5,28 @@
     <p class="description">{{ testimony.description }}</p>
   </div>
   <div class="media" (click)="$event.stopPropagation()">
-    @defer (on viewport) {
-      @if (testimony.format === "Video") {
-        <app-video-player class="media-content" [videoUrl]="testimony.url" />
-      } @else if (testimony.format === "Audio") {
-        <audio
-          #audioPlayer
-          [src]="testimony.url"
-          controls
-          loading="lazy"
-          class="media-content"
-        ></audio>
-      }
-    } @placeholder (minimum 500ms) {
-      <div class="skeleton-media"></div>
+    @defer (on viewport) { @if (testimony.format === "Video") {
+    <app-video-player class="media-content" [videoUrl]="testimony.url" />
+    } @else if (testimony.format === "Audio") {
+    <audio
+      #audioPlayer
+      [src]="testimony.url"
+      controls
+      loading="lazy"
+      class="media-content"
+    ></audio>
+    } } @placeholder (minimum 500ms) {
+    <div class="skeleton-media"></div>
     } @loading (minimum 1s; after 500ms) {
-      <div class="loading">
-        <axl-spinner />
-        <p>Cargando medio...</p>
-      </div>
+    <div class="loading">
+      <axl-spinner />
+      <p>Cargando medio...</p>
+    </div>
     } @error {
-      <div class="error">
-        <mat-icon>error</mat-icon>
-        <p>Error al cargar el medio.</p>
-      </div>
+    <div class="error">
+      <mat-icon>error</mat-icon>
+      <p>Error al cargar el medio.</p>
+    </div>
     }
   </div>
   <div class="meta-grid">
@@ -38,7 +36,7 @@
     </div>
     <div class="meta-item">
       <mat-icon>calendar_today</mat-icon>
-      <span>{{ testimony.createdAt | date: "medium" }}</span>
+      <span>{{ testimony.createdAt | date : "medium" }}</span>
     </div>
     <div class="meta-item">
       <mat-icon>category</mat-icon>
@@ -48,9 +46,11 @@
       <mat-icon>label</mat-icon>
       <span>{{ testimony.tags.join(", ") || "Ninguna" }}</span>
     </div>
-    <div class="meta-item" *ngIf="testimony.event">
+    @if(testimony.event){
+    <div class="meta-item">
       <mat-icon>event</mat-icon>
       <span>{{ testimony.event }}</span>
     </div>
+    }
   </div>
 </div>

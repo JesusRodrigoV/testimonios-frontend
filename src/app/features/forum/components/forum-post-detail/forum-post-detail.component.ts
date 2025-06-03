@@ -14,7 +14,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import {
   FormBuilder,
-  FormControl,
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";

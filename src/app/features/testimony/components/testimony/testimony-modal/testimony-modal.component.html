@@ -1,13 +1,16 @@
-<div class="modal-content">
+<div class="modal-content" scrollTop>
   <div class="modal-header">
-    <h2>{{ testimony.title }}</h2>
-    <button mat-icon-button (click)="closeModal()">
+    <button
+      mat-icon-button
+      class="close-btn"
+      (click)="closeModal()"
+      matTooltip="Cerrar"
+    >
       <mat-icon>close</mat-icon>
     </button>
   </div>
   <div class="modal-body">
     <div class="main-content">
-      <p class="description">{{ testimony.description }}</p>
       <div class="media">
         @if (testimony.format === "Video") {
           <app-video-player [videoUrl]="testimony.url" />
@@ -15,6 +18,7 @@
           <audio [src]="testimony.url" controls></audio>
         }
       </div>
+      <h1 class="title">{{ testimony.title }}</h1>
       <div class="actions">
         <button
           mat-raised-button
@@ -23,7 +27,7 @@
           matTooltip="Favorito"
         >
           <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
-          {{ testimony.favoriteCount}}
+          {{ testimony.favoriteCount }}
         </button>
         <button
           mat-icon-button
@@ -61,23 +65,41 @@
       </div>
       <div class="meta">
         <div class="meta-header">
-          <p>{{ getRelativeTime(testimony.createdAt) }}</p>
+          <p class="meta-author">Subido por: {{ testimony.author }}</p>
+          <p class="meta-date">{{ getRelativeTime(testimony.createdAt) }}</p>
           <button
             mat-icon-button
             (click)="toggleMeta()"
             class="meta-toggle-btn"
+            matTooltip="{{ isMetaExpanded ? 'Mostrar menos' : 'Mostrar más' }}"
           >
-            <mat-icon>{{
-              isMetaExpanded ? "expand_less" : "expand_more"
-            }}</mat-icon>
+            <mat-icon>{{ isMetaExpanded ? "expand_less" : "expand_more" }}</mat-icon>
           </button>
         </div>
         <div class="meta-details" [ngClass]="{ expanded: isMetaExpanded }">
-          <p>Subido por: {{ testimony.author }}</p>
           <p>Fecha: {{ testimony.createdAt | date: "medium" }}</p>
           <p>Categorías: {{ testimony.categories.join(", ") || "Ninguna" }}</p>
           <p>Etiquetas: {{ testimony.tags.join(", ") || "Ninguna" }}</p>
           <p *ngIf="testimony.event">Evento: {{ testimony.event }}</p>
+        </div>
+      </div>
+      <div class="description-section">
+        <div class="description-header">
+          <p>Descripción</p>
+          <button
+            mat-icon-button
+            (click)="toggleDescription()"
+            class="description-toggle-btn"
+            matTooltip="{{ isDescriptionExpanded ? 'Mostrar menos' : 'Mostrar más' }}"
+          >
+            <mat-icon>{{ isDescriptionExpanded ? "expand_less" : "expand_more" }}</mat-icon>
+          </button>
+        </div>
+        <div
+          class="description-content"
+          [ngClass]="{ expanded: isDescriptionExpanded }"
+        >
+          <p>{{ testimony.description || "Sin descripción disponible." }}</p>
         </div>
       </div>
       <div class="transcription" *ngIf="testimony.format !== 'Texto'">
@@ -87,10 +109,9 @@
             mat-icon-button
             (click)="toggleTranscription()"
             class="transcription-toggle-btn"
+            matTooltip="{{ isTranscriptionExpanded ? 'Mostrar menos' : 'Mostrar más' }}"
           >
-            <mat-icon>{{
-              isTranscriptionExpanded ? "expand_less" : "expand_more"
-            }}</mat-icon>
+            <mat-icon>{{ isTranscriptionExpanded ? "expand_less" : "expand_more" }}</mat-icon>
           </button>
         </div>
         <div
@@ -126,77 +147,36 @@
           }
         </div>
       </div>
-      <div class="rating-section">
-        <p class="rating-title">Calificar este testimonio</p>
+      <section class="rating-container">
+        <h3 class="rating-title">Calificar este testimonio</h3>
         <p class="rating-status" *ngIf="currentRating > 0 && !isRatingLoading">
           Tu calificación: {{ currentRating }} estrella{{ currentRating === 1 ? '' : 's' }}
         </p>
-        <div class="rating" [ngClass]="{ 'loading': isRatingLoading }">
-          <input
-            type="radio"
-            id="star-5"
-            name="star-radio"
-            value="5"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(5)"
-            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
-          />
-          <label for="star-5">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-4"
-            name="star-radio"
-            value="4"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(4)"
-            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
-          />
-          <label for="star-4">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-3"
-            name="star-radio"
-            value="3"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(3)"
-            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
-          />
-          <label for="star-3">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-2"
-            name="star-radio"
-            value="2"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(2)"
-            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
-          />
-          <label for="star-2">
-            <mat-icon>star</mat-icon>
-          </label>
-          <input
-            type="radio"
-            id="star-1"
-            name="star-radio"
-            value="1"
-            [(ngModel)]="currentRating"
-            (change)="rateTestimony(1)"
-            [disabled]="!authStore.isAuthenticated() || isRatingLoading"
-          />
-          <label for="star-1">
-            <mat-icon>star</mat-icon>
-          </label>
+        <div class="rating" [ngClass]="{ loading: isRatingLoading }">
+          @for (star of [5, 4, 3, 2, 1]; track star) {
+            <ng-container>
+              <input
+                type="radio"
+                [id]="'star-' + star"
+                name="star-radio"
+                [value]="star"
+                [(ngModel)]="currentRating"
+                (change)="rateTestimony(star)"
+                [disabled]="!authStore.isAuthenticated() || isRatingLoading"
+              />
+              <label [for]="'star-' + star">
+                <i
+                  class="bx"
+                  [ngClass]="star <= currentRating ? 'bxs-star' : 'bx-star'"
+                ></i>
+              </label>
+            </ng-container>
+          }
         </div>
-        @if (!authStore.isAuthenticated()) {
-          <p class="rating-login">Inicia sesión para calificar este testimonio.</p>
-        }
-      </div>
+        <p class="rating-login" *ngIf="!authStore.isAuthenticated()">
+          Inicia sesión para calificar este testimonio.
+        </p>
+      </section>
     </div>
     <div class="comments-sidebar">
       <app-testimony-comments

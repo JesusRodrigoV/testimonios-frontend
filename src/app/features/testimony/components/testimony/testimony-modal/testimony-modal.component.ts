@@ -31,6 +31,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { CollectionService } from "@app/features/collections/services";
 import { Subscription } from "rxjs";
 import { Transcripcion } from "@app/features/testimony/models/transcription.model";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { DateUtilsService } from "@app/core/services";
 
 @Component({
   selector: "app-testimony-modal",
@@ -48,6 +50,7 @@ import { Transcripcion } from "@app/features/testimony/models/transcription.mode
     MatMenuModule,
     FormsModule,
     VideoPlayerComponent,
+    MatTooltipModule
   ],
   templateUrl: "./testimony-modal.component.html",
   styleUrl: "./testimony-modal.component.scss",
@@ -58,6 +61,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   currentRatingId: number | null = null;
   isMetaExpanded = false;
   isTranscriptionExpanded = false;
+  isDescriptionExpanded = false;
   isRatingLoading = false;
   ratingControl = new FormControl<number | null>(null);
   favoritosMios: number[] = [];
@@ -77,6 +81,7 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
   readonly transcriptionService = inject(TranscriptionService);
   readonly calificationService = inject(CalificationService);
   readonly cdr = inject(ChangeDetectorRef);
+  private dateUtil = inject(DateUtilsService);
 
   ngOnInit() {
     this.loadFavorites();
@@ -413,34 +418,12 @@ export class TestimonyModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  toggleDescription() {
+    this.isDescriptionExpanded = !this.isDescriptionExpanded;
+  }
+
   getRelativeTime(createdAt: string | Date): string {
-    if (!createdAt) return 'Desconocido';
-
-    const now = new Date();
-    const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
-    if (isNaN(date.getTime())) return 'Fecha inválida';
-
-    const diffMs = now.getTime() - date.getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
-    const diffHr = Math.floor(diffMin / 60);
-    const diffDay = Math.floor(diffHr / 24);
-    const diffMonth = Math.floor(diffDay / 30);
-    const diffYear = Math.floor(diffMonth / 12);
-
-    if (diffSec < 60) {
-      return 'hace un instante';
-    } else if (diffMin < 60) {
-      return `hace ${diffMin} minuto${diffMin === 1 ? '' : 's'}`;
-    } else if (diffHr < 24) {
-      return `hace ${diffHr} hora${diffHr === 1 ? '' : 's'}`;
-    } else if (diffDay < 30) {
-      return `hace ${diffDay} día${diffDay === 1 ? '' : 's'}`;
-    } else if (diffMonth < 12) {
-      return `hace ${diffMonth} mes${diffMonth === 1 ? '' : 'es'}`;
-    } else {
-      return `hace ${diffYear} año${diffYear === 1 ? '' : 's'}`;
-    }
+    return this.dateUtil.getRelativeTime(createdAt);
   }
 
   get canDownload() {

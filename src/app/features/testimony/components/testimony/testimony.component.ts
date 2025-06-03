@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +21,6 @@ import { DateUtilsService } from "@app/core/services";
     DatePipe,
     SpinnerComponent,
     MatIconModule,
-    NgIf,
     VideoPlayerComponent,
   ],
   templateUrl: "./testimony.component.html",
