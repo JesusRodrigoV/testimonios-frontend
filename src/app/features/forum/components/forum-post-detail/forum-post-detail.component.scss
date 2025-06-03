@@ -1,13 +1,13 @@
 :host {
-  --accent: #4ade80;
+  --accent: #4ade80; /* Verde claro para botones */
   --card-bg: #ffffff;
   --text: #1a2a44;
   --description: #666;
   --border: #e0e0e0;
   --hover-bg: #f8f8f8;
   --red: #da291c;
-  --yellow: #ffe800;
-  --green: #00843d;
+  --green: #00843d; /* Verde oscuro para títulos y acentos */
+  --green-light: #4ade80; /* Verde claro para botones y spinner */
 
   :root.dark-mode & {
     --card-bg: #181818;
@@ -16,8 +16,8 @@
     --border: #3a3e44;
     --hover-bg: #3a3e44;
     --red: #da291c;
-    --yellow: #ffe800;
     --green: #00843d;
+    --green-light: #4ade80;
   }
 }
 
@@ -25,39 +25,37 @@
   max-width: 900px;
   margin: 32px auto;
   padding: 0 16px;
-  background: linear-gradient(
-    135deg,
-    var(--primary-gradient-start),
-    var(--primary-gradient-end)
-  );
 }
 
 .post-detail {
   background: var(--card-bg);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
 }
 
 .post-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   margin-bottom: 20px;
 
   .avatar {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
     background-color: var(--green);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    overflow: hidden;
 
-    img{
-      border-radius: 50%;
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .avatar-initials {
@@ -72,7 +70,7 @@
     flex: 1;
 
     .post-title {
-      font-size: 1.9rem;
+      font-size: 2rem;
       font-weight: 700;
       color: var(--green);
       margin: 0 0 8px;
@@ -80,7 +78,7 @@
     }
 
     .post-date {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: var(--description);
       margin: 0;
     }
@@ -91,12 +89,12 @@
   margin-bottom: 24px;
 
   .post-description {
-    font-size: 1.1rem;
-    line-height: 1.7;
+    font-size: 1.15rem;
+    line-height: 1.8;
     color: var(--text);
 
     p {
-      margin: 0;
+      margin: 0 0 1rem;
     }
   }
 }
@@ -104,26 +102,26 @@
 .post-footer {
   display: flex;
   justify-content: flex-start;
-  margin: 10px;
+  margin-bottom: 16px;
 
   button {
-    color: var(--yellow);
+    color: var(--green-light); /* Cambiado de amarillo a verde claro */
   }
 }
 
 .comment-form-wrapper,
 .reply-form-wrapper {
   background: var(--card-bg);
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 12px;
+  padding: 20px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   animation: fade-in 0.5s ease-out;
 
   .comment-form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 
     .full-width {
       width: 100%;
@@ -131,26 +129,23 @@
 
     mat-form-field {
       ::ng-deep .mat-mdc-text-field-wrapper {
-        border-radius: 8px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
       }
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 100px;
+      font-size: 1rem;
     }
 
     .form-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
+      gap: 12px;
 
       button {
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-size: 0.95rem;
-        transition: transform 0.2s ease;
-
         &:hover {
           transform: translateY(-2px);
         }
@@ -163,7 +158,7 @@
       }
 
       .mat-mdc-raised-button {
-        background: var(--green);
+        background: var(--green-light);
         color: #fff;
       }
 
@@ -197,12 +192,12 @@
 
 .comments-section {
   background: var(--card-bg);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 
   .comments-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--green);
     margin: 0 0 20px;
@@ -223,7 +218,7 @@
     }
 
     axl-spinner {
-      --mat-progress-spinner-active-indicator-color: var(--yellow);
+      --mat-progress-spinner-active-indicator-color: var(--green-light); /* Cambiado de amarillo a verde claro */
     }
   }
 
@@ -237,13 +232,31 @@
     }
   }
 
+  .replies {
+    margin-left: 24px;
+    padding-left: 16px;
+    border-left: 2px solid var(--green-light);
+    margin-top: 12px;
+
+    .replies-label {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--green);
+      margin: 8px 0;
+    }
+
+    .reply-wrapper {
+      padding: 12px 0;
+    }
+  }
+
   .no-comments {
     font-size: 1rem;
     color: var(--description);
     text-align: center;
     padding: 24px;
     background: var(--hover-bg);
-    border-radius: 8px;
+    border-radius: 12px;
     margin: 16px 0;
   }
 }
@@ -278,7 +291,7 @@
 
   .post-detail {
     padding: 16px;
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   .post-header {
@@ -288,6 +301,11 @@
       width: 40px;
       height: 40px;
 
+      .avatar-img {
+        width: 100%;
+        height: 100%;
+      }
+
       .avatar-initials {
         font-size: 16px;
       }
@@ -295,11 +313,11 @@
 
     .header-content {
       .post-title {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
       }
 
       .post-date {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
       }
     }
   }
@@ -311,19 +329,12 @@
   }
 
   .post-footer {
-    button {
-      font-size: 0.9rem;
-      padding: 6px 12px;
+    margin-bottom: 12px;
 
-      mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
-      }
-    }
   }
 
-  .comment-form-wrapper {
+  .comment-form-wrapper,
+  .reply-form-wrapper {
     padding: 12px;
     margin-bottom: 16px;
 
@@ -331,12 +342,12 @@
       gap: 8px;
 
       textarea {
-        min-height: 60px;
+        min-height: 80px;
       }
 
       .form-actions {
         button {
-          padding: 6px 12px;
+          padding: 8px 16px;
           font-size: 0.9rem;
         }
       }
@@ -352,11 +363,16 @@
     padding: 16px;
 
     .comments-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
     }
 
     .comment-wrapper {
       padding: 12px;
+    }
+
+    .replies {
+      margin-left: 16px;
+      padding-left: 12px;
     }
 
     .no-comments {

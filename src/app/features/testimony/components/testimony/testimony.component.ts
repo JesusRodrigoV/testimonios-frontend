@@ -1,10 +1,9 @@
-import { CommonModule, DatePipe, NgIf } from "@angular/common";
+import { DatePipe, NgIf } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   Input,
-  OnInit,
   signal,
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";

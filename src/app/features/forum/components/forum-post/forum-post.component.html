@@ -1,12 +1,21 @@
 <div class="thread-post" (click)="goToPost(topicInfo().id_forotema)">
   <div class="post-container">
     <div class="avatar">
-      <img
-        [ngSrc]="user()?.profile_image || '/assets/images/default-avatar.jpg'"
-        [alt]="user()?.nombre"
-        priority
-        fill
-      />
+      @if(user()?.profile_image !== null && user()?.profile_image !== '') {
+        <img
+          [ngSrc]="user()?.profile_image || ''"
+          [alt]="user()?.nombre"
+          priority
+          fill
+        />
+      } @else {
+        <img
+          ngSrc="/assets/images/default-avatar.jpg"
+          [alt]="user()?.nombre"
+          priority
+          fill
+        />
+      } 
     </div>
     
     <div class="post-content">
