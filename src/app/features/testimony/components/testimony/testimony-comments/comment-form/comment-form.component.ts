@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Output, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,7 +17,7 @@ export class CommentFormComponent {
   readonly formType = input<'comment' | 'reply'>('comment');
   readonly testimonyId = input.required<number>();
   readonly parentId = input<number>();
-  @Output() commentSubmitted = new EventEmitter<void>();
+  readonly commentSubmitted = output<void>();
 
   content = '';
   formErrors: { [key: string]: boolean } = {};
@@ -47,6 +47,7 @@ export class CommentFormComponent {
       .subscribe({
         next: () => {
           this.content = '';
+          // TODO: The 'emit' function requires a mandatory void argument
           this.commentSubmitted.emit();
           this.snackBar.open(
             `${this.formType() === 'comment' ? 'Comentario' : 'Respuesta'} creada. Esperando aprobación`,
@@ -64,6 +65,7 @@ export class CommentFormComponent {
   cancel() {
     this.content = '';
     this.formErrors['content'] = false;
+    // TODO: The 'emit' function requires a mandatory void argument
     this.commentSubmitted.emit();
     this.ref.markForCheck();
   }

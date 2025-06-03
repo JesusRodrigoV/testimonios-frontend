@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, input, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +29,10 @@ export class LoginFormComponent {
   //  and migrating would break narrowing currently.
   @Input() error: string | null = null;
   readonly showRegisterLink = input<boolean>(true);
-  @Output() onSubmit = new EventEmitter<{ email: string; password: string }>();
+  readonly onSubmit = output<{
+    email: string;
+    password: string;
+}>();
 
   hidePassword = true;
 

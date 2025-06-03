@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Output, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, output } from '@angular/core';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestimonioService } from '@app/features/testimony/services';
@@ -13,7 +13,7 @@ import { TestimonioService } from '@app/features/testimony/services';
 export class EventsFiltersComponent {
   events: { id: number; name: string; description: string; date: string }[] = [];
   readonly selectedEvents = input<number[]>([]);
-  @Output() selectedEventsChange = new EventEmitter<number[]>();
+  readonly selectedEventsChange = output<number[]>();
 
   private testimonyService = inject(TestimonioService);
   private snackBar = inject(MatSnackBar);

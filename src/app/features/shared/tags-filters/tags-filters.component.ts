@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, input, output } from '@angular/core';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { TestimonioService } from '@app/features/testimony/services';
 export class TagsFiltersComponent implements OnInit{
   tags: { id: number; name: string }[] = [];
   readonly selectedTags = input<number[]>([]);
-  @Output() selectedTagsChange = new EventEmitter<number[]>();
+  readonly selectedTagsChange = output<number[]>();
 
   private testimonyService = inject(TestimonioService);
   private snackBar = inject(MatSnackBar);
