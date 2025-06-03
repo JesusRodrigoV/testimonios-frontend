@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { animate, createScope, stagger, utils } from 'animejs';
 
 interface Circle {
@@ -18,7 +18,7 @@ export class BoliviaComponent implements AfterViewInit {
   yellowCircles: Circle[][] = [];
   greenCircles: Circle[][] = [];
 
-  @ViewChild('gridContainer', { static: false }) gridContainer?: ElementRef<HTMLElement>;
+  readonly gridContainer = viewChild<ElementRef<HTMLElement>>('gridContainer');
 
   ngOnInit() {
     const numRows = 3;
@@ -300,11 +300,12 @@ export class BoliviaComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this.gridContainer?.nativeElement) {
+    const gridContainer = this.gridContainer();
+    if (!gridContainer?.nativeElement) {
       console.error('gridContainer no está definido. Verifica que #gridContainer esté en el DOM.');
       return;
     }
-    const scope = createScope({ root: this.gridContainer.nativeElement });
+    const scope = createScope({ root: gridContainer.nativeElement });
     scope.add(() => {
       const $circle = utils.$('.circle') as HTMLElement[];
       console.log('Elementos .square encontrados:', $circle.length);

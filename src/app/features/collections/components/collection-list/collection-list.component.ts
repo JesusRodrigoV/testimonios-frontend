@@ -4,7 +4,7 @@ import {
   inject,
   signal,
   TemplateRef,
-  ViewChild,
+  viewChild
 } from "@angular/core";
 import {
   FormBuilder,
@@ -64,7 +64,7 @@ export default class CollectionListComponent {
   isAuthenticated = this.authStore.isAuthenticated;
   editingCollection: Collection | null = null;
 
-  @ViewChild('formTemplate') formTemplate!: TemplateRef<any>;
+  readonly formTemplate = viewChild.required<TemplateRef<any>>('formTemplate');
 
   constructor() {
     this.collectionForm = this.fb.group({
@@ -109,7 +109,7 @@ export default class CollectionListComponent {
       this.collectionForm.reset();
     }
 
-    this.dialogRef = this.dialog.open(this.formTemplate, {
+    this.dialogRef = this.dialog.open(this.formTemplate(), {
       data: { collection }, // Still pass for template rendering
       width: '500px',
     });

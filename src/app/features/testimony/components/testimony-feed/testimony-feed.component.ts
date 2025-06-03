@@ -9,8 +9,8 @@ import {
   OnDestroy,
   OnInit,
   signal,
-  ViewChild,
   WritableSignal,
+  viewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Testimony } from '@app/features/testimony/models/testimonio.model';
@@ -50,7 +50,7 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
   private _searchSubject = new Subject<string>();
   private _destroy$ = new Subject<void>();
 
-  @ViewChild('loadMoreTrigger', { static: false }) loadMoreTrigger!: ElementRef;
+  readonly loadMoreTrigger = viewChild.required<ElementRef>('loadMoreTrigger');
   private testimonioService = inject(TestimonioService);
   private cdr = inject(ChangeDetectorRef);
   private observer: IntersectionObserver | null = null;
@@ -152,8 +152,9 @@ export default class TestimonyFeedComponent implements OnInit, OnDestroy {
       { threshold: 0.1 }
     );
 
-    if (this.loadMoreTrigger?.nativeElement) {
-      this.observer.observe(this.loadMoreTrigger.nativeElement);
+    const loadMoreTrigger = this.loadMoreTrigger();
+    if (loadMoreTrigger?.nativeElement) {
+      this.observer.observe(loadMoreTrigger.nativeElement);
     }
   }
 
