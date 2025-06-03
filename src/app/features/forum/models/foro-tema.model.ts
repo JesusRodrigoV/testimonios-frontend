@@ -6,7 +6,7 @@ export interface ForoTema {
   creado_por_id_usuario: number;
   id_evento?: number;
   id_testimonio?: number;
-  usuarios?: {
+  usuarios: {
     id_usuario: number;
     nombre: string;
     email: string;

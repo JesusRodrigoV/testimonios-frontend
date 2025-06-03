@@ -24,7 +24,10 @@ export class ForumPostComponent {
     this.authService.getUserInfo(this.topicInfo().creado_por_id_usuario).subscribe({
       next: ((user) => {
         this.user.set(user);
-      })
+        console.log("El usuario"+this.user());
+      }), error: (err) => {
+        console.error('Error fetching user info:', err);
+      }
     });
   }
 

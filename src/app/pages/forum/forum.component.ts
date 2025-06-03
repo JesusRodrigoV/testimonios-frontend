@@ -27,4 +27,11 @@ export default class ForumComponent {
   private forumService = inject(ForumService);
 
   topics$ = this.forumService.getAllTopics();
+  ngOnInit(){
+    this.forumService.getAllTopics().subscribe({
+      next: (topic)=> {
+        console.log(topic);
+      }
+    });
+  }
 }
