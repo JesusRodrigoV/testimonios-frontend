@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,8 +16,7 @@ import { CalificationService } from "@app/features/testimony/services";
 import { CacheService } from "@app/core/services";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
-import { register } from 'swiper/element/bundle';
-import { Swiper } from 'swiper/types';
+import { register } from "swiper/element/bundle";
 
 register();
 
@@ -28,8 +26,8 @@ register();
     HeroSectionComponent,
     SpinnerComponent,
     TestimonyComponent,
-    MatSnackBarModule
-],
+    MatSnackBarModule,
+  ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +61,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
     const sub = this.calificationService.getTopRatedTestimonies(5).subscribe({
       next: (testimonies) => {
         this.highlightedTestimonies.set([...testimonies]);
-        console.log("Estos son los testimonios"+testimonies);
+        console.log("Estos son los testimonios" + testimonies);
         this.cacheService.setHighlightedTestimonies(testimonies);
         this.loading.set(false);
       },

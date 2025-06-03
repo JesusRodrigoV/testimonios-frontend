@@ -5,6 +5,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
+import LoginComponent from "@app/features/auth/components/login/login.component";
 import { ForumPostComponent } from "@app/features/forum/components/forum-post";
 import { ForumService } from "@app/features/forum/services";
 
@@ -27,11 +28,11 @@ export default class ForumComponent {
   private forumService = inject(ForumService);
 
   topics$ = this.forumService.getAllTopics();
-  ngOnInit(){
+  ngOnInit() {
     this.forumService.getAllTopics().subscribe({
-      next: (topic)=> {
+      next: (topic) => {
         console.log(topic);
-      }
+      },
     });
   }
 }
