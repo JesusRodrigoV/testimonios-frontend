@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -34,13 +34,15 @@ import { User } from "@app/features/auth/models/user.model";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserDialogComponent {
+  private fb = inject(FormBuilder);
+  private dialogRef = inject<MatDialogRef<UserDialogComponent>>(MatDialogRef);
+  data = inject<Partial<User>>(MAT_DIALOG_DATA);
+
   form: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<UserDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Partial<User>,
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.form = this.fb.group({
       id_usuario: [data.id_usuario],
       nombre: [data.nombre || "", [Validators.required]],

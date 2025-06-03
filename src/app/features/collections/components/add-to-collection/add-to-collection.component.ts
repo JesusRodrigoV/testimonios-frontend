@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Inject,
-  signal,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -52,6 +46,11 @@ import { MatTooltipModule } from "@angular/material/tooltip";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddToCollectionComponent {
+  dialogRef = inject<MatDialogRef<AddToCollectionComponent>>(MatDialogRef);
+  data = inject<{
+    testimonyId: number;
+}>(MAT_DIALOG_DATA);
+
   private readonly authStore = inject(AuthStore);
   private readonly collectionService = inject(CollectionService);
   private readonly fb = inject(FormBuilder);
@@ -64,10 +63,7 @@ export class AddToCollectionComponent {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  constructor(
-    public dialogRef: MatDialogRef<AddToCollectionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { testimonyId: number }
-  ) {
+  constructor() {
     this.collectionForm = this.fb.group({
       titulo: ['', Validators.required],
       descripcion: [''],

@@ -1,5 +1,5 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,10 +13,12 @@ import { Comment } from '@app/features/testimony/models/comment.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepliesDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<RepliesDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { comment: Comment; replies: Comment[] }
-  ) {}
+  dialogRef = inject<MatDialogRef<RepliesDialogComponent>>(MatDialogRef);
+  data = inject<{
+    comment: Comment;
+    replies: Comment[];
+}>(MAT_DIALOG_DATA);
+
 
   getRoleClass(role: string): string {
     return role.toLowerCase();
