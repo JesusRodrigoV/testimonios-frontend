@@ -1,4 +1,4 @@
-import { NgIf } from "@angular/common";
+
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
   FormBuilder,
@@ -17,11 +17,10 @@ import { AuthStore } from "@app/auth.store";
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    NgIf,
     MatInputModule,
     MatButtonModule,
-    MatIconModule,
-  ],
+    MatIconModule
+],
   templateUrl: "./two-factor-verify.component.html",
   styleUrl: "./two-factor-verify.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

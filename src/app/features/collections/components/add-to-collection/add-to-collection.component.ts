@@ -27,7 +27,7 @@ import { CollectionService } from "../../services";
 import { MatIconModule } from "@angular/material/icon";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { NgIf } from "@angular/common";
+
 import { forkJoin } from "rxjs";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -45,9 +45,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatTooltipModule,
     SpinnerComponent,
     FormsModule,
-    ReactiveFormsModule,
-    NgIf,
-  ],
+    ReactiveFormsModule
+],
   templateUrl: "./add-to-collection.component.html",
   styleUrl: "./add-to-collection.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

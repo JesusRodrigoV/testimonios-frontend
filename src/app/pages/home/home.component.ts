@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,12 +25,11 @@ register();
 @Component({
   selector: "app-home",
   imports: [
-    CommonModule,
     HeroSectionComponent,
     SpinnerComponent,
     TestimonyComponent,
-    MatSnackBarModule,
-  ],
+    MatSnackBarModule
+],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

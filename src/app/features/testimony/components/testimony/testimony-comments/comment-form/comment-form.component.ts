@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,7 +8,7 @@ import { CommentService } from '@app/features/testimony/services';
 
 @Component({
   selector: 'app-comment-form',
-  imports: [FormsModule, MatButtonModule, NgIf],
+  imports: [FormsModule, MatButtonModule],
   templateUrl: './comment-form.component.html',
   styleUrl: './comment-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

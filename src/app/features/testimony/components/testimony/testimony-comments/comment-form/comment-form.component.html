@@ -1,7 +1,7 @@
 <form
   class="{{ formType }}-form"
   (ngSubmit)="submit()"
->
+  >
   <div class="input-container">
     <input
       type="text"
@@ -12,28 +12,30 @@
       minlength="2"
       maxlength="500"
       placeholder=" "
-    />
-    <label [for]="formType + '-' + (parentId || 'new')" class="label">
-      Escribe un {{ formType === 'comment' ? 'comentario' : 'respuesta' }}
-    </label>
-    <div class="underline"></div>
-    <div class="error-message" *ngIf="formErrors['content']">
-      Mínimo 2 caracteres
+      />
+      <label [for]="formType + '-' + (parentId || 'new')" class="label">
+        Escribe un {{ formType === 'comment' ? 'comentario' : 'respuesta' }}
+      </label>
+      <div class="underline"></div>
+      @if (formErrors['content']) {
+        <div class="error-message">
+          Mínimo 2 caracteres
+        </div>
+      }
     </div>
-  </div>
-  @if (content && content.length >= 2) {
-    <div class="form-buttons">
-      <button mat-button type="button" class="btn-cancel" (click)="cancel()">
-        Cancelar
-      </button>
-      <button
-        mat-raised-button
-        type="submit"
-        class="btn-comment"
-        [disabled]="!content || content.length < 2"
-      >
-        {{ formType === 'comment' ? 'Comentar' : 'Responder' }}
-      </button>
-    </div>
-  }
-</form>
+    @if (content && content.length >= 2) {
+      <div class="form-buttons">
+        <button mat-button type="button" class="btn-cancel" (click)="cancel()">
+          Cancelar
+        </button>
+        <button
+          mat-raised-button
+          type="submit"
+          class="btn-comment"
+          [disabled]="!content || content.length < 2"
+          >
+          {{ formType === 'comment' ? 'Comentar' : 'Responder' }}
+        </button>
+      </div>
+    }
+  </form>

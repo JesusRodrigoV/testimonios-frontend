@@ -7,7 +7,7 @@ import {
   output,
   signal,
 } from "@angular/core";
-import { DatePipe, NgIf, NgOptimizedImage } from "@angular/common";
+import { DatePipe, NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -48,11 +48,10 @@ export const Rol = {
     RouterLink,
     GoldenDirective,
     NgOptimizedImage,
-    NgIf,
     SpinnerComponent,
     DatePipe,
-    SearchBarComponent,
-  ],
+    SearchBarComponent
+],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,4 +1,4 @@
-import { NgIf } from "@angular/common";
+
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
   FormBuilder,
@@ -16,14 +16,13 @@ import { AuthStore } from "@app/auth.store";
 @Component({
   selector: "app-two-factor-setup",
   imports: [
-    NgIf,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   templateUrl: "./two-factor-setup.component.html",
   styleUrl: "./two-factor-setup.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

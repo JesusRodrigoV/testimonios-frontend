@@ -22,10 +22,10 @@
           <div class="collection-header">
             <h3>{{ collection.titulo }}</h3>
             @if(collection.titulo !== "Favoritos" && collection.titulo !== "Guardados"){
-            <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()" aria-label="Opciones de la colección">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          }
+              <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()" aria-label="Opciones de la colección">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            }
             <mat-menu #menu="matMenu">
               @if (!isProtectedCollection(collection)) {
                 <button mat-menu-item (click)="openCollectionForm(collection); $event.stopPropagation()">
@@ -44,10 +44,10 @@
         </div>
       }
       @empty {
-        <p>No hay colecciones. ¡Crea una!</p>
-      }
-    </div>
-  }
+      <p>No hay colecciones. ¡Crea una!</p>
+    }
+  </div>
+}
 </div>
 
 <ng-template #formTemplate let-collection="collection">
@@ -57,9 +57,11 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Título</mat-label>
         <input matInput formControlName="titulo" required />
-        <mat-error *ngIf="collectionForm.get('titulo')?.hasError('required')">
-          Título es requerido
-        </mat-error>
+        @if (collectionForm.get('titulo')?.hasError('required')) {
+          <mat-error>
+            Título es requerido
+          </mat-error>
+        }
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
@@ -74,7 +76,7 @@
       color="primary"
       [disabled]="collectionForm.invalid || saving()"
       (click)="saveCollection()"
-    >
+      >
       {{ saving() ? 'Guardando...' : (collection ? 'Actualizar' : 'Crear') }}
     </button>
   </mat-dialog-actions>

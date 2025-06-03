@@ -1,4 +1,4 @@
-import { CommonModule, NgIf } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,9 +23,8 @@ import { ForumService } from '../../services';
     MatSelectModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    RouterLink,
-    NgIf
-  ],
+    RouterLink
+],
   templateUrl: './forum-create-topic.component.html',
   styleUrl: './forum-create-topic.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

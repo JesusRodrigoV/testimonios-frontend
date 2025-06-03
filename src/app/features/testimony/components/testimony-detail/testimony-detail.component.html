@@ -5,7 +5,7 @@
       class="back-btn"
       (click)="goBack()"
       matTooltip="Volver"
-    >
+      >
       <mat-icon>arrow_back</mat-icon>
     </button>
   </div>
@@ -13,9 +13,9 @@
     <div class="main-content">
       <div class="media">
         @if (testimony()?.format === "Video") {
-        <app-video-player [videoUrl]="testimony()!.url" />
+          <app-video-player [videoUrl]="testimony()!.url" />
         } @else if (testimony()?.format === "Audio") {
-        <audio [src]="testimony()!.url" controls></audio>
+          <audio [src]="testimony()!.url" controls></audio>
         }
       </div>
       <h1 class="title">{{ testimony()?.title || "Cargando..." }}</h1>
@@ -26,7 +26,7 @@
           (click)="addToFavorites()"
           matTooltip="Favorito"
           [disabled]="!testimony()"
-        >
+          >
           <mat-icon>{{ isFavorite ? "favorite" : "favorite_border" }}</mat-icon>
           {{ testimony()?.favoriteCount ?? 0 }}
         </button>
@@ -36,7 +36,7 @@
           (click)="addToCollection()"
           matTooltip="Guardar en una colección"
           [disabled]="!testimony()"
-        >
+          >
           <mat-icon>label</mat-icon>
         </button>
         <button
@@ -45,26 +45,27 @@
           (click)="shareTestimony()"
           matTooltip="Compartir"
           [disabled]="!testimony()"
-        >
+          >
           <mat-icon>share</mat-icon>
         </button>
-        <button
-          mat-icon-button
-          class="action-btn download-btn"
-          *ngIf="canDownload"
-          (click)="downloadTestimony()"
-          matTooltip="Descargar"
-          [disabled]="!testimony()"
-        >
-          <mat-icon>download</mat-icon>
-        </button>
+        @if (canDownload) {
+          <button
+            mat-icon-button
+            class="action-btn download-btn"
+            (click)="downloadTestimony()"
+            matTooltip="Descargar"
+            [disabled]="!testimony()"
+            >
+            <mat-icon>download</mat-icon>
+          </button>
+        }
         <button
           mat-icon-button
           class="action-btn suggest-btn"
           (click)="suggestImprovement()"
           matTooltip="Sugerir mejora"
           [disabled]="!testimony()"
-        >
+          >
           <mat-icon>edit</mat-icon>
         </button>
       </div>
@@ -75,9 +76,9 @@
           </p>
           <p class="meta-date">
             {{
-              testimony()
-                ? getRelativeTime(testimony()!.createdAt)
-                : "Cargando..."
+            testimony()
+            ? getRelativeTime(testimony()!.createdAt)
+            : "Cargando..."
             }}
           </p>
           <button
@@ -85,7 +86,7 @@
             (click)="toggleMeta()"
             class="meta-toggle-btn"
             matTooltip="{{ isMetaExpanded ? 'Mostrar menos' : 'Mostrar más' }}"
-          >
+            >
             <mat-icon>{{
               isMetaExpanded ? "expand_less" : "expand_more"
             }}</mat-icon>
@@ -97,7 +98,9 @@
             Categorías: {{ testimony()?.categories?.join(", ") || "Ninguna" }}
           </p>
           <p>Etiquetas: {{ testimony()?.tags?.join(", ") || "Ninguna" }}</p>
-          <p *ngIf="testimony()?.event">Evento: {{ testimony()!.event }}</p>
+          @if (testimony()?.event) {
+            <p>Evento: {{ testimony()!.event }}</p>
+          }
         </div>
       </div>
       <div class="description-section">
@@ -110,7 +113,7 @@
             matTooltip="{{
               isDescriptionExpanded ? 'Mostrar menos' : 'Mostrar más'
             }}"
-          >
+            >
             <mat-icon>{{
               isDescriptionExpanded ? "expand_less" : "expand_more"
             }}</mat-icon>
@@ -119,66 +122,68 @@
         <div
           class="description-content"
           [ngClass]="{ expanded: isDescriptionExpanded }"
-        >
+          >
           <p>{{ testimony()?.description || "Sin descripción disponible." }}</p>
         </div>
       </div>
-      <div class="transcription" *ngIf="testimony()?.format !== 'Texto'">
-        <div class="transcription-header">
-          <p>Transcripción</p>
-          <button
-            mat-icon-button
-            (click)="toggleTranscription()"
-            class="transcription-toggle-btn"
-          >
-            <mat-icon>{{
-              isTranscriptionExpanded() ? "expand_less" : "expand_more"
-            }}</mat-icon>
-          </button>
-        </div>
-        <div
-          class="transcription-content"
-          [ngClass]="{ expanded: isTranscriptionExpanded() }"
-        >
-          @if (isTranscribing()) {
-          <div class="transcription-loading">
-            <axl-spinner />
-            <p>Generando transcripción...</p>
-          </div>
-          } @else if (transcripciones().length > 0) {
-          <div class="transcription-text">
-            @for (transcripcion of transcripciones(); track transcripcion.id_transcripcion) {
-            <div class="transcription-item">
-              <p>{{ transcripcion.contenido }}</p>
-              <p class="transcription-meta">
-                Idioma: {{ transcripcion.idioma }} | Creado:
-                {{ transcripcion.fecha_creacion | date : "short" }} | Por:
-                {{ transcripcion.usuarios?.nombre || "Desconocido" }}
-              </p>
-            </div>
-            }
-          </div>
-          } @else if (canRequestTranscription) {
-          <div class="transcription-empty">
-            <p>No hay transcripciones disponibles.</p>
-            @if (user()?.nombre === testimony()?.author) {
+      @if (testimony()?.format !== 'Texto') {
+        <div class="transcription">
+          <div class="transcription-header">
+            <p>Transcripción</p>
             <button
-              mat-raised-button
-              color="accent"
-              (click)="requestTranscription()"
-              [disabled]="isTranscribing()"
-            >
-              Solicitar Transcripción
+              mat-icon-button
+              (click)="toggleTranscription()"
+              class="transcription-toggle-btn"
+              >
+              <mat-icon>{{
+                isTranscriptionExpanded() ? "expand_less" : "expand_more"
+              }}</mat-icon>
             </button>
+          </div>
+          <div
+            class="transcription-content"
+            [ngClass]="{ expanded: isTranscriptionExpanded() }"
+            >
+            @if (isTranscribing()) {
+              <div class="transcription-loading">
+                <axl-spinner />
+                <p>Generando transcripción...</p>
+              </div>
+            } @else if (transcripciones().length > 0) {
+              <div class="transcription-text">
+                @for (transcripcion of transcripciones(); track transcripcion.id_transcripcion) {
+                  <div class="transcription-item">
+                    <p>{{ transcripcion.contenido }}</p>
+                    <p class="transcription-meta">
+                      Idioma: {{ transcripcion.idioma }} | Creado:
+                      {{ transcripcion.fecha_creacion | date : "short" }} | Por:
+                      {{ transcripcion.usuarios?.nombre || "Desconocido" }}
+                    </p>
+                  </div>
+                }
+              </div>
+            } @else if (canRequestTranscription) {
+              <div class="transcription-empty">
+                <p>No hay transcripciones disponibles.</p>
+                @if (user()?.nombre === testimony()?.author) {
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="requestTranscription()"
+                    [disabled]="isTranscribing()"
+                    >
+                    Solicitar Transcripción
+                  </button>
+                }
+              </div>
+            } @else {
+              <p>
+                No hay transcripciones disponibles. Inicia sesión para solicitar una.
+              </p>
             }
           </div>
-          } @else {
-          <p>
-            No hay transcripciones disponibles. Inicia sesión para solicitar una.
-          </p>
-          }
         </div>
-      </div>
+      }
       <section class="rating-container">
         <h3 class="rating-title">Calificar este testimonio</h3>
         <div class="rating-stats">
@@ -193,32 +198,34 @@
         </div>
         <div class="rating" [ngClass]="{ loading: isRatingLoading }">
           @for (star of [5, 4, 3, 2, 1]; track star) {
-          <ng-container>
-            <input
-              type="radio"
-              [id]="'star-' + star"
-              name="star-radio"
-              [value]="star"
-              [(ngModel)]="currentRating().toFixed"
-              (change)="rateTestimony(star)"
-              [disabled]="!authStore.isAuthenticated() || isRatingLoading || !testimony()"
-            />
-            <label [for]="'star-' + star">
-              <i
-                class="bx"
-                [ngClass]="star <= currentRating() ? 'bxs-star' : 'bx-star'"
-              ></i>
-            </label>
-          </ng-container>
+            <ng-container>
+              <input
+                type="radio"
+                [id]="'star-' + star"
+                name="star-radio"
+                [value]="star"
+                [(ngModel)]="currentRating().toFixed"
+                (change)="rateTestimony(star)"
+                [disabled]="!authStore.isAuthenticated() || isRatingLoading || !testimony()"
+                />
+                <label [for]="'star-' + star">
+                  <i
+                    class="bx"
+                    [ngClass]="star <= currentRating() ? 'bxs-star' : 'bx-star'"
+                  ></i>
+                </label>
+              </ng-container>
+            }
+          </div>
+          @if (!authStore.isAuthenticated()) {
+            <p class="rating-login">
+              Inicia sesión para calificar este testimonio.
+            </p>
           }
-        </div>
-        <p class="rating-login" *ngIf="!authStore.isAuthenticated()">
-          Inicia sesión para calificar este testimonio.
-        </p>
-      </section>
-    </div>
-    <div class="comments-sidebar">
-      <app-testimony-comments [testimonyId]="testimony()!.id"></app-testimony-comments>
+        </section>
+      </div>
+      <div class="comments-sidebar">
+        <app-testimony-comments [testimonyId]="testimony()!.id"></app-testimony-comments>
+      </div>
     </div>
   </div>
-</div>

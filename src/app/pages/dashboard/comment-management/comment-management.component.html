@@ -39,16 +39,16 @@
             <td class="text-muted">#{{ comment.id_comentario }}</td>
             <td>{{ comment.contenido }}</td>
             <td>
-              <a
-                (click)="openTestimonyDialog(comment.id_testimonio)"
-                class="testimony-link"
-                *ngIf="comment.testimonios; else noTestimony"
-              >
-                {{ comment.testimonios.titulo }}
-              </a>
-              <ng-template #noTestimony>
+              @if (comment.testimonios) {
+                <a
+                  (click)="openTestimonyDialog(comment.id_testimonio)"
+                  class="testimony-link"
+                  >
+                  {{ comment.testimonios.titulo }}
+                </a>
+              } @else {
                 <span class="text-muted">Testimonio no encontrado</span>
-              </ng-template>
+              }
             </td>
             <td>
               <span class="user-info" [ngClass]="getRoleClass(comment.usuarios.rol.nombre)">
@@ -66,7 +66,7 @@
                   'status-aprobado': comment.id_estado === 2,
                   'status-rechazado': comment.id_estado === 3
                 }"
-              >
+                >
                 {{ comment.id_estado === 1 ? 'Pendiente' : comment.id_estado === 2 ? 'Aprobado' : 'Rechazado' }}
               </span>
             </td>
@@ -78,7 +78,7 @@
                   (click)="openTestimonyDialog(comment.id_testimonio)"
                   matTooltip="Ver testimonio"
                   [disabled]="!comment.testimonios"
-                >
+                  >
                   <i class="bx bx-show"></i>
                 </button>
                 @if (comment.replies && comment.replies.length > 0) {
@@ -87,7 +87,7 @@
                     class="btn-icon view-replies"
                     (click)="openRepliesDialog(comment)"
                     matTooltip="Ver respuestas ({{ comment.replies.length }})"
-                  >
+                    >
                     <mat-icon>forum</mat-icon>
                   </button>
                 }
@@ -97,7 +97,7 @@
                     class="btn-icon approve"
                     (click)="approveComment(comment.id_comentario)"
                     matTooltip="Aprobar"
-                  >
+                    >
                     <i class="bx bx-check"></i>
                   </button>
                 }
@@ -107,7 +107,7 @@
                     class="btn-icon reject"
                     (click)="rejectComment(comment.id_comentario)"
                     matTooltip="Rechazar"
-                  >
+                    >
                     <i class="bx bx-x"></i>
                   </button>
                 }
@@ -116,13 +116,13 @@
                   class="btn-icon delete"
                   (click)="deleteComment(comment.id_comentario)"
                   matTooltip="Eliminar"
-                >
+                  >
                   <i class="bx bx-trash"></i>
                 </button>
               </div>
             </td>
           </tr>
-        } @empty {
+          } @empty {
           <tr>
             <td colspan="9" class="no-data">No hay comentarios para mostrar.</td>
           </tr>

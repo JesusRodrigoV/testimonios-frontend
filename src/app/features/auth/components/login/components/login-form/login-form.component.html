@@ -7,57 +7,59 @@
         type="email"
         placeholder="Email"
         formControlName="email"
-      />
+        />
+      </div>
+      @if (form.get("email")?.errors?.["required"] && form.get("email")?.touched) {
+        <span class="error-text">El email es requerido</span>
+      }
+      @if (form.get("email")?.errors?.["email"] && form.get("email")?.touched) {
+        <span class="error-text">Email inválido</span>
+      }
     </div>
-    @if (form.get("email")?.errors?.["required"] && form.get("email")?.touched) {
-      <span class="error-text">El email es requerido</span>
-    }
-    @if (form.get("email")?.errors?.["email"] && form.get("email")?.touched) {
-      <span class="error-text">Email inválido</span>
-    }
-  </div>
 
-  <div class="input-container">
-    <div class="input-group">
-      <mat-icon>lock</mat-icon>
-      <input
-        class="custom-input"
-        [type]="hidePassword ? 'password' : 'text'"
-        placeholder="Contraseña"
-        formControlName="password"
-      />
+    <div class="input-container">
+      <div class="input-group">
+        <mat-icon>lock</mat-icon>
+        <input
+          class="custom-input"
+          [type]="hidePassword ? 'password' : 'text'"
+          placeholder="Contraseña"
+          formControlName="password"
+          />
+          <button
+            class="visibility-toggle"
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            >
+            <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+        </div>
+        @if (
+          form.get("password")?.errors?.["required"] &&
+          form.get("password")?.touched
+          ) {
+          <span class="error-text">La contraseña es requerida</span>
+        }
+      </div>
+
+      <div class="links">
+        <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
+        @if (showRegisterLink) {
+          <a routerLink="/register">¿No tienes cuenta? Regístrate</a>
+        }
+      </div>
+
       <button
-        class="visibility-toggle"
-        type="button"
-        (click)="hidePassword = !hidePassword"
-      >
-        <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="action-button"
+        [disabled]="form.invalid || loading"
+        >
+        {{ loading ? "Iniciando sesión..." : buttonText }}
       </button>
-    </div>
-    @if (
-      form.get("password")?.errors?.["required"] &&
-      form.get("password")?.touched
-    ) {
-      <span class="error-text">La contraseña es requerida</span>
-    }
-  </div>
 
-  <div class="links">
-    <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
-    <a routerLink="/register" *ngIf="showRegisterLink">¿No tienes cuenta? Regístrate</a>
-  </div>
-
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    class="action-button"
-    [disabled]="form.invalid || loading"
-  >
-    {{ loading ? "Iniciando sesión..." : buttonText }}
-  </button>
-
-  @if (error) {
-    <mat-error class="error-message">{{ error }}</mat-error>
-  }
-</form>
+      @if (error) {
+        <mat-error class="error-message">{{ error }}</mat-error>
+      }
+    </form>

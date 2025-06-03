@@ -1,5 +1,5 @@
 
-import { DatePipe, NgClass, NgIf } from "@angular/common";
+import { DatePipe, NgClass } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -44,14 +44,13 @@ import { DateUtilsService } from "@app/core/services";
     MatDialogModule,
     DatePipe,
     TestimonyCommentsComponent,
-    NgIf,
     NgClass,
     ReactiveFormsModule,
     MatMenuModule,
     FormsModule,
     VideoPlayerComponent,
     MatTooltipModule
-  ],
+],
   templateUrl: "./testimony-modal.component.html",
   styleUrl: "./testimony-modal.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

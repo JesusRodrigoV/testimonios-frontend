@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -28,7 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-testimony-feed',
-  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, NgIf, MatFormFieldModule, MatInputModule,CategoriesFiltersComponent, EventsFiltersComponent, TagsFiltersComponent, MatSelectModule],
+  imports: [FormsModule, TestimonyComponent, SpinnerComponent, MatIconModule, MatFormFieldModule, MatInputModule, CategoriesFiltersComponent, EventsFiltersComponent, TagsFiltersComponent, MatSelectModule],
   templateUrl: './testimony-feed.component.html',
   styleUrl: './testimony-feed.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

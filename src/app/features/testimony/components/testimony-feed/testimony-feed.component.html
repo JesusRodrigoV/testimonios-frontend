@@ -15,9 +15,11 @@
           <mat-form-field appearance="outline" class="search-field">
             <mat-label>Buscar testimonios</mat-label>
             <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchQueryChange($event)" placeholder="Escribe para buscar..." aria-label="Buscar testimonios" />
-            <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="clearSearch()" aria-label="Limpiar búsqueda">
-              <mat-icon>clear</mat-icon>
-            </button>
+            @if (searchQuery) {
+              <button mat-icon-button matSuffix (click)="clearSearch()" aria-label="Limpiar búsqueda">
+                <mat-icon>clear</mat-icon>
+              </button>
+            }
           </mat-form-field>
         </div>
         <div class="filter-group">
@@ -32,10 +34,12 @@
           <mat-label class="filter-label">Etiquetas</mat-label>
           <app-tags-filters [(selectedTags)]="selectedTags" (selectedTagsChange)="onFilterChange()"></app-tags-filters>
         </div>
-        <button mat-raised-button color="accent" class="clear-filters" (click)="clearFilters()" *ngIf="searchQuery || selectedCategories().length || selectedEvents().length || selectedTags().length" aria-label="Limpiar todos los filtros">
-          <mat-icon>filter_alt_off</mat-icon>
-          Limpiar filtros
-        </button>
+        @if (searchQuery || selectedCategories().length || selectedEvents().length || selectedTags().length) {
+          <button mat-raised-button color="accent" class="clear-filters" (click)="clearFilters()" aria-label="Limpiar todos los filtros">
+            <mat-icon>filter_alt_off</mat-icon>
+            Limpiar filtros
+          </button>
+        }
       </div>
     </aside>
     <div class="testimony-feed">
@@ -43,39 +47,41 @@
       <div class="testimonies-wrapper">
         @for (testimony of testimonies(); track testimony.id) {
           @defer (on viewport) {
-            <app-testimony [testimony]="testimony"></app-testimony>
+          <app-testimony [testimony]="testimony"></app-testimony>
           } @placeholder {
-            <div class="skeleton-card">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-content"></div>
-              <div class="skeleton-footer"></div>
-            </div>
-          }
+          <div class="skeleton-card">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-content"></div>
+            <div class="skeleton-footer"></div>
+          </div>
+        }
         } @empty {
         <div class="empty-state">
           <mat-icon>info</mat-icon>
           <p>No se encontraron testimonios</p>
         </div>
-        }
-      </div>
-      } @placeholder (minimum 500ms) {
-      <div class="skeleton-container">
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-      </div>
-      } @loading (minimum 1s; after 500ms) {
-      <div class="loading">
-        <axl-spinner />
-        <p>Cargando testimonios...</p>
-      </div>
-      } @error {
-      <div class="error">
-        <mat-icon>error</mat-icon>
-        <p>{{ error() || 'Error al cargar los testimonios. Por favor, intenta de nuevo.' }}</p>
-      </div>
       }
-      <div id="loadMoreTrigger" *ngIf="hasMore() && !loading() && !error()"></div>
     </div>
-  </div>
+    } @placeholder (minimum 500ms) {
+    <div class="skeleton-container">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+    } @loading (minimum 1s; after 500ms) {
+    <div class="loading">
+      <axl-spinner />
+      <p>Cargando testimonios...</p>
+    </div>
+    } @error {
+    <div class="error">
+      <mat-icon>error</mat-icon>
+      <p>{{ error() || 'Error al cargar los testimonios. Por favor, intenta de nuevo.' }}</p>
+    </div>
+  }
+  @if (hasMore() && !loading() && !error()) {
+    <div id="loadMoreTrigger"></div>
+  }
+</div>
+</div>
 </div>

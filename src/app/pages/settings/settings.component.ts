@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -12,15 +12,14 @@ import { ThemeService } from "@app/core/services";
 @Component({
   selector: "app-settings",
   imports: [
-    CommonModule,
     MatCardModule,
     MatDividerModule,
     MatSlideToggleModule,
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
-    FormsModule,
-  ],
+    FormsModule
+],
   templateUrl: "./settings.component.html",
   styleUrl: "./settings.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -6,20 +6,26 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Título</mat-label>
         <input matInput formControlName="titulo" placeholder="Escribe el título del tema" required>
-        <mat-error *ngIf="topicForm.get('titulo')?.hasError('required')">
-          El título es requerido
-        </mat-error>
-        <mat-error *ngIf="topicForm.get('titulo')?.hasError('maxlength')">
-          El título no puede exceder 100 caracteres
-        </mat-error>
+        @if (topicForm.get('titulo')?.hasError('required')) {
+          <mat-error>
+            El título es requerido
+          </mat-error>
+        }
+        @if (topicForm.get('titulo')?.hasError('maxlength')) {
+          <mat-error>
+            El título no puede exceder 100 caracteres
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
         <textarea matInput formControlName="descripcion" placeholder="Describe tu tema..." rows="5" required></textarea>
-        <mat-error *ngIf="topicForm.get('descripcion')?.hasError('required')">
-          La descripción es requerida
-        </mat-error>
+        @if (topicForm.get('descripcion')?.hasError('required')) {
+          <mat-error>
+            La descripción es requerida
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">

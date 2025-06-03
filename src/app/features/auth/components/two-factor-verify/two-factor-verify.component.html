@@ -21,34 +21,38 @@
           autocomplete="one-time-code"
           inputmode="numeric"
           pattern="[0-9]*"
-        />
-        <mat-icon matSuffix>lock</mat-icon>
-        <mat-error *ngIf="twoFactorForm.get('token')?.errors?.['required']">
-          El código es requerido
-        </mat-error>
-        <mat-error *ngIf="twoFactorForm.get('token')?.errors?.['pattern']">
-          El código debe contener solo números
-        </mat-error>
-      </mat-form-field>
+          />
+          <mat-icon matSuffix>lock</mat-icon>
+          @if (twoFactorForm.get('token')?.errors?.['required']) {
+            <mat-error>
+              El código es requerido
+            </mat-error>
+          }
+          @if (twoFactorForm.get('token')?.errors?.['pattern']) {
+            <mat-error>
+              El código debe contener solo números
+            </mat-error>
+          }
+        </mat-form-field>
 
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="twoFactorForm.invalid || loading()"
-      >
-        <mat-icon>{{
-          loading() ? "hourglass_empty" : "check_circle"
-        }}</mat-icon>
-        {{ loading() ? "Verificando..." : "Verificar código" }}
-      </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="twoFactorForm.invalid || loading()"
+          >
+          <mat-icon>{{
+            loading() ? "hourglass_empty" : "check_circle"
+          }}</mat-icon>
+          {{ loading() ? "Verificando..." : "Verificar código" }}
+        </button>
 
-      @if (error()) {
-        <mat-error>
-          <mat-icon>error_outline</mat-icon>
-          {{ error() }}
-        </mat-error>
-      }
-    </form>
+        @if (error()) {
+          <mat-error>
+            <mat-icon>error_outline</mat-icon>
+            {{ error() }}
+          </mat-error>
+        }
+      </form>
+    </div>
   </div>
-</div>

@@ -22,9 +22,11 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Título</mat-label>
           <input matInput formControlName="titulo" required>
-          <mat-error *ngIf="collectionForm.get('titulo')?.hasError('required')">
-            El título es requerido
-          </mat-error>
+          @if (collectionForm.get('titulo')?.hasError('required')) {
+            <mat-error>
+              El título es requerido
+            </mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Descripción</mat-label>
@@ -38,7 +40,7 @@
             <mat-checkbox
               [checked]="selectedCollectionIds().includes(collection.id_coleccion)"
               (change)="toggleCollection(collection.id_coleccion)"
-            >
+              >
               {{ collection.titulo }}
             </mat-checkbox>
           </div>
@@ -47,7 +49,7 @@
           <p>No tienes colecciones. Crea una nueva.</p>
         }
       </div>
-    
+
     }
   </mat-dialog-content>
 
@@ -58,7 +60,7 @@
       color="primary"
       (click)="addToCollection()"
       [disabled]="(showCreateForm() && collectionForm.invalid) || loading()"
-    >
+      >
       Guardar
     </button>
   </mat-dialog-actions>

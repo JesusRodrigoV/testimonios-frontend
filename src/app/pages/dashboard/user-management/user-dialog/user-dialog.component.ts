@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import {
   FormBuilder,
@@ -21,15 +21,14 @@ import { User } from "@app/features/auth/models/user.model";
 @Component({
   selector: "app-user-dialog",
   imports: [
-    CommonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
     FormsModule,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   templateUrl: "./user-dialog.component.html",
   styleUrl: "./user-dialog.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

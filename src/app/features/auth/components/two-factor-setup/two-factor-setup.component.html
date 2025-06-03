@@ -25,29 +25,35 @@
           maxlength="6"
           inputmode="numeric"
           autocomplete="one-time-code"
-        />
-        <mat-icon matPrefix>dialpad</mat-icon>
-        <mat-error *ngIf="setupForm.get('token')?.errors?.['required']">
-          El código es requerido
-        </mat-error>
-        <mat-error *ngIf="setupForm.get('token')?.errors?.['minlength']">
-          El código debe tener 6 dígitos
-        </mat-error>
-      </mat-form-field>
+          />
+          <mat-icon matPrefix>dialpad</mat-icon>
+          @if (setupForm.get('token')?.errors?.['required']) {
+            <mat-error>
+              El código es requerido
+            </mat-error>
+          }
+          @if (setupForm.get('token')?.errors?.['minlength']) {
+            <mat-error>
+              El código debe tener 6 dígitos
+            </mat-error>
+          }
+        </mat-form-field>
 
-      <button
-        mat-raised-button
-        type="submit"
-        class="submit-button"
-        [disabled]="setupForm.invalid || loading()"
-      >
-        <mat-icon *ngIf="!loading()">check_circle</mat-icon>
-        {{ loading() ? 'Verificando...' : 'Verificar código' }}
-      </button>
+        <button
+          mat-raised-button
+          type="submit"
+          class="submit-button"
+          [disabled]="setupForm.invalid || loading()"
+          >
+          @if (!loading()) {
+            <mat-icon>check_circle</mat-icon>
+          }
+          {{ loading() ? 'Verificando...' : 'Verificar código' }}
+        </button>
 
-      @if (error()) {
-        <div class="error-message">{{ error() }}</div>
-      }
-    </form>
+        @if (error()) {
+          <div class="error-message">{{ error() }}</div>
+        }
+      </form>
+    </div>
   </div>
-</div>

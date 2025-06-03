@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
-import { NgClass, NgIf, NgOptimizedImage } from "@angular/common";
+import { NgClass, NgOptimizedImage } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { AuthStore } from "@app/auth.store";

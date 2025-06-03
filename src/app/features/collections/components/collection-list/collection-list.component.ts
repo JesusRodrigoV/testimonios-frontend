@@ -28,7 +28,7 @@ import { AuthStore } from "@app/auth.store";
 import { CollectionService } from "../../services";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SpinnerComponent } from "@app/features/shared/ui/spinner";
-import { DatePipe, NgIf } from "@angular/common";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-collection-list",
@@ -41,9 +41,8 @@ import { DatePipe, NgIf } from "@angular/common";
     MatDialogModule,
     SpinnerComponent,
     ReactiveFormsModule,
-    DatePipe,
-    NgIf,
-  ],
+    DatePipe
+],
   templateUrl: "./collection-list.component.html",
   styleUrl: "./collection-list.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

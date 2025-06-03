@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf, SlicePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, SlicePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,13 +23,12 @@ import { SearchService } from '../../services/search.service';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    NgIf,
     MatListModule,
     SpinnerComponent,
     DatePipe,
     SlicePipe,
     AsyncPipe
-  ],
+],
   templateUrl: './search-dialog.component.html',
   styleUrl: './search-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

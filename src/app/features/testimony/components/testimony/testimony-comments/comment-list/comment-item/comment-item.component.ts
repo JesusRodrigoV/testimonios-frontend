@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Comment } from '@app/features/testimony/models/comment.model';
-import { DatePipe, NgClass, NgIf, TitleCasePipe } from '@angular/common';
+import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

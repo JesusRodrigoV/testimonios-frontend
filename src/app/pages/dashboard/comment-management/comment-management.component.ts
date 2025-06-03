@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 import { CommentService, TestimonioService } from '../services';
 import { Comment } from '@app/features/testimony/models/comment.model';
 import { MatIconModule } from '@angular/material/icon';
-import { DatePipe, NgClass, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { SpinnerComponent } from '@app/features/shared/ui/spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { TestimonyDialogComponent } from '../testimony-management/testimony-dialog';
@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-comment-management',
-  imports: [DatePipe, MatIconModule, SpinnerComponent, MatButtonModule, NgClass, MatTooltipModule, MatFormFieldModule, MatSelectModule, FormsModule, NgIf],
+  imports: [DatePipe, MatIconModule, SpinnerComponent, MatButtonModule, NgClass, MatTooltipModule, MatFormFieldModule, MatSelectModule, FormsModule],
   templateUrl: './comment-management.component.html',
   styleUrl: './comment-management.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

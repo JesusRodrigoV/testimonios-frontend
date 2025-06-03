@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,13 +22,12 @@ import { AuthService } from "@app/features/auth/services/auth";
 @Component({
   selector: "app-reset-password",
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
-  ],
+    MatProgressSpinnerModule
+],
   templateUrl: "./reset-password.component.html",
   styleUrl: "./reset-password.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

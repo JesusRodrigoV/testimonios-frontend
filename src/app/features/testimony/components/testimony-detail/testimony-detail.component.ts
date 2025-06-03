@@ -23,7 +23,7 @@ import {
   CalificationService,
 } from "../../services";
 import { SuggestionDialogComponent } from "../suggestion-dialog";
-import { DatePipe, NgIf, NgClass, Location } from "@angular/common";
+import { DatePipe, NgClass, Location } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -46,7 +46,6 @@ import { ScrollTopDirective } from "@app/core/directives/scroll-top.directive";
     MatDialogModule,
     DatePipe,
     TestimonyCommentsComponent,
-    NgIf,
     NgClass,
     ReactiveFormsModule,
     MatMenuModule,
@@ -54,8 +53,8 @@ import { ScrollTopDirective } from "@app/core/directives/scroll-top.directive";
     VideoPlayerComponent,
     MatTooltipModule,
     SpinnerComponent,
-    ScrollTopDirective,
-  ],
+    ScrollTopDirective
+],
   templateUrl: "./testimony-detail.component.html",
   styleUrl: "./testimony-detail.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

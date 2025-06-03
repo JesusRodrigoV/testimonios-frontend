@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, input, Input, output, Output, viewChild, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,7 @@ import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [MatMenuModule, FormsModule, NgIf, GoldenDirective, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatMenuModule, FormsModule, GoldenDirective, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
