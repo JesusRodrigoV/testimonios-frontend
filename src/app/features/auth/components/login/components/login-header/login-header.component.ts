@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-login-header',
@@ -9,6 +9,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginHeaderComponent {
-  @Input() title: string = "Legado de Bolivia";
-  @Input() subtitle: string = "";
+  readonly title = input<string>("Legado de Bolivia");
+  readonly subtitle = input<string>("");
 }

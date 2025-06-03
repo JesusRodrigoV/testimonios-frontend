@@ -6,7 +6,7 @@
   @for (evento of events; track evento.id) {
     <mat-chip-option
       [selectable]="true"
-      [selected]="selectedEvents.includes(evento.id)"
+      [selected]="selectedEvents().includes(evento.id)"
       (selectionChange)="toggleEvent(evento.id)"
     >
       {{ evento.name }}

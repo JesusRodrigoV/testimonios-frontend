@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Output, input } from '@angular/core';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestimonioService } from '@app/features/testimony/services';
@@ -12,7 +12,7 @@ import { TestimonioService } from '@app/features/testimony/services';
 })
 export class EventsFiltersComponent {
   events: { id: number; name: string; description: string; date: string }[] = [];
-  @Input() selectedEvents: number[] = [];
+  readonly selectedEvents = input<number[]>([]);
   @Output() selectedEventsChange = new EventEmitter<number[]>();
 
   private testimonyService = inject(TestimonioService);
@@ -36,7 +36,7 @@ export class EventsFiltersComponent {
   }
 
   toggleEvent(id: number) {
-    const updated = this.selectedEvents.includes(id) ? [] : [id]; // Single selection
+    const updated = this.selectedEvents().includes(id) ? [] : [id]; // Single selection
     this.selectedEventsChange.emit(updated);
   }
 

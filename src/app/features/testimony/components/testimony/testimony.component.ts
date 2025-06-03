@@ -28,6 +28,9 @@ import { DateUtilsService } from "@app/core/services";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestimonyComponent{
+  // TODO: Skipped for migration because:
+  //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+  //  and migrating would break narrowing currently.
   @Input({ required: true }) testimony!: Testimony;
 
 

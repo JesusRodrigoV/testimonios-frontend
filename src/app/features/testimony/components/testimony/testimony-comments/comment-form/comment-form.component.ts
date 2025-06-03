@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Output, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,9 +14,9 @@ import { CommentService } from '@app/features/testimony/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentFormComponent {
-  @Input() formType: 'comment' | 'reply' = 'comment';
-  @Input() testimonyId!: number;
-  @Input() parentId?: number;
+  readonly formType = input<'comment' | 'reply'>('comment');
+  readonly testimonyId = input.required<number>();
+  readonly parentId = input<number>();
   @Output() commentSubmitted = new EventEmitter<void>();
 
   content = '';
@@ -41,21 +41,21 @@ export class CommentFormComponent {
     this.commentService
       .createComment({
         contenido: this.content,
-        id_testimonio: this.testimonyId,
-        parent_id: this.parentId,
+        id_testimonio: this.testimonyId(),
+        parent_id: this.parentId(),
       })
       .subscribe({
         next: () => {
           this.content = '';
           this.commentSubmitted.emit();
           this.snackBar.open(
-            `${this.formType === 'comment' ? 'Comentario' : 'Respuesta'} creada. Esperando aprobación`,
+            `${this.formType() === 'comment' ? 'Comentario' : 'Respuesta'} creada. Esperando aprobación`,
             'Cerrar',
             { duration: 3000 }
           );
         },
         error: () => {
-          this.snackBar.open(`Error al crear ${this.formType === 'comment' ? 'comentario' : 'respuesta'}`, 'Cerrar', { duration: 3000 });
+          this.snackBar.open(`Error al crear ${this.formType() === 'comment' ? 'comentario' : 'respuesta'}`, 'Cerrar', { duration: 3000 });
           this.ref.markForCheck();
         },
       });

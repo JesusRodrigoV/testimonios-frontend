@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,10 +22,13 @@ import { RouterLink } from '@angular/router';
 export class LoginFormComponent {
   private fb = inject(FormBuilder);
 
-  @Input() buttonText: string = "Iniciar sesión";
-  @Input() loading: boolean = false;
+  readonly buttonText = input<string>("Iniciar sesión");
+  readonly loading = input<boolean>(false);
+  // TODO: Skipped for migration because:
+  //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+  //  and migrating would break narrowing currently.
   @Input() error: string | null = null;
-  @Input() showRegisterLink: boolean = true;
+  readonly showRegisterLink = input<boolean>(true);
   @Output() onSubmit = new EventEmitter<{ email: string; password: string }>();
 
   hidePassword = true;

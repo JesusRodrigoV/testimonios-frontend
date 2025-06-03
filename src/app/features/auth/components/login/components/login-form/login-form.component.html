@@ -44,7 +44,7 @@
 
       <div class="links">
         <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
-        @if (showRegisterLink) {
+        @if (showRegisterLink()) {
           <a routerLink="/register">¿No tienes cuenta? Regístrate</a>
         }
       </div>
@@ -54,9 +54,9 @@
         color="primary"
         type="submit"
         class="action-button"
-        [disabled]="form.invalid || loading"
+        [disabled]="form.invalid || loading()"
         >
-        {{ loading ? "Iniciando sesión..." : buttonText }}
+        {{ loading() ? "Iniciando sesión..." : buttonText() }}
       </button>
 
       @if (error) {

@@ -1,11 +1,11 @@
 <form
-  class="{{ formType }}-form"
+  class="{{ formType() }}-form"
   (ngSubmit)="submit()"
   >
   <div class="input-container">
     <input
       type="text"
-      [id]="formType + '-' + (parentId || 'new')"
+      [id]="formType() + '-' + (parentId() || 'new')"
       name="content"
       [(ngModel)]="content"
       required
@@ -13,8 +13,8 @@
       maxlength="500"
       placeholder=" "
       />
-      <label [for]="formType + '-' + (parentId || 'new')" class="label">
-        Escribe un {{ formType === 'comment' ? 'comentario' : 'respuesta' }}
+      <label [for]="formType() + '-' + (parentId() || 'new')" class="label">
+        Escribe un {{ formType() === 'comment' ? 'comentario' : 'respuesta' }}
       </label>
       <div class="underline"></div>
       @if (formErrors['content']) {
@@ -34,7 +34,7 @@
           class="btn-comment"
           [disabled]="!content || content.length < 2"
           >
-          {{ formType === 'comment' ? 'Comentar' : 'Responder' }}
+          {{ formType() === 'comment' ? 'Comentar' : 'Responder' }}
         </button>
       </div>
     }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output, input } from '@angular/core';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { TestimonioService } from '@app/features/testimony/services';
 })
 export class TagsFiltersComponent implements OnInit{
   tags: { id: number; name: string }[] = [];
-  @Input() selectedTags: number[] = [];
+  readonly selectedTags = input<number[]>([]);
   @Output() selectedTagsChange = new EventEmitter<number[]>();
 
   private testimonyService = inject(TestimonioService);
@@ -37,9 +37,10 @@ export class TagsFiltersComponent implements OnInit{
   }
 
   toggleTag(id: number) {
-    const updated = this.selectedTags.includes(id)
-      ? this.selectedTags.filter(t => t !== id)
-      : [...this.selectedTags, id];
+    const selectedTags = this.selectedTags();
+    const updated = selectedTags.includes(id)
+      ? selectedTags.filter(t => t !== id)
+      : [...selectedTags, id];
     this.selectedTagsChange.emit(updated);
   }
 
