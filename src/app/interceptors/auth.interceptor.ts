@@ -30,9 +30,8 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const token = authStore.accessToken();
 
-  // Evitar añadir Authorization en /refresh
   const authReq =
-    token && !req.url.includes('/refresh')
+    token && !req.url.includes('/refresh') && !req.url.includes('/verify-2fa')
       ? req.clone({
           headers: req.headers.set('Authorization', `Bearer ${token}`),
         })

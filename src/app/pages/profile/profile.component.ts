@@ -1,11 +1,22 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
 import { NgClass, NgOptimizedImage } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { AuthStore } from "@app/auth.store";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
@@ -13,6 +24,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { UserService } from "./services/user.service";
 import { User } from "@app/features/auth/models/user.model";
 import { firstValueFrom } from "rxjs";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-profile",
@@ -38,6 +50,7 @@ export default class ProfileComponent {
   private userService = inject(UserService);
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   user = this.authStore.user;
   profileForm: FormGroup;
@@ -49,24 +62,29 @@ export default class ProfileComponent {
   constructor() {
     this.profileForm = this.fb.group({
       nombre: [
-        { value: this.user()?.nombre || '', disabled: true },
+        { value: this.user()?.nombre || "", disabled: true },
         [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(20),
         ],
       ],
-      biografia: [{ value: this.user()?.biografia || '', disabled: true }],
+      biografia: [{ value: this.user()?.biografia || "", disabled: true }],
     });
   }
 
   getRoleName(roleId: number | undefined): string {
     switch (roleId) {
-      case 1: return 'Administrador';
-      case 2: return 'Curador';
-      case 3: return 'Investigador';
-      case 4: return 'Visitante';
-      default: return 'Desconocido';
+      case 1:
+        return "Administrador";
+      case 2:
+        return "Curador";
+      case 3:
+        return "Investigador";
+      case 4:
+        return "Visitante";
+      default:
+        return "Desconocido";
     }
   }
 
@@ -87,9 +105,9 @@ export default class ProfileComponent {
     this.isLoading.set(true);
     try {
       await this.authStore.logout();
-      this.openSnackBar('Sesión cerrada exitosamente', 'success');
+      this.openSnackBar("Sesión cerrada exitosamente", "success");
     } catch (error) {
-      this.openSnackBar('Error al cerrar sesión', 'error');
+      this.openSnackBar("Error al cerrar sesión", "error");
     } finally {
       this.isLoading.set(false);
     }
@@ -100,14 +118,14 @@ export default class ProfileComponent {
     if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
-    const validTypes = ['image/jpeg', 'image/png'];
+    const validTypes = ["image/jpeg", "image/png"];
     if (!validTypes.includes(file.type)) {
-      this.openSnackBar('Solo se permiten imágenes JPEG o PNG', 'error');
+      this.openSnackBar("Solo se permiten imágenes JPEG o PNG", "error");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      this.openSnackBar('La imagen no debe exceder 5MB', 'error');
+      this.openSnackBar("La imagen no debe exceder 5MB", "error");
       return;
     }
 
@@ -121,33 +139,40 @@ export default class ProfileComponent {
     this.isLoading.set(true);
     try {
       const userId = this.user()?.id_usuario;
-      if (!userId) throw new Error('Usuario no autenticado');
+      if (!userId) throw new Error("Usuario no autenticado");
 
       let profileImageUrl: string | undefined;
       if (this.selectedFile) {
-        const uploadResult = await firstValueFrom(this.userService.uploadProfileImage(this.selectedFile));
+        const uploadResult = await firstValueFrom(
+          this.userService.uploadProfileImage(this.selectedFile)
+        );
         profileImageUrl = uploadResult.secure_url;
       }
 
       const updateData: Partial<User> = {
-        nombre: this.profileForm.get('nombre')?.value,
-        biografia: this.profileForm.get('biografia')?.value || '',
+        nombre: this.profileForm.get("nombre")?.value,
+        biografia: this.profileForm.get("biografia")?.value || "",
         ...(profileImageUrl && { profile_image: profileImageUrl }),
       };
 
-      const updatedUser = await firstValueFrom(this.userService.updateUser(userId, updateData));
+      const updatedUser = await firstValueFrom(
+        this.userService.updateUser(userId, updateData)
+      );
       if (updatedUser) {
         this.authStore.loadUserProfile();
         this.isEditing.set(false);
         this.profileForm.disable();
         this.imagePreview.set(null);
         this.selectedFile = null;
-        this.openSnackBar('Perfil actualizado exitosamente', 'success');
+        this.openSnackBar("Perfil actualizado exitosamente", "success");
       } else {
-        throw new Error('No se recibió respuesta del servidor');
+        throw new Error("No se recibió respuesta del servidor");
       }
     } catch (error: any) {
-      this.openSnackBar(error.message || 'Error al actualizar el perfil', 'error');
+      this.openSnackBar(
+        error.message || "Error al actualizar el perfil",
+        "error"
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -155,19 +180,36 @@ export default class ProfileComponent {
 
   resetForm() {
     this.profileForm.reset({
-      nombre: this.user()?.nombre || '',
-      biografia: this.user()?.biografia || '',
+      nombre: this.user()?.nombre || "",
+      biografia: this.user()?.biografia || "",
     });
     this.imagePreview.set(null);
     this.selectedFile = null;
   }
 
-  openSnackBar(message: string, type: 'success' | 'error') {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: type === 'success' ? 3000 : 5000,
-      panelClass: type === 'success' ? ['snackbar-success'] : ['snackbar-error'],
-      verticalPosition: 'bottom',
-      horizontalPosition: 'center',
+  async setup2FA() {
+    this.isLoading.set(true);
+    try {
+      await this.authStore.initiate2FASetup();
+      this.openSnackBar("Iniciando configuración de 2FA", "success");
+    } catch (error: any) {
+      this.openSnackBar(
+        error.message || "Error al iniciar configuración de 2FA",
+        "error"
+      );
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  openSnackBar(message: string, type: "success" | "error") {
+    this.snackBar.open(message, "Cerrar", {
+      duration: type === "success" ? 3000 : 5000,
+      panelClass:
+        type === "success" ? ["snackbar-success"] : ["snackbar-error"],
+      verticalPosition: "bottom",
+      horizontalPosition: "center",
     });
   }
 }
+

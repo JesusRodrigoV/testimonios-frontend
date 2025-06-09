@@ -43,9 +43,8 @@ export default class TwoFactorSetupComponent {
   setupData = this.authStore.setupData;
 
   async onSubmit() {
-    if (this.setupForm.valid && this.setupData()) {
-      const { secret } = this.setupData()!;
-      await this.authStore.setup2FA(secret, this.setupForm.value.token);
+    if (this.setupForm.valid) {
+      await this.authStore.setup2FA(this.setupForm.value.token);
     }
   }
 }
