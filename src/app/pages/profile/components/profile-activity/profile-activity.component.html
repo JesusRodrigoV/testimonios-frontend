@@ -1,0 +1,29 @@
+<div class="profile-card activity-card">
+  <mat-card-header>
+    <mat-card-title>Actividad</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="activity-stats">
+      <div class="stat-item">
+        <span class="stat-label">Testimonios</span>
+        <span class="stat-value">{{ testimonyCount() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Calificación Promedio</span>
+        <span class="stat-value">{{ averageRating() || "N/A" }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Comentarios Aprobados</span>
+        <span class="stat-value">{{ approvedCommentsCount() || "N/A" }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Favoritos</span>
+        <span class="stat-value">{{ favoriteCount() || "N/A" }}</span>
+      </div>
+    </div>
+    <div class="testimonies-section">
+      <h3>Testimonios</h3>
+      <p>Lista de testimonios vendrá aquí (pendiente de implementación).</p>
+    </div>
+  </mat-card-content>
+</div>

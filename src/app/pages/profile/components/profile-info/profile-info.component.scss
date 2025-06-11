@@ -1,0 +1,245 @@
+.profile-card {
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color);
+  }
+}
+
+.profile-card-hero {
+  text-align: center;
+  padding: 2rem;
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .profile-image-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+  }
+
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    transition: border-color 0.3s ease;
+  }
+
+  .edit-image-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 2px 8px var(--shadow-color);
+
+    &:hover {
+      background: var(--bolivia-yellow);
+    }
+  }
+
+  .profile-name {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--title-color);
+    margin: 0;
+  }
+}
+
+.info-card {
+  padding: 1rem;
+
+  mat-card-header {
+    padding-bottom: 0.5rem;
+
+    mat-card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--title-color);
+    }
+  }
+
+  .profile-info {
+    padding: 0.5rem 0;
+
+    mat-divider {
+      margin-bottom: 1rem;
+      border-color: var(--border-color);
+    }
+
+    .info-group {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      label {
+        font-weight: 500;
+        color: var(--text-color);
+        font-size: 0.95rem;
+      }
+
+      span {
+        color: var(--description-color);
+        font-size: 0.95rem;
+        word-break: break-word;
+      }
+
+      .custom-input {
+        position: relative;
+        width: 100%;
+
+        input,
+        textarea {
+          width: 100%;
+          padding: 0.6rem 0.8rem;
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
+          font-size: 0.95rem;
+          color: var(--text-color);
+          background: var(--card-background);
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+          }
+        }
+
+        textarea {
+          resize: vertical;
+          min-height: 60px;
+        }
+
+        &.input-error {
+          input,
+          textarea {
+            border-color: var(--danger-color);
+          }
+        }
+      }
+
+      .error-message {
+        color: var(--danger-color);
+        font-size: 0.8rem;
+        margin-top: 0.2rem;
+        display: block;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+
+    button[mat-raised-button] {
+      background: var(--primary-color);
+      color: #fff;
+    }
+
+    button[mat-button] {
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+  }
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: var(--bolivia-green);
+  color: #fff;
+  width: fit-content;
+}
+
+.two-factor-enabled {
+  color: var(--success-color);
+  font-weight: 500;
+}
+
+.two-factor-disabled {
+  color: var(--danger-color);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .profile-card-hero {
+    padding: 1.5rem;
+
+    .profile-image-container {
+      width: 120px;
+      height: 120px;
+    }
+
+    .profile-name {
+      font-size: 1.8rem;
+    }
+  }
+
+  .info-card {
+    .info-group {
+      grid-template-columns: 100px 1fr;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card-hero {
+    padding: 1rem;
+
+    .profile-image-container {
+      width: 100px;
+      height: 100px;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+    }
+  }
+
+  .info-card {
+    .info-group {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+
+      label {
+        font-size: 0.9rem;
+      }
+
+      span,
+      .custom-input input,
+      .custom-input textarea {
+        font-size: 0.9rem;
+      }
+    }
+
+    .form-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+}

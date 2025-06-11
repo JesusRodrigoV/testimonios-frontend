@@ -11,6 +11,7 @@ import { environment } from "src/environment/environment";
 export class UserService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/auth`;
+  private testimonyUrl = `${environment.apiUrl}/media/my-uploads/count`;
 
   updateUser(userId: number, data: Partial<User>): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/profile`, data).pipe(
@@ -69,7 +70,6 @@ export class UserService {
       }>(`${this.apiUrl}/setup-2fa`, {})
       .pipe(
         map((response) => {
-          console.log("Response from /setup-2fa:", response); // Añadir log
           return {
             tempToken: response.tempToken,
             setupData: {
@@ -113,7 +113,8 @@ export class UserService {
       );
   }
 
-  disable2FA(): Observable<User> {
+  //Todavia no implementado en el backend
+  disable2FA(): Observable<User> { 
     return this.http.post<User>(`${this.apiUrl}/disable-2fa`, {}).pipe(
       catchError((error) => {
         return throwError(
@@ -121,5 +122,9 @@ export class UserService {
         );
       })
     );
+  }
+
+  getTestimonyCount(): Observable<number> {
+    return this.http.get<number>(this.testimonyUrl);
   }
 }

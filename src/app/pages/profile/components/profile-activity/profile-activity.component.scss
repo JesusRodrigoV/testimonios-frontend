@@ -1,0 +1,64 @@
+.activity-card {
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color);
+  }
+
+  mat-card-header {
+    padding-bottom: 0.5rem;
+
+    mat-card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--title-color);
+    }
+  }
+
+  .activity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .stat-label {
+        color: var(--description-color);
+        font-size: 0.95rem;
+      }
+
+      .stat-value {
+        color: var(--title-color);
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .testimonies-section {
+    padding: 1rem 0;
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--title-color);
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .activity-card {
+    .activity-stats {
+      grid-template-columns: 1fr;
+    }
+  }
+}
