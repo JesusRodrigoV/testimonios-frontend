@@ -1,0 +1,54 @@
+<mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+  <div class="notifications-container">
+    <div class="header-actions">
+      <h3>Notificaciones</h3>
+      @if (unreadNotifications() > 0) {
+        <button
+          mat-stroked-button
+          class="read-all-btn"
+          (click)="markAllAsRead()"
+          [disabled]="isLoading()"
+        >
+          Leer todo
+        </button>
+      }
+    </div>
+    @if (isLoading()) {
+      <div class="loading">
+        <axl-spinner />
+        <p>Cargando notificaciones...</p>
+      </div>
+    } @else if (error()) {
+      <div class="error">
+        <mat-icon>error_outline</mat-icon>
+        <p>Error al obtener las notificaciones</p>
+      </div>
+    } @else { @for (notification of notifications(); track notification.id_notificacion) { @if (!notification.leido) {
+      <app-notification
+        [notification]="notification"
+        (markAsRead)="markAsRead($event)"
+      />
+    } } @empty {
+      <div class="empty">
+        <mat-icon>notifications_none</mat-icon>
+        <p>No hay notificaciones</p>
+      </div>
+    } }
+  </div>
+</mat-menu>
+
+<div class="notification-button-container">
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="notificationsMenu"
+    [matBadge]="unreadNotifications()"
+    [matBadgeHidden]="unreadNotifications() === 0"
+    matBadgeColor="warn"
+    class="notification-btn"
+    matTooltip="Notificaciones"
+    matTooltipPosition="below"
+    golden
+  >
+    <i class="bx bx-bell"></i>
+  </button>
+</div>

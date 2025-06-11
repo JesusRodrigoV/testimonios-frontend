@@ -1,0 +1,16 @@
+<div
+  class="notification-item"
+  [class.read]="notification().leido"
+  (click)="onMarkAsRead()"
+>
+  <div class="notification-content">
+    <p class="message">{{ notification().mensaje }}</p>
+    <p class="details">
+      Testimonio: {{ notification().testimonios.titulo }} •
+      {{ notification().fecha_creacion | date: 'short' }}
+    </p>
+  </div>
+  <mat-icon class="status-icon">
+    {{ notification().leido ? 'check_circle' : 'circle' }}
+  </mat-icon>
+</div>

@@ -1,0 +1,98 @@
+@use "@angular/material" as mat;
+
+.notifications-menu {
+  @include mat.menu-overrides(
+    (
+      container-shape: 8px,
+      divider-color: var(--mat-divider),
+      item-label-text-size: 14px,
+      item-label-text-weight: 400,
+      item-hover-state-layer-color: rgba(0, 0, 0, 0.04),
+      item-spacing: 0,
+    )
+  );
+
+  .notifications-container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 8px 0;
+    width: 400px;
+    max-height: 400px;
+    overflow-y: auto;
+
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px 8px;
+
+      h3 {
+        font: var(--mat-sys-title-small);
+        color: var(--mat-sys-on-surface);
+        margin: 0;
+      }
+
+      .read-all-btn {
+        font: var(--mat-sys-label-medium);
+        color: var(--mat-sys-primary);
+        padding: 4px 12px;
+        border-radius: 4px;
+        min-width: 80px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &:disabled {
+          color: var(--mat-sys-on-surface-variant);
+          background-color: transparent;
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .loading,
+    .error,
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: var(--mat-sys-on-surface-variant);
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        opacity: 0.6;
+      }
+
+      p {
+        font: var(--mat-sys-body-medium);
+        margin: 0;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.notification-button-container {
+  display: inline-flex;
+
+  .notification-btn {
+    @include mat.badge-overrides(
+      (
+        container-size: 18px,
+        container-shape: 9px,
+        background-color: var(--mat-sys-error),
+        text-color: var(--mat-sys-on-error),
+      )
+    );
+
+    i.bx-bell {
+      font-size: 24px;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
