@@ -21,7 +21,7 @@ export class AdminService {
   }
 
   updateUser(id_usr: number, userData: Partial<User>): Observable<User> {
-    return this.http.put<User>(`${this.API_URL}/users/${id_usr}`, userData);
+    return this.http.patch<User>(`${this.API_URL}/users/${id_usr}`, userData);
   }
 
   deleteUser(id: number): Observable<void> {
