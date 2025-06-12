@@ -31,13 +31,14 @@ import { Router } from "@angular/router";
 import { FileUploadComponent } from "./file-upload";
 import { MatStepperModule } from "@angular/material/stepper";
 
+const MEDIA_TYPES = ["Video", "Audio"] as const;
+type MediaType = (typeof MEDIA_TYPES)[number];
+
 @Component({
   selector: "app-testimony-upload",
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    AsyncPipe,
-    DatePipe,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -50,16 +51,20 @@ import { MatStepperModule } from "@angular/material/stepper";
     MatStepperModule,
     SpinnerComponent,
     FileUploadComponent,
+    AsyncPipe,
+    DatePipe,
   ],
   templateUrl: "./testimony-upload.component.html",
   styleUrl: "./testimony-upload.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TestimonyUploadComponent implements OnInit {
- testimony: TestimonyInput & {
-    selectedTags: string[];
-    selectedCategories: string[];
-  } = {
+  private testimonyService = inject(TestimonioService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+
+  // Estado del testimonio
+  testimony = signal<TestimonyInput & { selectedTags: string[]; selectedCategories: string[] }>({
     title: '',
     description: '',
     content: '',
@@ -71,36 +76,34 @@ export default class TestimonyUploadComponent implements OnInit {
     url: '',
     duration: undefined,
     format: '',
-  };
-  cloudinaryResult: {
-    secure_url: string;
-    duration?: number;
-    format: string;
-  } | null = null;
-  mediaPreview: string | null = null;
-  mediaType: 'Video' | 'Audio' | null = null;
-  shareLocation: boolean = false;
-  submitting = false;
-  cargandoTestimonio = signal(false);
+  });
+
+  // Estado de la subida
+  cloudinaryResult = signal<{ secure_url: string; duration?: number; format: string } | null>(null);
+  mediaPreview = signal<string | null>(null);
+  mediaType = signal<MediaType | null>(null);
+  private _shareLocation = signal<boolean>(false);
+  get shareLocation(): boolean { return this._shareLocation(); }
+  set shareLocation(value: boolean) { this._shareLocation.set(value); }
+  submitting = signal<boolean>(false);
+  cargandoTestimonio = signal<boolean>(false);
   eventName = signal<string>('Ninguno');
 
-  categories: { id_categoria: number; nombre: string; descripcion: string }[] = [];
-  tags: { id: number; name: string }[] = [];
-  events: { id: number; name: string; description: string; date: string }[] = [];
+  // Metadatos
+  categories = signal<{ id_categoria: number; nombre: string; descripcion: string }[]>([]);
+  tags = signal<{ id: number; name: string }[]>([]);
+  events = signal<{ id: number; name: string; description: string; date: string }[]>([]);
 
+  // Control de etiquetas
   tagCtrl = new FormControl<string>('');
   filteredTags: Observable<string[]>;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-
   private tagsSubject = new BehaviorSubject<string[]>([]);
-  private testimonyService = inject(TestimonioService);
-  private snackBar = inject(MatSnackBar);
-  private router = inject(Router);
 
   constructor() {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterTags(value || '')),
+      map((value) => this.filterTags(value || '')),
     );
   }
 
@@ -108,71 +111,47 @@ export default class TestimonyUploadComponent implements OnInit {
     this.loadMetadata();
   }
 
-  loadMetadata(): void {
+  // Carga de metadatos
+  private loadMetadata(): void {
     this.testimonyService.getAllCategories().subscribe({
-      next: (data) => {
-        this.categories = data;
-      },
-      error: (err) => {
-        this.openSnackBar(
-          'Error al cargar categorías: ' + err.message,
-          'Cerrar',
-          'error',
-        );
-      },
+      next: (data) => this.categories.set(data),
+      error: (err) => this.showError('cargar categorías', err),
     });
 
     this.testimonyService.getAllTags().subscribe({
       next: (data) => {
-        this.tags = data;
-        this.tagsSubject.next(data.map((tag) => tag.name));
+        this.tags.set(data);
+        this.tagsSubject.next(data.map(tag => tag.name));
       },
-      error: (err) => {
-        this.openSnackBar(
-          'Error al cargar etiquetas: ' + err.message,
-          'Cerrar',
-          'error',
-        );
-      },
+      error: (err) => this.showError('cargar etiquetas', err),
     });
 
     this.testimonyService.getAllEvents().subscribe({
       next: (data) => {
-        this.events = data;
+        this.events.set(data);
         this.updateEventName();
       },
-      error: (err) => {
-        this.openSnackBar(
-          'Error al cargar eventos: ' + err.message,
-          'Cerrar',
-          'error',
-        );
-      },
+      error: (err) => this.showError('cargar eventos', err),
     });
   }
 
-  private _filterTags(value: string): string[] {
+  // Filtrado de etiquetas
+  private filterTags(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.tags
-      .map((tag) => tag.name)
-      .filter((tag) => tag.toLowerCase().includes(filterValue));
+    return this.tags().map(tag => tag.name).filter(tag => tag.toLowerCase().includes(filterValue));
   }
 
+  // Gestión de archivos
   async onFileSelected(file: File | null): Promise<void> {
     if (!file) {
-      this.cloudinaryResult = null;
-      this.mediaPreview = null;
-      this.mediaType = null;
-      this.testimony.url = '';
-      this.testimony.duration = undefined;
-      this.testimony.format = '';
+      this.resetMedia();
       return;
     }
 
     this.cargandoTestimonio.set(true);
-
-    this.mediaType = file.type.startsWith('video') ? 'Video' : 'Audio';
-    this.mediaPreview = URL.createObjectURL(file);
+    const mediaType = file.type.startsWith('video') ? 'Video' : 'Audio';
+    this.mediaType.set(mediaType);
+    this.mediaPreview.set(URL.createObjectURL(file));
 
     const formData = new FormData();
     formData.append('file', file);
@@ -183,148 +162,92 @@ export default class TestimonyUploadComponent implements OnInit {
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${environment.cloudinary.cloudName}/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        },
+        { method: 'POST', body: formData },
       );
       const result = await response.json();
-      if (!response.ok) {
-        throw new Error(
-          result.error?.message || 'Error al subir archivo a Cloudinary',
-        );
-      }
-      this.cloudinaryResult = {
+      if (!response.ok) throw new Error(result.error?.message || 'Error al subir archivo');
+
+      this.cloudinaryResult.set({
         secure_url: result.secure_url,
-        duration: result.duration,
-        format: result.format,
-      };
-      this.testimony.url = result.secure_url;
-      this.testimony.duration = result.duration
-        ? Math.round(result.duration)
-        : undefined;
-      this.testimony.format = this.mediaType;
-      this.openSnackBar('Archivo subido exitosamente', 'Cerrar', 'success');
-      this.cargandoTestimonio.set(false);
+        duration: result.duration ? Math.round(result.duration) : undefined,
+        format: mediaType,
+      });
+      this.testimony.update(t => ({
+        ...t,
+        url: result.secure_url,
+        duration: result.duration ? Math.round(result.duration) : undefined,
+        format: mediaType,
+      }));
+      this.showSuccess('Archivo subido exitosamente');
     } catch (error) {
-      console.error('Upload error details:', error);
-      const errorMessage =
-        error instanceof Error ? error.message : 'Error al subir archivo';
-      this.openSnackBar(errorMessage, 'Reintentar', 'error');
-      this.cloudinaryResult = null;
-      this.mediaPreview = null;
-      this.mediaType = null;
-      this.testimony.url = '';
-      this.testimony.duration = undefined;
-      this.testimony.format = '';
+      console.error('Upload error:', error);
+      this.showError('subir archivo', error instanceof Error ? error : new Error('Error desconocido'));
+      this.resetMedia();
+    } finally {
       this.cargandoTestimonio.set(false);
     }
   }
 
+  // Gestión de ubicación
   onShareLocationChange(): void {
     if (this.shareLocation) {
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            this.testimony.latitude = position.coords.latitude;
-            this.testimony.longitude = position.coords.longitude;
-            this.openSnackBar(
-              'Ubicación obtenida exitosamente',
-              'Cerrar',
-              'success',
-            );
+            const lat = Number(position.coords.latitude.toFixed(2));
+            const lon = Number(position.coords.longitude.toFixed(2));
+            this.testimony.update(t => ({ ...t, latitude: lat, longitude: lon }));
+            this.showSuccess('Ubicación obtenida');
           },
           (error) => {
             console.error('Geolocation error:', error);
             this.shareLocation = false;
-            this.testimony.latitude = undefined;
-            this.testimony.longitude = undefined;
-            this.openSnackBar(
-              'No se pudo obtener la ubicación: ' + error.message,
-              'Cerrar',
-              'error',
-            );
+            this.testimony.update(t => ({ ...t, latitude: undefined, longitude: undefined }));
+            this.showError('obtener ubicación', new Error(error.message));
           },
-          { enableHighAccuracy: true, timeout: 10000 },
+          { enableHighAccuracy: false, timeout: 5000 },
         );
       } else {
         this.shareLocation = false;
-        this.openSnackBar(
-          'La geolocalización no está disponible en este navegador',
-          'Cerrar',
-          'error',
-        );
+        this.showError('obtener ubicación', new Error('Geolocalización no soportada'));
       }
     } else {
-      this.testimony.latitude = undefined;
-      this.testimony.longitude = undefined;
+      this.testimony.update(t => ({ ...t, latitude: undefined, longitude: undefined }));
     }
   }
 
-  submitTestimony(): void {
-    if (!this.cloudinaryResult) {
-      this.openSnackBar(
-        'Por favor, sube un archivo antes de enviar',
-        'Cerrar',
-        'error',
-      );
+  // Envío del testimonio
+  submitTestimony(form: NgForm): void {
+    if (!this.isFileUploaded() || !form.valid) {
+      this.showError('enviar testimonio', new Error('Archivo o formulario inválido'));
       return;
     }
 
-    this.submitting = true;
-
+    this.submitting.set(true);
     const payload: TestimonyInput = {
-      title: this.testimony.title,
-      description: this.testimony.description,
-      content: this.testimony.content,
-      url: this.testimony.url,
-      duration: this.testimony.duration,
-      format: this.testimony.format,
-      tags: this.testimony.selectedTags,
-      categories: this.testimony.selectedCategories,
-      eventId:
-        this.testimony.eventId === null ? undefined : this.testimony.eventId,
-      latitude:
-        this.testimony.latitude === null ? undefined : this.testimony.latitude,
-      longitude:
-        this.testimony.longitude === null
-          ? undefined
-          : this.testimony.longitude,
+      ...this.testimony(),
+      eventId: this.testimony().eventId ?? undefined,
+      latitude: this.testimony().latitude ?? undefined,
+      longitude: this.testimony().longitude ?? undefined,
     };
 
     this.testimonyService.createTestimony(payload).subscribe({
       next: () => {
-        this.openSnackBar(
-          'Testimonio subido exitosamente. Esperando aprobación de administrador',
-          'Cerrar',
-          'success',
-        );
-        this.submitting = false;
+        this.showSuccess('Testimonio subido. Esperando aprobación');
         this.resetForm();
         this.router.navigate(['/explore']);
       },
       error: (err) => {
-        console.error('Backend submission error:', err);
-        let errorMessage =
-          err.message || 'Error al enviar testimonio al servidor';
-        if (err.message.includes('url')) {
-          errorMessage =
-            'Error con el archivo multimedia. Por favor, intenta subir el archivo nuevamente.';
-        } else if (err.message.includes('eventId')) {
-          errorMessage =
-            'Error con el evento seleccionado. Por favor, verifica la selección.';
-        } else if (err.message.includes('Invalid type')) {
-          errorMessage =
-            'Error en los datos numéricos (evento, latitud o longitud). Déjalos en blanco si no aplican.';
-        }
-        this.openSnackBar(errorMessage, 'Reintentar', 'error');
-        this.submitting = false;
+        console.error('Submission error:', err);
+        const message = this.getErrorMessage(err);
+        this.showError('enviar testimonio', new Error(message));
       },
-    });
+    }).add(() => this.submitting.set(false));
   }
 
+  // Reset del formulario
   resetForm(): void {
-    this.testimony = {
+    this.testimony.set({
       title: '',
       description: '',
       content: '',
@@ -336,70 +259,85 @@ export default class TestimonyUploadComponent implements OnInit {
       url: '',
       duration: undefined,
       format: '',
-    };
-    this.cloudinaryResult = null;
-    this.mediaPreview = null;
-    this.mediaType = null;
+    });
+    this.cloudinaryResult.set(null);
+    this.mediaPreview.set(null);
+    this.mediaType.set(null);
     this.shareLocation = false;
     this.tagCtrl.setValue('');
     this.eventName.set('Ninguno');
   }
 
-  clearError(): void {
-    this.snackBar.dismiss();
-  }
-
+  // Gestión de etiquetas
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-    if (value && !this.testimony.selectedTags.includes(value)) {
-      this.testimony.selectedTags.push(value);
+    if (value && !this.testimony().selectedTags.includes(value)) {
+      this.testimony.update(t => ({ ...t, selectedTags: [...t.selectedTags, value] }));
     }
-    event.chipInput!.clear();
+    event.chipInput?.clear();
     this.tagCtrl.setValue('');
   }
 
   removeTag(tag: string): void {
-    const index = this.testimony.selectedTags.indexOf(tag);
-    if (index >= 0) {
-      this.testimony.selectedTags.splice(index, 1);
-    }
+    this.testimony.update(t => ({
+      ...t,
+      selectedTags: t.selectedTags.filter(t => t !== tag),
+    }));
   }
 
   selectedTag(event: MatAutocompleteSelectedEvent): void {
-    const value: string = event.option.value;
-    if (!this.testimony.selectedTags.includes(value)) {
-      this.testimony.selectedTags.push(value);
+    const value = event.option.value;
+    if (!this.testimony().selectedTags.includes(value)) {
+      this.testimony.update(t => ({ ...t, selectedTags: [...t.selectedTags, value] }));
     }
     this.tagCtrl.setValue('');
   }
 
-  openSnackBar(message: string, action: string, type: 'success' | 'error'): void {
-    this.snackBar.open(message, action, {
-      duration: type === 'success' ? 3000 : 5000,
-      panelClass: type === 'success' ? ['snackbar-success'] : ['snackbar-error'],
-      verticalPosition: 'bottom',
-      horizontalPosition: 'center',
-    });
+  // Método para actualizar selectedTags
+  updateSelectedTags(newTags: string[]): void {
+    this.testimony.update(t => ({ ...t, selectedTags: newTags }));
   }
 
-  isFileUploaded(): boolean {
-    return !!this.cloudinaryResult;
+  // Actualización de nombre del evento
+  updateEventName(): void {
+    const event = this.events().find(e => e.id === this.testimony().eventId);
+    this.eventName.set(event?.name ?? 'Ninguno');
   }
 
+  // Validaciones
   isInfoFormValid(form: NgForm): boolean {
     return form.valid ?? false;
   }
 
   isMetaFormValid(form: NgForm): boolean {
-    return true;
+    return true; // Puedes añadir lógica específica si es necesario
   }
 
-  updateEventName(): void {
-    const event = this.events.find((e) => e.id === this.testimony.eventId);
-    this.eventName.set(event?.name ?? 'Ninguno');
+  // Utilidades
+  isFileUploaded(): boolean {
+    return !!this.cloudinaryResult();
   }
 
-  onEventChange(): void {
-    this.updateEventName();
+  // Resetea el estado relacionado al archivo multimedia
+  private resetMedia(): void {
+    this.cloudinaryResult.set(null);
+    this.mediaPreview.set(null);
+    this.mediaType.set(null);
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Cerrar', { duration: 3000, panelClass: ['snackbar-success'], verticalPosition: 'bottom', horizontalPosition: 'center' });
+  }
+
+  private showError(action: string, error: Error): void {
+    this.snackBar.open(`Error al ${action}: ${error.message}`, 'Reintentar', { duration: 5000, panelClass: ['snackbar-error'], verticalPosition: 'bottom', horizontalPosition: 'center' });
+  }
+
+  private getErrorMessage(err: any): string {
+    const message = err.message || 'Error desconocido';
+    if (message.includes('url')) return 'Error con el archivo multimedia. Reintenta subirlo.';
+    if (message.includes('eventId')) return 'Error con el evento seleccionado. Verifica la selección.';
+    if (message.includes('Invalid type')) return 'Error en datos numéricos. Déjalos en blanco si no aplican.';
+    return message;
   }
 }

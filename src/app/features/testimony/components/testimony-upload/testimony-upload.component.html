@@ -22,8 +22,8 @@
               accept=".mp4,.mov,.mp3,.wav"
               dragMessage="Arrastra o selecciona un archivo (video o audio)"
               (fileSelected)="onFileSelected($event)"
-              [mediaPreview]="mediaPreview"
-              [mediaType]="mediaType"
+              [mediaPreview]="mediaPreview()"
+              [mediaType]="mediaType()"
             ></app-file-upload>
             @if (cargandoTestimonio()) {
               <axl-spinner size="small" />
@@ -62,7 +62,7 @@
             <input
               matInput
               id="title"
-              [(ngModel)]="testimony.title"
+              [(ngModel)]="testimony().title"
               name="title"
               placeholder="Título del testimonio"
               required
@@ -81,13 +81,12 @@
             <textarea
               matInput
               id="description"
-              [(ngModel)]="testimony.description"
+              [(ngModel)]="testimony().description"
               name="description"
               placeholder="Descripción del testimonio"
               required
               minlength="5"
               #description="ngModel"
-              (input)="clearError()"
             ></textarea>
             @if (description.invalid && description.touched) {
               <mat-error>La descripción debe tener al menos 5 caracteres</mat-error>
@@ -101,13 +100,12 @@
             <textarea
               matInput
               id="content"
-              [(ngModel)]="testimony.content"
+              [(ngModel)]="testimony().content"
               name="content"
               placeholder="Contenido del testimonio"
               required
               minlength="5"
               #content="ngModel"
-              (input)="clearError()"
             ></textarea>
             @if (content.invalid && content.touched) {
               <mat-error>El contenido debe tener al menos 5 caracteres</mat-error>
@@ -142,11 +140,11 @@
           <mat-form-field appearance="outline">
             <mat-label>Categorías</mat-label>
             <mat-select
-              [(ngModel)]="testimony.selectedCategories"
+              [(ngModel)]="testimony().selectedCategories"
               name="categories"
               multiple
             >
-              @for (category of categories; track category.id_categoria) {
+              @for (category of categories(); track category.id_categoria) {
                 <mat-option [value]="category.nombre">
                   {{ category.nombre }}
                 </mat-option>
@@ -160,11 +158,12 @@
             <mat-label>Etiquetas</mat-label>
             <mat-chip-grid
               #chipGrid
-              [(ngModel)]="testimony.selectedTags"
+              [ngModel]="testimony().selectedTags"
+              (ngModelChange)="updateSelectedTags($event)"
               name="tags"
               aria-label="Selección de etiquetas"
             >
-              @for (tag of testimony.selectedTags; track tag) {
+              @for (tag of testimony().selectedTags; track tag) {
                 <mat-chip-row
                   [removable]="true"
                   (removed)="removeTag(tag)"
@@ -227,12 +226,12 @@
           <mat-form-field appearance="outline">
             <mat-label>Evento histórico (opcional)</mat-label>
             <mat-select
-              [(ngModel)]="testimony.eventId"
+              [(ngModel)]="testimony().eventId"
               name="eventId"
-              (selectionChange)="onEventChange()"
+              (selectionChange)="updateEventName()"
             >
               <mat-option [value]="null">Ninguno</mat-option>
-              @for (event of events; track event.id) {
+              @for (event of events(); track event.id) {
                 <mat-option [value]="event.id">
                   {{ event.name }} ({{ event.date | date: 'yyyy-MM-dd' }})
                 </mat-option>
@@ -260,27 +259,27 @@
           <h3>Resumen del testimonio</h3>
           <div class="review-item">
             <strong>Archivo:</strong>
-            <span>{{ mediaType ? mediaType + ' subido' : 'No se ha subido archivo' }}</span>
+            <span>{{ mediaType() ? mediaType() + ' subido' : 'No se ha subido archivo' }}</span>
           </div>
           <div class="review-item">
             <strong>Título:</strong>
-            <span>{{ testimony.title || 'No especificado' }}</span>
+            <span>{{ testimony().title || 'No especificado' }}</span>
           </div>
           <div class="review-item">
             <strong>Descripción:</strong>
-            <span>{{ testimony.description || 'No especificada' }}</span>
+            <span>{{ testimony().description || 'No especificada' }}</span>
           </div>
           <div class="review-item">
             <strong>Contenido:</strong>
-            <span>{{ testimony.content || 'No especificado' }}</span>
+            <span>{{ testimony().content || 'No especificado' }}</span>
           </div>
           <div class="review-item">
             <strong>Categorías:</strong>
-            <span>{{ testimony.selectedCategories.length ? testimony.selectedCategories.join(', ') : 'Ninguna' }}</span>
+            <span>{{ testimony().selectedCategories.length ? testimony().selectedCategories.join(', ') : 'Ninguna' }}</span>
           </div>
           <div class="review-item">
             <strong>Etiquetas:</strong>
-            <span>{{ testimony.selectedTags.length ? testimony.selectedTags.join(', ') : 'Ninguna' }}</span>
+            <span>{{ testimony().selectedTags.length ? testimony().selectedTags.join(', ') : 'Ninguna' }}</span>
           </div>
           <div class="review-item">
             <strong>Evento:</strong>
@@ -296,10 +295,10 @@
             mat-raised-button
             color="primary"
             type="button"
-            (click)="submitTestimony()"
-            [disabled]="submitting"
+            (click)="submitTestimony(reviewForm)"
+            [disabled]="submitting()"
           >
-            @if (submitting) {
+            @if (submitting()) {
               <axl-spinner size="small" />
             } @else {
               <p>Subir Testimonio</p>
