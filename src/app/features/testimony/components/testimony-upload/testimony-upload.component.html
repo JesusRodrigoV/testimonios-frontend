@@ -26,19 +26,19 @@
               [mediaType]="mediaType()"
             ></app-file-upload>
             @if (cargandoTestimonio()) {
-              <axl-spinner size="small" />
-              <div class="upload-overlay">
-                <span>Subiendo el testimonio...</span>
-              </div>
+            <axl-spinner size="small" />
+            <div class="upload-overlay">
+              <span>Subiendo el testimonio...</span>
+            </div>
             }
           </div>
           @if (!isFileUploaded() && fileForm.submitted) {
-            <mat-error>Debes subir un archivo antes de continuar</mat-error>
+          <mat-error>Debes subir un archivo antes de continuar</mat-error>
           }
         </div>
         <div class="step-actions">
           <button
-            mat-button
+            matButton="filled"
             matStepperNext
             type="button"
             [disabled]="cargandoTestimonio() || !isFileUploaded()"
@@ -70,7 +70,7 @@
               #title="ngModel"
             />
             @if (title.invalid && title.touched) {
-              <mat-error>El título debe tener al menos 3 caracteres</mat-error>
+            <mat-error>El título debe tener al menos 3 caracteres</mat-error>
             }
           </mat-form-field>
         </div>
@@ -89,7 +89,9 @@
               #description="ngModel"
             ></textarea>
             @if (description.invalid && description.touched) {
-              <mat-error>La descripción debe tener al menos 5 caracteres</mat-error>
+            <mat-error
+              >La descripción debe tener al menos 5 caracteres</mat-error
+            >
             }
           </mat-form-field>
         </div>
@@ -108,15 +110,13 @@
               #content="ngModel"
             ></textarea>
             @if (content.invalid && content.touched) {
-              <mat-error>El contenido debe tener al menos 5 caracteres</mat-error>
+            <mat-error>El contenido debe tener al menos 5 caracteres</mat-error>
             }
           </mat-form-field>
         </div>
 
         <div class="step-actions">
-          <button mat-button matStepperPrevious type="button">
-            Anterior
-          </button>
+          <button mat-button matStepperPrevious type="button">Anterior</button>
           <button
             mat-button
             matStepperNext
@@ -145,9 +145,9 @@
               multiple
             >
               @for (category of categories(); track category.id_categoria) {
-                <mat-option [value]="category.nombre">
-                  {{ category.nombre }}
-                </mat-option>
+              <mat-option [value]="category.nombre">
+                {{ category.nombre }}
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -164,15 +164,12 @@
               aria-label="Selección de etiquetas"
             >
               @for (tag of testimony().selectedTags; track tag) {
-                <mat-chip-row
-                  [removable]="true"
-                  (removed)="removeTag(tag)"
-                >
-                  {{ tag }}
-                  <button matChipRemove>
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-row>
+              <mat-chip-row [removable]="true" (removed)="removeTag(tag)">
+                {{ tag }}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
               }
               <input
                 placeholder="Añadir etiqueta..."
@@ -189,21 +186,17 @@
               (optionSelected)="selectedTag($event)"
             >
               @for (tag of filteredTags | async; track tag) {
-                <mat-option [value]="tag">
-                  {{ tag }}
-                </mat-option>
+              <mat-option [value]="tag">
+                {{ tag }}
+              </mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
         </div>
 
         <div class="step-actions">
-          <button mat-button matStepperPrevious type="button">
-            Anterior
-          </button>
-          <button mat-button matStepperNext type="button">
-            Siguiente
-          </button>
+          <button mat-button matStepperPrevious type="button">Anterior</button>
+          <button mat-button matStepperNext type="button">Siguiente</button>
         </div>
       </form>
     </mat-step>
@@ -213,11 +206,7 @@
       <ng-template matStepLabel>Ubicación</ng-template>
       <form #locationForm="ngForm" class="step-form">
         <div class="form-group location">
-          <mat-checkbox
-            [(ngModel)]="shareLocation"
-            name="shareLocation"
-            (change)="onShareLocationChange()"
-          >
+          <mat-checkbox [(ngModel)]="shareLocation" name="shareLocation">
             Compartir mi ubicación actual
           </mat-checkbox>
         </div>
@@ -232,21 +221,17 @@
             >
               <mat-option [value]="null">Ninguno</mat-option>
               @for (event of events(); track event.id) {
-                <mat-option [value]="event.id">
-                  {{ event.name }} ({{ event.date | date: 'yyyy-MM-dd' }})
-                </mat-option>
+              <mat-option [value]="event.id">
+                {{ event.name }} ({{ event.date | date : "yyyy-MM-dd" }})
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
         </div>
 
         <div class="step-actions">
-          <button mat-button matStepperPrevious type="button">
-            Anterior
-          </button>
-          <button mat-button matStepperNext type="button">
-            Siguiente
-          </button>
+          <button mat-button matStepperPrevious type="button">Anterior</button>
+          <button mat-button matStepperNext type="button">Siguiente</button>
         </div>
       </form>
     </mat-step>
@@ -259,27 +244,37 @@
           <h3>Resumen del testimonio</h3>
           <div class="review-item">
             <strong>Archivo:</strong>
-            <span>{{ mediaType() ? mediaType() + ' subido' : 'No se ha subido archivo' }}</span>
+            <span>{{
+              mediaType() ? mediaType() + " subido" : "No se ha subido archivo"
+            }}</span>
           </div>
           <div class="review-item">
             <strong>Título:</strong>
-            <span>{{ testimony().title || 'No especificado' }}</span>
+            <span>{{ testimony().title || "No especificado" }}</span>
           </div>
           <div class="review-item">
             <strong>Descripción:</strong>
-            <span>{{ testimony().description || 'No especificada' }}</span>
+            <span>{{ testimony().description || "No especificada" }}</span>
           </div>
           <div class="review-item">
             <strong>Contenido:</strong>
-            <span>{{ testimony().content || 'No especificado' }}</span>
+            <span>{{ testimony().content || "No especificado" }}</span>
           </div>
           <div class="review-item">
             <strong>Categorías:</strong>
-            <span>{{ testimony().selectedCategories.length ? testimony().selectedCategories.join(', ') : 'Ninguna' }}</span>
+            <span>{{
+              testimony().selectedCategories.length
+                ? testimony().selectedCategories.join(", ")
+                : "Ninguna"
+            }}</span>
           </div>
           <div class="review-item">
             <strong>Etiquetas:</strong>
-            <span>{{ testimony().selectedTags.length ? testimony().selectedTags.join(', ') : 'Ninguna' }}</span>
+            <span>{{
+              testimony().selectedTags.length
+                ? testimony().selectedTags.join(", ")
+                : "Ninguna"
+            }}</span>
           </div>
           <div class="review-item">
             <strong>Evento:</strong>
@@ -288,9 +283,7 @@
         </div>
 
         <div class="step-actions">
-          <button mat-button matStepperPrevious type="button">
-            Anterior
-          </button>
+          <button mat-button matStepperPrevious type="button">Anterior</button>
           <button
             mat-raised-button
             color="primary"
@@ -299,9 +292,9 @@
             [disabled]="submitting()"
           >
             @if (submitting()) {
-              <axl-spinner size="small" />
+            <axl-spinner size="small" />
             } @else {
-              <p>Subir Testimonio</p>
+            <p>Subir Testimonio</p>
             }
           </button>
         </div>

@@ -1,3 +1,9 @@
+enum Status {
+  "PENDIENTE" = "Pendiente",
+  "APROBADO" = "Aprobado",
+  "RECHAZADO" = "Rechazado",
+}
+
 interface Rating{
   average: number;
   total: number;

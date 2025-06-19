@@ -32,9 +32,9 @@
   background: var(--background-color);
   border-radius: var(--border-radius);
   box-shadow: 0 8px 32px var(--shadow-color);
-  padding: 2.5rem;
-  max-width: 720px;
-  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 920px;
+  margin: 1rem auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   h2 {
@@ -48,9 +48,6 @@
 }
 
 mat-stepper {
-  height: 90vh;
-  display: flex;
-  flex-direction: column;
   background: var(--background-color);
 
   .mat-stepper-horizontal {
@@ -87,9 +84,8 @@ mat-stepper {
 
 .step-form {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 1rem;
-  min-height: calc(90vh - 120px);
 }
 
 .form-group {
@@ -134,7 +130,6 @@ mat-chip-grid {
   padding: 1rem 0;
 
   button {
-    background: var(--gradient-primary);
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -245,16 +240,3 @@ mat-chip-grid {
     }
   }
 }
-
-@include mat.stepper-overrides((
-  header-icon-foreground-color: var(--input-background),
-  header-selected-state-icon-background-color: var(--primary-color),
-  header-selected-state-icon-foreground-color: var(--input-background),
-  header-done-state-icon-background-color: var(--success-color),
-  header-done-state-icon-foreground-color: var(--input-background),
-  container-color: var(--background-color),
-  line-color: var(--primary-color),
-  header-label-text-color: var(--text-color),
-  header-selected-state-label-text-color: var(--text-color),
-  header-error-state-label-text-color: var(--error-color),
-));

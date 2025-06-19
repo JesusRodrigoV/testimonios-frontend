@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNowStrict } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class DateUtilsService {
       const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
       if (isNaN(date.getTime())) return 'Fecha inválida';
 
-      return formatDistanceToNow(date, {
+      return formatDistanceToNowStrict(date, {
         locale: es,
         addSuffix: true
       });
