@@ -85,6 +85,10 @@ export const routes: Routes = [
         redirectTo: "/home",
         pathMatch: "full",
       },
+      {
+        path: "terms-conditions",
+        loadComponent: () => import("./features/terms-conditions/terms-conditions.component")
+      }
     ],
   },
   {
@@ -155,4 +159,8 @@ export const routes: Routes = [
         "./features/auth/components/two-factor-setup/two-factor-setup.component"
       ),
   },
+  {
+    path: "**",
+    loadComponent: () => import("./features/not-found/not-found.component"),
+  }
 ];
