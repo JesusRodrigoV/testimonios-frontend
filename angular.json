@@ -92,6 +92,7 @@
               "node_modules/boxicons/css/boxicons.min.css",
               "node_modules/@videogular/ngx-videogular/fonts/videogular.css",
               "node_modules/leaflet/dist/leaflet.css",
+              "driver.js/dist/driver.css",
               "src/styles.scss"
             ],
             "scripts": []
