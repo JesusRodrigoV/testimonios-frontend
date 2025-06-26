@@ -1,3 +1,19 @@
+:host {
+  --card-background: #ffffff;
+  --accent: #3f51b5;
+  --text: #212121;
+  --border-radius: 4px;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  :root.dark-mode & {
+    --card-background: #303030;
+    --accent: #bbdefb;
+    --text: #ffffff;
+    --border-radius: 4px;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
 .page-container {
   display: flex;
   flex-direction: column;
@@ -8,6 +24,102 @@
   gap: 20px;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.map-wrapper {
+  display: flex;
+  width: 100%;
+  height: 600px;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
+.department-menu {
+  width: 250px;
+  border-radius: var(--border-radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+
+  h3 {
+    font-size: 1.25rem;
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .bolivia-button {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .mat-nav-list {
+    padding-top: 0;
+  }
+
+  .mat-list-item {
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    padding: 8px 16px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    &:active {
+      background: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.map-container {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  animation: scaleIn 0.5s ease-out;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  .map {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius, 25px);
+    box-shadow: var(--shadow);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      height: 450px;
+      border-radius: var(--border-radius, 12px);
+    }
+  }
 }
 
 .title {
@@ -36,37 +148,11 @@
   }
 }
 
-.map-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  animation: scaleIn 0.5s ease-out;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-
-  }
-
-  .map {
-    width: 600px;
-    height: 600px;
-    border-radius: 25px;
-
-  }
-}
-
-
-
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -78,7 +164,6 @@
     transform: scale(0.95);
     opacity: 0;
   }
-
   to {
     transform: scale(1);
     opacity: 1;
@@ -102,11 +187,7 @@
   .map-container {
     max-height: 450px;
     min-height: 300px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    :root.dark-mode & {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
+    border-radius: var(--border-radius, 12px);
+    box-shadow: var(--shadow);
   }
 }

@@ -1,6 +1,34 @@
 <section class="page-container" role="main" aria-labelledby="map-title">
-  <div class="map-container">
-    <div class="map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" aria-label="Interactive geographical map">
+  <div class="map-wrapper">
+    <aside class="department-menu">
+      <button
+        matButton
+        class="bolivia-button"
+        (click)="onBoliviaClick()"
+        aria-label="Zoom a Bolivia"
+      >
+        Bolivia
+      </button>
+      <h3>Departamentos</h3>
+      <mat-nav-list>
+        @for (department of departments; track department.name) {
+        <mat-list-item
+          (click)="onDepartmentClick(department)"
+          [attr.aria-label]="'Zoom a ' + department.name"
+        >
+          <span matListItemTitle>{{ department.name }}</span>
+        </mat-list-item>
+        }
+      </mat-nav-list>
+    </aside>
+    <div class="map-container">
+      <div
+        class="map"
+        leaflet
+        [leafletOptions]="options"
+        (leafletMapReady)="onMapReady($event)"
+        aria-label="Interactive geographical map"
+      ></div>
     </div>
   </div>
 </section>
