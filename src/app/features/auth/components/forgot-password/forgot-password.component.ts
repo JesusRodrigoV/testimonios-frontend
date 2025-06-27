@@ -50,11 +50,7 @@ export default class ForgotPasswordComponent {
 
       this.authService.requestPasswordReset(email).subscribe({
         next: (response) => {
-          this.snackBar.open(
-            "Se han enviado las instrucciones a tu correo electrónico",
-            "Cerrar",
-            { duration: 5000 }
-          );
+          this.openSnackbar("Se han enviado las instrucciones a tu correo electrónico");
           this.router.navigate(["/login"]);
           this.loading = false;
         },
@@ -62,10 +58,16 @@ export default class ForgotPasswordComponent {
           const errorMessage =
             err.error?.message || "Ocurrió un error al procesar tu solicitud";
           this.error = errorMessage;
-          this.snackBar.open(errorMessage, "Cerrar", { duration: 5000 });
+          this.openSnackbar(errorMessage);
           this.loading = false;
         },
       });
     }
+  }
+
+  openSnackbar(message: string) {
+    this.snackBar.open(message, "Cerrar", {
+      duration: 5000,
+    });
   }
 }

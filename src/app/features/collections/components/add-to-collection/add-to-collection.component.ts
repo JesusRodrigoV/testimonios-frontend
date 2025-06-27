@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -39,8 +44,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatTooltipModule,
     SpinnerComponent,
     FormsModule,
-    ReactiveFormsModule
-],
+    ReactiveFormsModule,
+  ],
   templateUrl: "./add-to-collection.component.html",
   styleUrl: "./add-to-collection.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,7 +54,7 @@ export class AddToCollectionComponent {
   dialogRef = inject<MatDialogRef<AddToCollectionComponent>>(MatDialogRef);
   data = inject<{
     testimonyId: number;
-}>(MAT_DIALOG_DATA);
+  }>(MAT_DIALOG_DATA);
 
   private readonly authStore = inject(AuthStore);
   private readonly collectionService = inject(CollectionService);
@@ -65,28 +70,28 @@ export class AddToCollectionComponent {
 
   constructor() {
     this.collectionForm = this.fb.group({
-      titulo: ['', Validators.required],
-      descripcion: [''],
+      titulo: ["", Validators.required],
+      descripcion: [""],
     });
     this.loadCollections();
   }
 
   loadCollections() {
     if (!this.authStore.isAuthenticated()) {
-      this.error.set('Debes iniciar sesión para ver tus colecciones');
+      this.error.set("Debes iniciar sesión para ver tus colecciones");
       return;
     }
     this.loading.set(true);
     this.collectionService.getAll().subscribe({
       next: (collections) => {
-        const filteredCollections = collections.filter(collection =>
-          !collection.titulo.toLowerCase().includes('favoritos')
+        const filteredCollections = collections.filter(
+          (collection) => !collection.titulo.toLowerCase().includes("favoritos")
         );
         this.collections.set(filteredCollections);
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Error al cargar las colecciones');
+        this.error.set("Error al cargar las colecciones");
         this.loading.set(false);
       },
     });
@@ -107,9 +112,13 @@ export class AddToCollectionComponent {
 
   addToCollection() {
     if (!this.authStore.isAuthenticated()) {
-      this.snackBar.open('Debes iniciar sesión para agregar a una colección', 'Cerrar', {
-        duration: 3000,
-      });
+      this.snackBar.open(
+        "Debes iniciar sesión para agregar a una colección",
+        "Cerrar",
+        {
+          duration: 3000,
+        }
+      );
       return;
     }
 
@@ -126,33 +135,43 @@ export class AddToCollectionComponent {
           this.addTestimonyToCollection(newCollection.id_coleccion);
         },
         error: () => {
-          this.snackBar.open('Error al crear la colección', 'Cerrar', { duration: 3000 });
+          this.snackBar.open("Error al crear la colección", "Cerrar", {
+            duration: 3000,
+          });
           this.loading.set(false);
         },
       });
     } else if (this.selectedCollectionIds().length > 0) {
       this.addTestimonyToSelectedCollections();
     } else {
-      this.snackBar.open('Selecciona al menos una colección o crea una nueva', 'Cerrar', {
-        duration: 3000,
-      });
+      this.snackBar.open(
+        "Selecciona al menos una colección o crea una nueva",
+        "Cerrar",
+        {
+          duration: 3000,
+        }
+      );
       this.loading.set(false);
     }
   }
 
   private addTestimonyToCollection(collectionId: number) {
-    this.collectionService.addTestimony(collectionId, this.data.testimonyId).subscribe({
-      next: () => {
-        this.snackBar.open('Testimonio agregado a la colección', 'Cerrar', {
-          duration: 3000,
-        });
-        this.dialogRef.close(true);
-      },
-      error: () => {
-        this.snackBar.open('Error al agregar el testimonio', 'Cerrar', { duration: 3000 });
-        this.loading.set(false);
-      },
-    });
+    this.collectionService
+      .addTestimony(collectionId, this.data.testimonyId)
+      .subscribe({
+        next: () => {
+          this.snackBar.open("Testimonio agregado a la colección", "Cerrar", {
+            duration: 3000,
+          });
+          this.dialogRef.close(true);
+        },
+        error: () => {
+          this.snackBar.open("Error al agregar el testimonio", "Cerrar", {
+            duration: 3000,
+          });
+          this.loading.set(false);
+        },
+      });
   }
 
   private addTestimonyToSelectedCollections() {
@@ -161,15 +180,23 @@ export class AddToCollectionComponent {
     );
     forkJoin(requests).subscribe({
       next: () => {
-        this.snackBar.open('Testimonio agregado a las colecciones seleccionadas', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          "Testimonio agregado a las colecciones seleccionadas",
+          "Cerrar",
+          {
+            duration: 3000,
+          }
+        );
         this.dialogRef.close(true);
       },
       error: () => {
-        this.snackBar.open('Error al agregar el testimonio a algunas colecciones', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          "Error al agregar el testimonio a algunas colecciones",
+          "Cerrar",
+          {
+            duration: 3000,
+          }
+        );
         this.loading.set(false);
       },
     });

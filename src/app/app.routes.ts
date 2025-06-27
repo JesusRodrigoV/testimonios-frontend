@@ -1,11 +1,21 @@
 import { Routes } from "@angular/router";
 import { authGuard, loginGuard } from "./guards/auth";
+import HomeComponent from "./pages/home/home.component";
 
 export const routes: Routes = [
   {
     path: "",
     loadComponent: () => import("./pages/layout/layout.component"),
     children: [
+      {
+        path: "",
+        redirectTo: "home",
+        pathMatch: "full",
+      },
+      {
+        path: "home",
+        component: HomeComponent,
+      },
       {
         path: "profile",
         loadComponent: () => import("./pages/profile/profile.component"),
@@ -20,10 +30,6 @@ export const routes: Routes = [
         path: "settings",
         loadComponent: () => import("./pages/settings/settings.component"),
         canActivate: [authGuard],
-      },
-      {
-        path: "home",
-        loadComponent: () => import("./pages/home/home.component"),
       },
       {
         path: "explore",
@@ -81,14 +87,10 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
-        path: "",
-        redirectTo: "/home",
-        pathMatch: "full",
-      },
-      {
         path: "terms-conditions",
-        loadComponent: () => import("./features/terms-conditions/terms-conditions.component")
-      }
+        loadComponent: () =>
+          import("./features/terms-conditions/terms-conditions.component"),
+      },
     ],
   },
   {
@@ -162,5 +164,5 @@ export const routes: Routes = [
   {
     path: "**",
     loadComponent: () => import("./features/not-found/not-found.component"),
-  }
+  },
 ];

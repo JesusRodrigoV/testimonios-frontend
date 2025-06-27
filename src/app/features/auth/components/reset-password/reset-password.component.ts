@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -57,7 +56,7 @@ export default class ResetPasswordComponent implements OnInit {
       this.snackBar.open("Token inválido o expirado", "Cerrar", {
         duration: 5000,
       });
-      this.router.navigate(["/forgot-password"]);
+      this.router.navigateByUrl("/forgot-password");
     }
   }
 
@@ -82,7 +81,7 @@ export default class ResetPasswordComponent implements OnInit {
                 "Cerrar",
                 { duration: 5000 },
               );
-              this.router.navigate(["/login"]);
+              this.router.navigateByUrl("/login");
             },
             error: (error) => {
               this.snackBar.open(
