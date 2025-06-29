@@ -1,26 +1,27 @@
+@use "@angular/material" as mat;
+
 :host {
-  --primary-color: #4CAF50;
-  --danger-color: #f44336;
+  --primary-color: #4caf50;
+  --danger-color:rgba(244, 67, 54, 0.5);
   --success-color: #06d6a0;
   --text-color: #2b2d42;
   --background: #f8f9fa;
   --border-color: #dee2e6;
   --card-background: #ffffff;
-  --title-color: #2c3e50;
   --description-color: #666;
   --shadow-color: rgba(0, 0, 0, 0.1);
 
   :root.dark-mode & {
-    --primary-color: #66BB6A;
-    --danger-color: #ff6659;
+    --primary-color: #66bb6a;
+    --danger-color:rgba(255, 103, 89, 0.5);
     --success-color: #0ce7b1;
     --text-color: #e0e0e0;
     --background: #1e2126;
     --border-color: #3a3f47;
     --card-background: #2a2e34;
-    --title-color: #e0e0e0;
     --description-color: #a0a0a0;
     --shadow-color: rgba(0, 0, 0, 0.3);
+    
   }
 }
 
@@ -62,9 +63,13 @@
   gap: 1rem;
   padding: 1rem 0;
 
-  button[mat-raised-button][color="warn"] {
-    background: var(--danger-color);
-    color: #fff;
+  .logout-button {
+    @include mat.button-overrides(
+      (
+        tonal-container-color: var(--danger-color),
+        tonal-label-text-color: #e0e0e0,
+      )
+    );
   }
 }
 
