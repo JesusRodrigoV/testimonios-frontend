@@ -11,7 +11,6 @@ import { SearchDialogComponent } from "@app/features/shared/search/components/se
 
 @Component({
   selector: "app-layout",
-  standalone: true,
   imports: [
     RouterOutlet,
     MatSidenavModule,
